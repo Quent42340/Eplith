@@ -3,6 +3,6 @@
 
 #include "uInt.h"
 
-uInt* vars;
+extern uInt* vars;
 
 #endif // VARS_H
