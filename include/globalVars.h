@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef GLOBALVARS_H
+#define GLOBALVARS_H
 
 #include <iostream>
 #include <fstream>
@@ -15,17 +15,13 @@
 inline bool isd(char c) { return (c >= '0' && c <= '9'); }
 inline bool ish(char c) { return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || isd(c)); }
 
-bool HEX, DEBUG;
+extern bool HEX, DEBUG;
 
-std::vector<unsigned char> memory(MEM_SIZE, 0);
+extern std::vector<unsigned char> memory;
 
-std::string sourceCode;
+extern std::string sourceCode;
 
-unsigned int i;
+extern unsigned int i;
 
-#include "errors.h"
-#include "attributes.h"
-#include "operators.h"
-#include "vars.h"
+#endif // GLOBALVARS_H
 
-#endif // MAIN_H

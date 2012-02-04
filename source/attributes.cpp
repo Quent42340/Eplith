@@ -1,4 +1,8 @@
-#include "main.h"
+#include "globalVars.h"
+#include "errors.h"
+#include "attributes.h"
+
+using namespace std;
 
 vector<unsigned char> mem(MEM_SIZE, 0);
 

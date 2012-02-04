@@ -1,3 +1,5 @@
-#include "main.h"
+#include "globalVars.h"
+#include "vars.h"
 
+using namespace std;
 

@@ -5,6 +5,7 @@ BFAI=/home/quentin/Bureau/BFAI CD=. filter="*.c *.cpp *.h Makefile Notes TODO RE
  include=include {
   attributes.h
   errors.h
+  globalVars.h
   main.h
   operators.h
   uInt.h
@@ -13,6 +14,7 @@ BFAI=/home/quentin/Bureau/BFAI CD=. filter="*.c *.cpp *.h Makefile Notes TODO RE
  source=source {
   attributes.cpp
   errors.cpp
+  globalVars.cpp
   main.cpp
   operators.cpp
   uInt.cpp

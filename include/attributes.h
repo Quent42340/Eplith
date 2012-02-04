@@ -12,7 +12,7 @@ typedef struct {
 	int value;
 } DataRange;
 
-extern vector<unsigned char> mem;
+extern std::vector<unsigned char> mem;
 
 int catchAttr();
 Attr catchAttrs();

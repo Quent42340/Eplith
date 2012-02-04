@@ -1,4 +1,7 @@
-#include "main.h"
+#include "globalVars.h"
+#include "errors.h"
+
+using namespace std;
 
 void berror(int code, string error) {
 	string type;

@@ -1,3 +1,5 @@
-#include "main.h"
+#include "globalVars.h"
+#include "uInt.h"
 
+using namespace std;
 

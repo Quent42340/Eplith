@@ -1,4 +1,9 @@
-#include "main.h"
+#include "globalVars.h"
+#include "errors.h"
+#include "attributes.h"
+#include "operators.h"
+
+using namespace std;
 
 unsigned int pointer(0);
 

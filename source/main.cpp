@@ -6,7 +6,13 @@
 // https://github.com/FabianM/Brainfuck/blob/master/src/interpreter.c
 //
 //----------------------------------
-#include "main.h"
+#include "globalVars.h"
+#include "errors.h"
+#include "attributes.h"
+#include "operators.h"
+#include "vars.h"
+
+using namespace std;
 
 int main(int argc, char* argv[]) {
 	HEX = false;
