@@ -1,0 +1,3 @@
+.("Enter your age:"),$
+.("So you're ").$.(" years old? [y/n]"),
+.("You answered: ").

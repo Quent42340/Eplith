@@ -1,0 +1,36 @@
+BFAI
+
+{nom(a,b,c)
+instructions
+}
+
+b,c,d : arguments
+
+&(addr) = valeur;
+@(var) = &(addr);
+@(var) = 5; revient à faire &(addr) = 5;
+
+exemple:
+&(5A) = 5;
+@(var) = &(5A);
+
+Également possible:
+
+$(var) = &(5A;6A);
+
+Ici, var vaut toute la plage de valeur de l'adresse 5A à l'adresse 6A, autrement dit, une chaîne de caractères (ici 9 caractères + le caractère '\0').
+
+( Autre écriture ? $(var) = &(5A,A); Plage de donnée depuis 5A et pour 10 valeurs. )
+
+------------------
+£(var) désigne un grand nombre. Exemple: £(var) = &(5A;5B)
+
+Sachant que l'on ne peut mettre qu'un nombre < 256 dans 5A, et idem dans 5B, on va additionner les deux quand on demandera la valeur de £(var), c'est à dire qu'on pourra donc mettre un nombre entre 0 et 511. On peut également choisir une plage d'adresses plus grandes pour un plus grand nombre, mais ça n'a pas un grand intérêt.
+------------------
+=> Ne plus penser à ça, @(var) vaut un nombre entre 0 et 65535, tout dépendant de la plage de valeurs donnée.
+
+COMPTEUR, idée:
+dans le for, chercher à savoir si il n'y a pas un '(', si oui incrémenter le compteur
+si il y a un ')', décrémenter le compteur et vérifier s'il n'est pas égal à 0
+si oui, break
+si non, ne rien faire

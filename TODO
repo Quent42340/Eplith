@@ -1,0 +1,60 @@
+x Faire le tableau de mémoire libre ou non ( vector<unsigned int> mem ; 0 : libre ; 1 : occupé )
+x Pour tout ce qui est chaîne, permettre l'usage des parenthèses à l'intérieur
+  x-> en utilisant des doubles quotes ""
+- Améliorer le design du code
+  -> répartir le code en plusieurs fichiers
+	1- main.cpp, avec juste l'appel de la fonction principale et les variables globales
+	2- main.h, qui contient tous les entêtes et permet la lecture des variables globales
+	3- operators.cpp, qui contient tout ce qui touche aux opérateurs
+	4- operators.h
+	5- vars.cpp, qui contient les fonctions englobant tous les types de variables
+	6- vars.h, qui contient les entêtes des types de variables
+	7- uInt.cpp, qui contient les fonctions pour les variables numériques
+	8- uInt.h, qui contient la structure uInt
+		* make; test; git add .; git commit -am "Code design: OK."
+- Faire les variables numériques ( catchVar() ) pour var = value et var = addr
+- Faire les tableaux des variables numériques ( uInt* nbrs; )
+	* make; git commit -am "Integer vars: 1/2"
+- Faire les variables numériques ( catchVar()* ) pour var = addr = value
+	* make; git commit -am "Integer vars: OK."
+- Faire les chaînes ( catchString() ) pour addr = string et var = string ainsi que var = addr
+  -> Modifier catchValue() en conséquence
+	* make; git commit -am "String type: OK."
+- Faire
+	-> les opérateurs '.' et ',' avec les chaînes
+	-> le tableau des chaînes ( String* strings; )
+	-> celui des variables ( vars; )
+	-> réglages nécessaires
+		* make; git commit -am "Strings: OK."
+- Chercher toutes les erreurs possibles pour avertir le codeur
+  -> créer errors.c et errors.h
+  -> voir notemment les erreurs hex/dec avec ish et isd dans + - < > *
+  -> mettre des warnings pour des zones mémoires non-associés à des variables mais qui sont différentes de 0
+  -> mettre des erreurs pour des zones mémoires réservées à des variables
+  -> rajouter la ligne dans le détail d'une erreur
+  -> trouver les autres erreurs
+	* make; git add .; git commit -am "Errors: OK."
+- Tests
+  -> Coder des tests pour
+	1- tous les opérateurs
+	2- les plages de données
+	3- 3 tests sur chaque type de variable
+		* make; git commit -am "Tests: OK."
+- Faire les fonctions
+  -> créer les fichiers functions.c et functions.h
+  -> opérateurs '(', ')' et ':'
+  -> étapes
+	1- Fonctions simples, ni paramètres ni retour
+		* make; test; git add.;git commit -am "Functions: 1/3"
+	2- Fonctions avec paramètres mais sans retour
+		* make; test; git commit -am "Functions: 2/3"
+	3- Fonctions avec paramètres et retour
+		* make; test; git commit -am "Functions: OK."
+- Mettre BFAI sous licence ( ajouter également les entêtes sur les sources )
+	* make; git add .; git commit -am "License: OK."
+- Ajouter un README
+	* make; git add .; git commit -am "Readme: OK."
+- Renommer le dossier en BFAI
+- Écrire une doc dans le git
+- Créer un devblog
+- Écrire un mini-tuto sur le SDZ

@@ -1,0 +1,26 @@
+BFAI=/home/quentin/Bureau/BFAI CD=. filter="*.c *.cpp *.h Makefile Notes TODO README *.b *.ba" {
+ Makefile
+ Notes
+ TODO
+ include=include {
+  errors.h
+  main.h
+  operators.h
+  uInt.h
+  vars.h
+ }
+ source=source {
+  errors.cpp
+  main.cpp
+  operators.cpp
+  uInt.cpp
+  vars.cpp
+ }
+ tests=tests {
+  factorial.b
+  helloworld.b
+  io.ba
+  operators.ba
+  test.ba
+ }
+}
