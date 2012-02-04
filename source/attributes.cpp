@@ -84,7 +84,12 @@ char* catchString() {
 			unsigned int temp = i + 1;
 			
 			for(i++ ; sourceCode[i] != '"' ; i++) {
-				name[i - temp] = sourceCode[i];
+				if(sourceCode[i] == '\\' && sourceCode[i + 1] == 'n') {
+					name[i - temp] = '\n';
+					i++;
+				} else {
+					name[i - temp] = sourceCode[i];
+				}
 			}
 			
 			if(sourceCode[i + 1] == ')') {

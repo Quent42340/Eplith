@@ -1,12 +1,12 @@
 #D
-.(Decimal for 15)
+.("Decimal for 15\n")
 >(15)~
 <(15)~
 +(15)_
 -(15)_
 
 #H
-.(Hexa for F, 15)
+.("Hexa for F, 15\n")
 >(F)~
 <(F)~
 +(F)_

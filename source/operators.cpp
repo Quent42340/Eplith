@@ -156,7 +156,7 @@ void exec() {
 							break;
 						
 						default:
-							i--;
+							i -= 2;
 							a = 1;
 							break;
 					}
