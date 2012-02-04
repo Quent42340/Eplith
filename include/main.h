@@ -7,6 +7,8 @@
 #include <vector>
 #include <cstdio>
 #include <cmath>
+#include <cstring>
+#include <cstdlib>
 
 using namespace std;
 
