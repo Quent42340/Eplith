@@ -1,7 +1,7 @@
 - Faire les chaînes ( catchString() ) pour addr = string et var = string ainsi que var = addr en plus du tableau des chaînes
 	* make; git commit -am "String type: OK."
-- Faire fonctionner les opérateurs '.' et ',' avec les strings
-		* make; git commit -am "Strings: OK."
+- Faire fonctionner l'opérateur ',' avec les variables
+		* make; git commit -am "Vars: OK."
 - Chercher toutes les erreurs possibles pour avertir le codeur
   -> voir notemment les erreurs hex/dec avec ish et isd dans + - < > *
   -> rajouter la ligne dans le détail d'une erreur

@@ -72,6 +72,7 @@ uInt catchVar() {
 			if(sourceCode[i] == '&') {
 				temp.dr = catchDataRange(true);
 				setDataRangeValue(temp.dr, catchValue(), true);
+				while(sourceCode[i] == ' ') i++;
 				if(sourceCode[i] == ';') {
 					vars.push_back(temp);
 					return temp;
@@ -141,7 +142,12 @@ String catchString() {
 		if(!stringExists(temp)) {
 			if(sourceCode[i] == '&') {
 				temp.dr = catchDataRange(true);
-				setDataRangeStringValue(temp.dr, catchStringValue(true), true);
+				while(sourceCode[i] == ' ') i++;
+				if(sourceCode[i] == '=') {
+					i++;
+					setDataRangeStringValue(temp.dr, catchStringValue(true), true);
+				}
+				while(sourceCode[i] == ' ') i++;
 				if(sourceCode[i] == ';') {
 					strings.push_back(temp);
 					return temp;

@@ -111,9 +111,10 @@ char* catchStringValue(bool onlyString) {
 	char* str = new char;
 	
 	if((sourceCode[i + 1] == '(') || (onlyString)) {
-		while(sourceCode[i] == ' ') i++;
-		if(sourceCode[i] == '"') {
-			i++;
+		if(onlyString) { while(sourceCode[i] == ' ') i++; }
+		else i++;
+		if((sourceCode[i] == '"') || (sourceCode[i + 1] == '"')) {
+			if(!onlyString) i++;
 			unsigned int temp = i + 1;
 			
 			for(i++ ; sourceCode[i] != '"' ; i++) {
@@ -133,6 +134,7 @@ char* catchStringValue(bool onlyString) {
 				return NULL;
 			}
 		} else {
+			i--;
 			return NULL;
 		}
 	} else {
@@ -188,12 +190,6 @@ void setDataRangeStringValue(DataRange &dr, char* str, bool noError) {
 		
 		if(vSize <= dr.addr.length) {
 			for(int j = dr.addr.tab[0] ; j < dr.addr.tab[0] + vSize ; j++) {
-				if(((dr.value - 255 * (j - dr.addr.tab[0])) - 255) > 0) {
-					memory[j] = 255;
-				} else {
-					memory[j] = (dr.value - 255 * (j - dr.addr.tab[0]));
-					break;
-				}
 				memory[j] = dr.str[dr.addr.tab[0] - j];
 			}
 			

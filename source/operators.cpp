@@ -98,7 +98,8 @@ void exec() {
 						i++;
 						cout << endl;
 					}
-					else if(sourceCode[i] == '(') {
+					else if(sourceCode[i + 1] == '(') {
+						i++;
 						if(sourceCode[i + 1] == '@') {
 							i++;
 							uInt &var = findVar(catchVarName());

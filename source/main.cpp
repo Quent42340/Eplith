@@ -30,18 +30,21 @@ int main(int argc, char* argv[]) {
 	DEBUG = false;
 	
 	ifstream file(argv[1], ifstream::in);
-	
-	string line;
-	
-	while(getline(file, line)) {
-		sourceCode += line;
-	}
+	if(file) {
+		string line;
 		
-	cout << " --- START --- " << endl;
-	
-	exec();
-	
-	cout << " --- END --- " << endl;
+		while(getline(file, line)) {
+			sourceCode += line;
+		}
+			
+		cout << " --- START --- " << endl;
+		
+		exec();
+		
+		cout << " --- END --- " << endl;
+	} else {
+		cerr << " *** FILE ERROR: File " << argv[1] << " not found. *** " << endl;
+	}
 	
 	return 0;
 }

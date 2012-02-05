@@ -41,7 +41,8 @@ void error(int code, string error) {
 			type = "ERROR";
 			break;
 	}
-	if(DEBUG) cout << sourceCode[i - 1] << sourceCode[i] << sourceCode[i + 1];
+	//if(DEBUG) cout << " *** " << sourceCode[i - 3] << sourceCode[i - 2] << sourceCode[i - 1] << "|" << sourceCode[i] << "|" << sourceCode[i + 1] << sourceCode[i + 2] << sourceCode[i + 3] << " *** ";
+	if(DEBUG) cout << " *** " << sourceCode[i - 1] << "|" << sourceCode[i] << "|" << sourceCode[i + 1] << " *** ";
 	cerr << " *** " << type << ": " << error << " *** " << i << " *** " << endl;
 	cout << " --- END --- " << endl;
 	exit(code);
