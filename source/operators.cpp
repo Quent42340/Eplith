@@ -1,6 +1,6 @@
 #include "globalVars.h"
 #include "errors.h"
-#include "attributes.h"
+#include "vars.h"
 #include "operators.h"
 
 using namespace std;
@@ -68,17 +68,32 @@ void exec() {
 			}
 			
 			case '.': {
-				char* str = catchString();
+				char* out = catchString();
 				
-				if(str == NULL) {
+				if(out == NULL) {
 					if(sourceCode[i + 1] == '$') {
 						i++;
 						cout << tempString;
+					}
+					else if(sourceCode[i + 1] == '!') {
+						i++;
+						cout << endl;
+					}
+					else if(sourceCode[i] == '(') {
+						if(sourceCode[i + 1] == '@') {
+							i++;
+							uInt &var = findVar(catchVarName());
+							if(var.name != NULL) {
+								cout << var.dr.value;
+							} else {
+								error(2, "Please enter a correct variable.");
+							}
+						}
 					} else {
 						cout << memory[pointer];
 					}
 				} else {
-					cout << str;
+					cout << out;
 				}
 				
 				break;
@@ -127,7 +142,7 @@ void exec() {
 				if(attr != -1) {
 					pointer = attr;
 				} else {
-					berror(1, "'*' operator needs an argument.");
+					error(1, "'*' operator needs an argument.");
 				}
 				break;
 			}
@@ -155,6 +170,18 @@ void exec() {
 							DEBUG = true;
 							break;
 						
+						case '!':
+							i++;
+							while(1) {
+								if((sourceCode[i] == '!') && (sourceCode[i + 1] == '#')) {
+									break;
+								} else {
+									i++;
+								}
+							}
+							break;
+							
+						
 						default:
 							i -= 2;
 							a = 1;
@@ -170,6 +197,7 @@ void exec() {
 				break;
 			
 			case '@': // Entier de taille comprise entre un char et un int
+				catchVar();
 				break;
 			
 			case '$': // Équivalent d'un char*

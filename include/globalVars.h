@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cstring>
 #include <cstdlib>
+#include <cstddef>
 
 #define MEM_SIZE 0xFFFF
 

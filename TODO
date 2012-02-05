@@ -1,29 +1,9 @@
-x Faire le tableau de mémoire libre ou non ( vector<unsigned int> mem ; 0 : libre ; 1 : occupé )
-x Pour tout ce qui est chaîne, permettre l'usage des parenthèses à l'intérieur
-  x-> en utilisant des doubles quotes ""
-- Améliorer le design du code
-  -> répartir le code en plusieurs fichiers
-	1- main.cpp, avec juste l'appel de la fonction principale et les variables globales
-	2- main.h, qui contient tous les entêtes et permet la lecture des variables globales
-	3- operators.cpp, qui contient tout ce qui touche aux opérateurs
-	4- operators.h
-	5- vars.cpp, qui contient les fonctions englobant tous les types de variables
-	6- vars.h, qui contient les entêtes des types de variables
-	7- uInt.cpp, qui contient les fonctions pour les variables numériques
-	8- uInt.h, qui contient la structure uInt
-		* make; test; git add .; git commit -am "Code design: OK."
-- Faire les variables numériques ( catchVar() ) pour var = value et var = addr
-- Faire les tableaux des variables numériques ( uInt* nbrs; )
-	* make; git commit -am "Integer vars: 1/2"
-- Faire les variables numériques ( catchVar()* ) pour var = addr = value
-	* make; git commit -am "Integer vars: OK."
-- Faire les chaînes ( catchString() ) pour addr = string et var = string ainsi que var = addr
+- Faire les chaînes ( catchString() ) pour addr = string et var = string ainsi que var = addr en plus du tableau des chaînes
   -> Modifier catchValue() en conséquence
 	* make; git commit -am "String type: OK."
+- Optimiser la fonction catchVar() en poussant le principe du DRY au maximum et en utilisant catchAttrs au lieu de catchDataRange
 - Faire
-	-> les opérateurs '.' et ',' avec les chaînes
-	-> le tableau des chaînes ( String* strings; )
-	-> celui des variables ( vars; )
+	-> les opérateurs '.' et ',' avec les variables
 	-> réglages nécessaires
 		* make; git commit -am "Strings: OK."
 - Chercher toutes les erreurs possibles pour avertir le codeur
