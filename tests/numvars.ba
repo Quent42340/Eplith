@@ -17,3 +17,6 @@
 @(var) = &(0;9); #! Causes warning !#
 .("@(var) = &(0;9) = ").(@(var)).!
 
+@(age) = &(17);
+.("Please enter your age: "),(@(age))
+.("So you're ").(@(age)).("!\n")

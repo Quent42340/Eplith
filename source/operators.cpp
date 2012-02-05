@@ -128,14 +128,44 @@ void exec() {
 				break;
 			}
 			
-			case ',':
+			case ',': {
 				if(sourceCode[i + 1] == '$') {
+					i++;
+					cin >> tempString;
+				}
+				else if(sourceCode[i + 1] == '(') {
+					i++;
+					if(sourceCode[i + 1] == '@') {
+						i++;
+						uInt &var = findVar(catchVarName());
+						if(var.name != NULL) {
+							cin >> var.dr.value;
+						} else {
+							error(2, "Please enter a correct variable.");
+						}
+					}
+					else if(sourceCode[i + 1] == '$') {
+						i++;
+						String &str = findString(catchVarName());
+						if(str.name != NULL) {
+							cin >> str.dr.str;
+						} else {
+							error(2, "Please enter a correct variable.");
+						}
+					}
+				} else {
+					cin >> memory[pointer];
+				}
+				
+				break;
+			}
+				/*if(sourceCode[i + 1] == '$') {
 					i++;
 					cin >> tempString;
 				} else {
 					cin >> memory[pointer];
 				}
-				break;
+				break;*/
 			
 			case '[':
 				if(!memory[pointer]) {

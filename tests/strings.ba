@@ -1,3 +1,5 @@
 #HD
 $(str) = &(0,7) = "String";
 .("$(str) = &(0,6) = ").($(str)).!
+.("Please enter your name: "),($(str))
+.("So you're ").($(str)).("!\n")
