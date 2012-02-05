@@ -27,10 +27,17 @@ typedef struct {
 	DataRange dr;
 } uInt;
 
+typedef struct {
+	char* name;
+	DataRange dr;
+} String;
+
 extern std::vector<uInt> vars;
 
 char* catchVarName();
 uInt catchVar();
 uInt& findVar(char* name);
+String catchString();
+String& findString(char* name);
 
 #endif // VARS_H

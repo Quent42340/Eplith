@@ -87,7 +87,7 @@ void exec() {
 			}
 			
 			case '.': {
-				char* out = catchString();
+				char* out = catchStringValue();
 				
 				if(out == NULL) {
 					if(sourceCode[i + 1] == '$') {
@@ -104,6 +104,15 @@ void exec() {
 							uInt &var = findVar(catchVarName());
 							if(var.name != NULL) {
 								cout << var.dr.value;
+							} else {
+								error(2, "Please enter a correct variable.");
+							}
+						}
+						else if(sourceCode[i + 1] == '$') {
+							i++;
+							String &str = findString(catchVarName());
+							if(str.name != NULL) {
+								cout << str.dr.str;
 							} else {
 								error(2, "Please enter a correct variable.");
 							}
@@ -220,6 +229,7 @@ void exec() {
 				break;
 			
 			case '$': // Équivalent d'un char*
+				catchString();
 				break;
 				
 			// FONCTIONS - À FAIRE !!!

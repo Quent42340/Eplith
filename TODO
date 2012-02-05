@@ -4,8 +4,6 @@
 		* make; git commit -am "Strings: OK."
 - Chercher toutes les erreurs possibles pour avertir le codeur
   -> voir notemment les erreurs hex/dec avec ish et isd dans + - < > *
-  -> mettre des warnings pour des zones mémoires non-associés à des variables mais qui sont différentes de 0
-  -> mettre des erreurs pour des zones mémoires réservées à des variables
   -> rajouter la ligne dans le détail d'une erreur
   -> trouver les autres erreurs
 	* make; git add .; git commit -am "Errors: OK."

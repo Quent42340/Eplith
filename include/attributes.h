@@ -30,16 +30,23 @@ typedef struct {
 typedef struct {
 	Attr addr;
 	int value;
+	char* str;
 } DataRange;
 
 extern std::vector<unsigned char> mem;
 
 int catchAttr();
 Attr catchAttrs();
+
 int catchValue(bool onlyValue = false);
-char* catchString();
+char* catchStringValue(bool onlyString = false);
+
 void setDataRangeValue(DataRange &dr, int value, bool noErrors = false);
 int getDataRangeValue(DataRange &dr);
+
+void setDataRangeStringValue(DataRange &dr, char* str, bool noErrors = false);
+char* getDataRangeStringValue(DataRange &dr);
+
 DataRange catchDataRange(bool onlyDR = false);
 
 #endif // ATTRIBUTES_H

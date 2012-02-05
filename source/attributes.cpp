@@ -107,12 +107,12 @@ int catchValue(bool onlyValue) {
 	return value;
 }
 
-char* catchString() {
+char* catchStringValue(bool onlyString) {
 	char* str = new char;
 	
-	if(sourceCode[i + 1] == '(') {
-		i++;
-		if(sourceCode[i + 1] == '"') {
+	if((sourceCode[i + 1] == '(') || (onlyString)) {
+		while(sourceCode[i] == ' ') i++;
+		if(sourceCode[i] == '"') {
 			i++;
 			unsigned int temp = i + 1;
 			
@@ -126,7 +126,7 @@ char* catchString() {
 			}
 			str[i - temp] = '\0';
 			
-			if(sourceCode[i + 1] == ')') {
+			if((sourceCode[i + 1] == ')') || (sourceCode[i + 1] == ';')) {
 				i++;
 				return str;
 			} else {
@@ -178,14 +178,63 @@ int getDataRangeValue(DataRange &dr) {
 	return dr.value;
 }
 
+void setDataRangeStringValue(DataRange &dr, char* str, bool noError) {
+	dr.str = str;
+	
+	if(dr.str == NULL) {
+		if(!noError) error(2, "A value is required after '=' operator.");
+	} else {
+		int vSize = strlen(dr.str) + 1;
+		
+		if(vSize <= dr.addr.length) {
+			for(int j = dr.addr.tab[0] ; j < dr.addr.tab[0] + vSize ; j++) {
+				if(((dr.value - 255 * (j - dr.addr.tab[0])) - 255) > 0) {
+					memory[j] = 255;
+				} else {
+					memory[j] = (dr.value - 255 * (j - dr.addr.tab[0]));
+					break;
+				}
+				memory[j] = dr.str[dr.addr.tab[0] - j];
+			}
+			
+			for(int j = dr.addr.tab[0] ; j < dr.addr.tab[0] + dr.addr.length ; j++) {
+				mem[j] = 1;
+			}
+		} else {
+			if(DEBUG) cout << "vSize: " << vSize << " *** dr.addr.length: " << dr.addr.length << " *** alone: " << dr.addr.alone << endl;
+			error(3, "Data range too little for the string.");
+		}
+	}	
+}
+
+char* getDataRangeStringValue(DataRange &dr) {
+	if(dr.str == NULL) dr.str = new char;
+	else {
+		delete[] dr.str;
+		dr.str = new char;
+	}
+	
+	for(int j = dr.addr.tab[0] ; j < dr.addr.tab[0] + dr.addr.length ; j++) {
+		dr.str[dr.addr.tab[0] - j] = memory[j];
+	}
+	
+	return dr.str;
+}
+
 DataRange catchDataRange(bool onlyDR) {
 	Attr addr = catchAttrs();
-	DataRange dr = {addr, -1};
+	DataRange dr = {addr, -1, NULL};
 	
 	if(onlyDR) { i++; return dr; }
 	
 	if(addr.tab[0] != -1) {
-		setDataRangeValue(dr, catchValue());
+		int value = catchValue();
+		if(value == -1) {
+			char* str = catchStringValue(true);
+			if(str != NULL) {
+				setDataRangeStringValue(dr, str);
+			}
+		} else setDataRangeValue(dr, value);
 	} else {
 		error(1, "'&' operator needs at least one argument.");
 	}

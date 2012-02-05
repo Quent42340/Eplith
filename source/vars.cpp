@@ -24,8 +24,10 @@
 using namespace std;
 
 vector<uInt> vars;
+vector<String> strings;
 
 uInt uIntNULL = {NULL};
+String StringNULL = {NULL};
 
 char* catchVarName() {
 	char* name = new char;
@@ -114,5 +116,75 @@ uInt& findVar(char* name) {
 	}
 	
 	return uIntNULL;
+}
+
+bool stringExists(String str) {
+	for(unsigned int j = 0 ; j < strings.size() ; j++) {
+		if(strcmp(strings[j].name, str.name) == 0) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+String catchString() {
+	String temp = {NULL};
+	temp.name = catchVarName();
+	
+	String &tmp = findString(temp.name);
+	
+	while(sourceCode[i] == ' ') i++;
+	if(sourceCode[i] == '=') {
+		i++;
+		while(sourceCode[i] == ' ') i++;
+		if(!stringExists(temp)) {
+			if(sourceCode[i] == '&') {
+				temp.dr = catchDataRange(true);
+				setDataRangeStringValue(temp.dr, catchStringValue(true), true);
+				if(sourceCode[i] == ';') {
+					strings.push_back(temp);
+					return temp;
+				} else {
+					error(1, "Expecting a ';' here.");
+				}
+			} else {
+				error(1, "A data range is expected here.");
+			}
+		} else {
+			if(sourceCode[i] == '&') {
+				warning("Variable already assigned.");
+				tmp.dr = catchDataRange(true);
+				tmp.dr.str = getDataRangeStringValue(tmp.dr);
+				if(sourceCode[i] == ';') {
+					return tmp;
+				} else {
+					error(1, "Expecting a ';' here.");
+				}
+			} else {
+				setDataRangeStringValue(tmp.dr, catchStringValue(true));
+				while(sourceCode[i] == ' ') i++;
+				if(sourceCode[i] == ';') {
+					return tmp;
+				} else {
+					error(1, "Expecting a ';' here.");
+				}	
+			}
+		}
+	} else {
+		error(1, "Needs an '=' operator here.");
+	}
+	
+	return temp;
+}
+
+String& findString(char* name) {
+	for(unsigned int j = 0 ; j < strings.size() ; j++) {
+		if(strcmp(strings[j].name, name) == 0) {
+			return strings[j];
+		}
+	}
+	
+	return StringNULL;
 }
 
