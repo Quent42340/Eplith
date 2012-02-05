@@ -1,4 +1,10 @@
-- Gérer les opérations dans les affections. + - / * % ^ ++ -- += -= /= *= ^= %=
+- Gérer les opérations dans les affections
+	1- + - / * sur var = addr; var = var + var;
+	2- + - / * sur var = addr = var + var;
+	3- % ^
+	4- ++ --
+	5- += -= /= *=
+	6- ^= %=
 	* make; git commit -am "Operations: OK."
 - Chercher toutes les erreurs possibles pour avertir le codeur
   -> voir notemment les erreurs hex/dec avec ish et isd dans + - < > *

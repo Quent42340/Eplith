@@ -58,6 +58,59 @@ bool varExists(uInt var) {
 	return false;
 }
 
+void catchOperationResult(uInt &tmp) {
+	uInt &var1 = findVar(catchVarName());
+	if(var1.name != NULL) {
+		while(sourceCode[i] == ' ') i++;
+		if(sourceCode[i] == ';') {
+			setDataRangeValue(tmp.dr, var1.dr.value);
+		} else {
+			if((sourceCode[i] == '+') || (sourceCode[i] == '-') || (sourceCode[i] == '*') || (sourceCode[i] == '/')) {
+				char op = sourceCode[i];
+				i++;
+				while(sourceCode[i] == ' ') i++;
+				if(sourceCode[i] == '@') {
+					uInt &var2 = findVar(catchVarName());
+					if(var2.name != NULL) {
+						while(sourceCode[i] == ' ') i++;
+						if(sourceCode[i] == ';') {
+							switch(op) {
+								case '+':
+									setDataRangeValue(tmp.dr, var1.dr.value + var2.dr.value);
+									break;
+								
+								case '-':
+									setDataRangeValue(tmp.dr, var1.dr.value - var2.dr.value);
+									break;
+								
+								case '*':
+									setDataRangeValue(tmp.dr, var1.dr.value * var2.dr.value);
+									break;
+								
+								case '/':
+									setDataRangeValue(tmp.dr, var1.dr.value / var2.dr.value);
+									break;
+								
+								default:
+									error(2, "Unexpected error.");
+									break;
+							}
+						} else {
+							error(1, "Expecting a ';' here.");
+						}
+					} else {
+						error(2, "This variable doesn't exist");
+					}
+				}
+			} else {
+				error(1, "Expecting a ';' here.");
+			}
+		}
+	} else {
+		error(2, "This variable doesn't exist.");
+	}
+}
+
 uInt catchVar() {
 	uInt temp = {NULL};
 	temp.name = catchVarName();
@@ -92,6 +145,10 @@ uInt catchVar() {
 				} else {
 					error(1, "Expecting a ';' here.");
 				}
+			}
+			else if(sourceCode[i] == '@') {
+				catchOperationResult(tmp);
+				return tmp;
 			} else {
 				setDataRangeValue(tmp.dr, catchValue(true));
 				while(sourceCode[i] == ' ') i++;
