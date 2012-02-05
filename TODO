@@ -30,7 +30,5 @@
 		* make; test; git commit -am "Functions: 2/3"
 	3- Fonctions avec paramètres et retour
 		* make; test; git commit -am "Functions: OK."
-- Mettre BFAI sous licence ( ajouter également les entêtes sur les sources )
-	* make; git add .; git commit -am "License: OK."
 - Créer un devblog
 - Écrire un mini-tuto sur le SDZ
