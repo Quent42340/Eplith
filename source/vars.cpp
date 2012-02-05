@@ -46,7 +46,7 @@ char* catchVarName() {
 	}
 }
 
-bool varExist(uInt var) {
+bool varExists(uInt var) {
 	for(unsigned int j = 0 ; j < vars.size() ; j++) {
 		if(strcmp(vars[j].name, var.name) == 0) {
 			return true;
@@ -59,11 +59,14 @@ bool varExist(uInt var) {
 uInt catchVar() {
 	uInt temp = {NULL};
 	temp.name = catchVarName();
-	if(!varExist(temp)) {
+	
+	uInt &tmp = findVar(temp.name);
+	
+	while(sourceCode[i] == ' ') i++;
+	if(sourceCode[i] == '=') {
+		i++;
 		while(sourceCode[i] == ' ') i++;
-		if(sourceCode[i] == '=') {
-			i++;
-			while(sourceCode[i] == ' ') i++;
+		if(!varExists(temp)) {
 			if(sourceCode[i] == '&') {
 				temp.dr = catchDataRange(true);
 				setDataRangeValue(temp.dr, catchValue(), true);
@@ -77,15 +80,6 @@ uInt catchVar() {
 				error(1, "A data range is expected here.");
 			}
 		} else {
-			error(1, "Needs an '=' operator here.");
-		}
-	} else {
-		uInt &tmp = findVar(temp.name);
-		
-		while(sourceCode[i] == ' ') i++;
-		if(sourceCode[i] == '=') {
-			i++;
-			while(sourceCode[i] == ' ') i++;
 			if(sourceCode[i] == '&') {
 				warning("Variable already assigned.");
 				tmp.dr = catchDataRange(true);
@@ -97,7 +91,6 @@ uInt catchVar() {
 				}
 			} else {
 				setDataRangeValue(tmp.dr, catchValue(true));
-				
 				while(sourceCode[i] == ' ') i++;
 				if(sourceCode[i] == ';') {
 					return tmp;
@@ -105,9 +98,9 @@ uInt catchVar() {
 					error(1, "Expecting a ';' here.");
 				}	
 			}
-		} else {
-			error(1, "Needs an '=' operator here.");
 		}
+	} else {
+		error(1, "Needs an '=' operator here.");
 	}
 	
 	return temp;

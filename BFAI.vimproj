@@ -6,9 +6,7 @@ BFAI=/home/quentin/Bureau/BFAI CD=. filter="*.c *.cpp *.h Makefile Notes TODO RE
   attributes.h
   errors.h
   globalVars.h
-  main.h
   operators.h
-  uInt.h
   vars.h
  }
  source=source {
@@ -17,13 +15,13 @@ BFAI=/home/quentin/Bureau/BFAI CD=. filter="*.c *.cpp *.h Makefile Notes TODO RE
   globalVars.cpp
   main.cpp
   operators.cpp
-  uInt.cpp
   vars.cpp
  }
  tests=tests {
   factorial.b
   helloworld.b
   io.ba
+  numvars.ba
   operators.ba
   test.ba
  }

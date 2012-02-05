@@ -182,10 +182,7 @@ DataRange catchDataRange(bool onlyDR) {
 	Attr addr = catchAttrs();
 	DataRange dr = {addr, -1};
 	
-	if(onlyDR) {
-		i++;
-		return dr;
-	}
+	if(onlyDR) { i++; return dr; }
 	
 	if(addr.tab[0] != -1) {
 		setDataRangeValue(dr, catchValue());
