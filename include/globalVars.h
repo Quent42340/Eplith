@@ -43,5 +43,7 @@ extern std::string sourceCode;
 
 extern unsigned int i;
 
+extern unsigned int pLine, pCol;
+
 #endif // GLOBALVARS_H
 

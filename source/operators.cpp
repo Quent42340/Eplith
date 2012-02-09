@@ -34,6 +34,7 @@ char* tempString = new char;
 
 void exec() {
 	for(i = 0 ; i < sourceCode.size() ; i++) {
+		pCol++;
 		switch(sourceCode[i]) {
 			case '>':
 				if(pointer == MEM_SIZE) {
@@ -274,6 +275,10 @@ void exec() {
 				break;
 			
 			default:
+				if(sourceCode[i] == '\n') {
+					pLine++;
+					pCol = 0;
+				}
 				break;
 		}
 		

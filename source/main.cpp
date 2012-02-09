@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 		string line;
 		
 		while(getline(file, line)) {
-			sourceCode += line;
+			sourceCode += line + '\n';
 		}
 			
 		cout << " --- START --- " << endl;

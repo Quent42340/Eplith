@@ -124,13 +124,31 @@ uInt catchVar() {
 		if(!varExists(temp)) {
 			if(sourceCode[i] == '&') {
 				temp.dr = catchDataRange(true);
-				setDataRangeValue(temp.dr, catchValue(), true);
 				while(sourceCode[i] == ' ') i++;
-				if(sourceCode[i] == ';') {
-					vars.push_back(temp);
-					return temp;
+				if(sourceCode[i] == '=') {
+					i++;
+					while(sourceCode[i] == ' ') i++;
+					int tmpValue = catchValue(true);
+					if(tmpValue != -1) {
+						setDataRangeValue(temp.dr, tmpValue);
+						vars.push_back(temp);
+						return temp;
+					} else { // Don't know what it was, maybe an old debug, I don't remember
+						cout << " *** " << sourceCode[i] << " *** " << endl;
+					}
 				} else {
-					error(1, "Expecting a ';' here.");
+					if(sourceCode[i] == ';') {
+						vars.push_back(temp);
+						return temp;
+					} else {
+						if(sourceCode[i] == '@') {
+							catchOperationResult(tmp);
+							vars.push_back(temp);
+							return tmp;
+						} else {
+							error(1, "Expecting a ';' here.");
+						}
+					}
 				}
 			} else {
 				error(1, "A data range is expected here.");
@@ -140,10 +158,16 @@ uInt catchVar() {
 				warning("Variable already assigned.");
 				tmp.dr = catchDataRange(true);
 				tmp.dr.value = getDataRangeValue(tmp.dr);
+				while(sourceCode[i] == ' ') i++;
 				if(sourceCode[i] == ';') {
 					return tmp;
 				} else {
-					error(1, "Expecting a ';' here.");
+					if(sourceCode[i] == '@') {
+						catchOperationResult(tmp);
+						return tmp;
+					} else {
+						error(1, "Expecting a ';' here.");
+					}
 				}
 			}
 			else if(sourceCode[i] == '@') {
@@ -156,7 +180,7 @@ uInt catchVar() {
 					return tmp;
 				} else {
 					error(1, "Expecting a ';' here.");
-				}	
+				}
 			}
 		}
 	} else {

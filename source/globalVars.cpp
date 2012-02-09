@@ -27,3 +27,7 @@ std::string sourceCode;
 
 unsigned int i;
 
+unsigned int pLine(0), pCol(0);
+
+vector<unsigned int> lines;
+
