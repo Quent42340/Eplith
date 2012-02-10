@@ -27,6 +27,7 @@ using namespace std;
 unsigned int pointer(0);
 
 unsigned int loop(0);
+unsigned int comment(0);
 
 char c;
 
@@ -34,7 +35,6 @@ char* tempString = new char;
 
 void exec() {
 	for(i = 0 ; i < sourceCode.size() ; i++) {
-		pCol++;
 		switch(sourceCode[i]) {
 			case '>':
 				if(pointer == MEM_SIZE) {
@@ -187,12 +187,12 @@ void exec() {
 				loop = 1;
 				while (loop > 0) {
 					c = sourceCode[--i];
-					if (c == '[') {
+					if(c == '[') {
 						loop--;
 					}
-					else if (c == ']') {
+					else if(c == ']') {
 						loop++;
-					}
+					} 
 				}
 				i--;
 				break;
@@ -230,11 +230,26 @@ void exec() {
 							DEBUG = true;
 							break;
 						
+						case '#':
+							while(sourceCode[i] != '\n') i++;
+							i--;
+							break;
+						
 						case '!':
 							i++;
 							while(1) {
-								if((sourceCode[i] == '!') && (sourceCode[i + 1] == '#')) {
-									break;
+								if(sourceCode[i] == '\n') {
+									pLine++;
+									i++;
+								}
+								else if((sourceCode[i] == '#') && (sourceCode[i + 1] == '!')) {
+									i++;
+									comment++;
+								}
+								else if((sourceCode[i] == '!') && (sourceCode[i + 1] == '#')) {
+									i++;
+									comment--;
+									if(comment == 0) break;
 								} else {
 									i++;
 								}
@@ -252,33 +267,36 @@ void exec() {
 			}
 			
 			// VARIABLES
-			case '&': // Plage de données
+			case '&': // Data range
 				catchDataRange();
 				break;
 			
-			case '@': // Entier de taille comprise entre un char et un int
+			case '@': // Integer of size between a char and an int
 				catchVar();
 				break;
 			
-			case '$': // Équivalent d'un char*
+			case '$': // char* equivalent
 				catchString();
 				break;
 				
-			// FONCTIONS - À FAIRE !!!
-			case '{': // Ouverture de la fonction
+			// FUNCTIONS - TODO !!!
+			case '{': // Function begin
 				break;
 				
-			case '}': // Fermeture de la fonction
+			case '}': // Function end
 				break;
 			
-			case ':': // Appel de la fonction
+			case ':': // Function call
 				break;
 			
-			default:
+			case '\n':
 				if(sourceCode[i] == '\n') {
 					pLine++;
-					pCol = 0;
+					pLastLine = i;
 				}
+				break;
+				
+			default:
 				break;
 		}
 		

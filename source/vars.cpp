@@ -26,8 +26,10 @@ using namespace std;
 vector<uInt> vars;
 vector<String> strings;
 
-uInt uIntNULL = {NULL};
-String StringNULL = {NULL};
+Attr attrNULL = {{-1, -1}, false, false, -1};
+DataRange drNULL = {attrNULL, -1, NULL};
+uInt uIntNULL = {NULL, drNULL};
+String StringNULL = {NULL, drNULL};
 
 char* catchVarName() {
 	char* name = new char;
@@ -117,7 +119,7 @@ uInt catchVar() {
 	
 	uInt &tmp = findVar(temp.name);
 	
-	while(sourceCode[i] == ' ') i++;
+	whilenotspace();
 	if(sourceCode[i] == '=') {
 		i++;
 		while(sourceCode[i] == ' ') i++;
@@ -128,26 +130,26 @@ uInt catchVar() {
 				if(sourceCode[i] == '=') {
 					i++;
 					while(sourceCode[i] == ' ') i++;
-					int tmpValue = catchValue(true);
-					if(tmpValue != -1) {
-						setDataRangeValue(temp.dr, tmpValue);
+					if(sourceCode[i] == '@') {
+						catchOperationResult(temp);
 						vars.push_back(temp);
 						return temp;
-					} else { // Don't know what it was, maybe an old debug, I don't remember
-						cout << " *** " << sourceCode[i] << " *** " << endl;
+					} else {
+						int tmpValue = catchValue(true);
+						if(tmpValue != -1) {
+							setDataRangeValue(temp.dr, tmpValue);
+							vars.push_back(temp);
+							return temp;
+						} else {
+							error(1, "Expecting a value or a variable.");
+						}
 					}
 				} else {
 					if(sourceCode[i] == ';') {
 						vars.push_back(temp);
 						return temp;
 					} else {
-						if(sourceCode[i] == '@') {
-							catchOperationResult(tmp);
-							vars.push_back(temp);
-							return tmp;
-						} else {
-							error(1, "Expecting a ';' here.");
-						}
+						error(1, "Expecting a ';' here.");
 					}
 				}
 			} else {
@@ -162,9 +164,15 @@ uInt catchVar() {
 				if(sourceCode[i] == ';') {
 					return tmp;
 				} else {
-					if(sourceCode[i] == '@') {
-						catchOperationResult(tmp);
-						return tmp;
+					if(sourceCode[i] == '=') {
+						i++;
+						whilenotspace();
+						if(sourceCode[i] == '@') {
+							catchOperationResult(tmp);
+							return tmp;
+						} else {
+							error(1, "Expecting a variable here.");
+						}
 					} else {
 						error(1, "Expecting a ';' here.");
 					}

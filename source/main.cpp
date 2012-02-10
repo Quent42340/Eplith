@@ -35,8 +35,11 @@ int main(int argc, char* argv[]) {
 		
 		while(getline(file, line)) {
 			sourceCode += line + '\n';
+			lines.push_back(line);
 		}
-			
+		
+		bFilename = argv[1];
+		
 		cout << " --- START --- " << endl;
 		
 		exec();

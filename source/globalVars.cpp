@@ -27,7 +27,7 @@ std::string sourceCode;
 
 unsigned int i;
 
-unsigned int pLine(0), pCol(0);
+std::string bFilename;
+unsigned int pLine(1), pLastLine(0);
 
-vector<unsigned int> lines;
-
+std::vector<std::string> lines;

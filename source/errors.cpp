@@ -22,7 +22,7 @@
 
 using namespace std;
 
-void error(int code, string error) {
+void berror(int code, string error, const char* file, unsigned int line) {
 	string type;
 	switch(code) {
 		case 1:
@@ -41,14 +41,23 @@ void error(int code, string error) {
 			type = "ERROR";
 			break;
 	}
-	//if(DEBUG) cout << " *** " << sourceCode[i - 3] << sourceCode[i - 2] << sourceCode[i - 1] << "|" << sourceCode[i] << "|" << sourceCode[i + 1] << sourceCode[i + 2] << sourceCode[i + 3] << " *** ";
-	if(DEBUG) cout << " *** " << sourceCode[i - 1] << "|" << sourceCode[i] << "|" << sourceCode[i + 1] << " *** ";
-	cerr << " *** " << type << ": " << error << " *** " << pLine << ":" << pCol << " *** " << endl;
-	cout << " --- END --- " << endl;
+	if(DEBUG) cerr << " *** " << lines[pLine - 1] << " *** " << endl;
+	//if(DEBUG) cerr << " *** " << sourceCode[i - 3] << sourceCode[i - 2] << sourceCode[i - 1] << "|" << sourceCode[i] << "|" << sourceCode[i + 1] << sourceCode[i + 2] << sourceCode[i + 3] << " *** ";
+	//if(DEBUG) cerr << " *** " << sourceCode[i - 1] << "|" << sourceCode[i] << "|" << sourceCode[i + 1] << " *** ";
+	cerr << " *** " << type << ": " << error << " *** " << bFilename << ":" << pLine << ":" << i - pLastLine << " *** "
+#if BE_DEBUG
+		<< file << ":" << line
+#endif
+		<< endl;
+	cerr << " --- END: Program terminated with error code " << code << ". ---" << endl;
 	exit(code);
 }
 
-void warning(string warning) {
-	cout << " /!\\ " << "WARNING: " << warning << " *** " << i << " /!\\ " << endl;
+void bwarning(string warning, const char* file, unsigned int line) {
+	cerr << " /!\\ " << "WARNING: " << warning << " *** " << bFilename << ":" << pLine << ":" << i - pLastLine << " /!\\ "
+#if BF_DEBUG
+		<< file << ":" << line
+#endif
+		<< endl;
 }
 

@@ -23,5 +23,11 @@
 void error(int code, std::string error);
 void warning(std::string warning);
 
+#define error(code, error) berror(code, error, __FILE__, __LINE__)
+#define warning(warning) bwarning(warning, __FILE__, __LINE__)
+
+void berror(int code, std::string error, const char* file, unsigned int line);
+void bwarning(std::string warning, const char* file, unsigned int line);
+
 #endif // ERRORS_H
 
