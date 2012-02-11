@@ -32,7 +32,7 @@ uInt uIntNULL = {NULL, drNULL};
 String StringNULL = {NULL, drNULL};
 
 char* catchVarName() {
-	string name;
+	char* name = new char[255];
 	
 	if(sourceCode[i + 1] == '(') {
 		i++;
@@ -44,7 +44,7 @@ char* catchVarName() {
 		name[i - temp] = '\0';
 		
 		i++;
-		return (char*)name.c_str();
+		return name;
 	} else {
 		return NULL;
 	}
