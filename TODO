@@ -8,7 +8,6 @@
 	* make; git commit -am "Operations: OK."
 - Chercher toutes les erreurs possibles pour avertir le codeur
   -> voir notemment les erreurs hex/dec avec ish et isd dans + - < > *
-  -> faire une fonction splitFilename() pour afficher juste le chemin relatif du fichier
   -> trouver les autres erreurs
 	* make; git add .; git commit -am "Errors: OK."
 - Tests

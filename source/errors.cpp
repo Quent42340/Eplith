@@ -22,6 +22,12 @@
 
 using namespace std;
 
+string splitFilename(string filename) {
+	size_t found;
+	found = filename.find_last_of("/\\");
+	return filename.substr(found + 1);
+}
+
 void berror(int code, string error, const char* file, unsigned int line) {
 	string type;
 	switch(code) {
@@ -41,22 +47,22 @@ void berror(int code, string error, const char* file, unsigned int line) {
 			type = "ERROR";
 			break;
 	}
-	if(DEBUG) cerr << " *** " << lines[pLine - 1] << " *** " << endl;
 	//if(DEBUG) cerr << " *** " << sourceCode[i - 3] << sourceCode[i - 2] << sourceCode[i - 1] << "|" << sourceCode[i] << "|" << sourceCode[i + 1] << sourceCode[i + 2] << sourceCode[i + 3] << " *** ";
 	//if(DEBUG) cerr << " *** " << sourceCode[i - 1] << "|" << sourceCode[i] << "|" << sourceCode[i + 1] << " *** ";
-	cerr << " *** " << type << ": " << error << " *** " << bFilename << ":" << pLine << ":" << i - pLastLine << " *** "
+	cerr << " *** " << type << ": " << error << " *** " << splitFilename(bFilename) << ":" << pLine << ":" << i - pLastLine << " *** "
 #if BE_DEBUG
-		<< file << ":" << line
+		<< splitFilename(file) << ":" << line
 #endif
 		<< endl;
+	if(DEBUG) cerr << " *** Current line: " << lines[pLine - 1] << " *** " << endl;
 	cerr << " --- END: Program terminated with error code " << code << ". ---" << endl;
 	exit(code);
 }
 
 void bwarning(string warning, const char* file, unsigned int line) {
-	cerr << " /!\\ " << "WARNING: " << warning << " *** " << bFilename << ":" << pLine << ":" << i - pLastLine << " /!\\ "
+	cerr << " /!\\ " << "WARNING: " << warning << " *** " << splitFilename(bFilename) << ":" << pLine << ":" << i - pLastLine << " /!\\ "
 #if BF_DEBUG
-		<< file << ":" << line
+		<< splitFilename(file) << ":" << line
 #endif
 		<< endl;
 }

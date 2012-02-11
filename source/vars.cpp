@@ -32,7 +32,7 @@ uInt uIntNULL = {NULL, drNULL};
 String StringNULL = {NULL, drNULL};
 
 char* catchVarName() {
-	char* name = new char;
+	string name;
 	
 	if(sourceCode[i + 1] == '(') {
 		i++;
@@ -44,7 +44,7 @@ char* catchVarName() {
 		name[i - temp] = '\0';
 		
 		i++;
-		return name;
+		return (char*)name.c_str();
 	} else {
 		return NULL;
 	}
@@ -67,7 +67,7 @@ void catchOperationResult(uInt &tmp) {
 		if(sourceCode[i] == ';') {
 			setDataRangeValue(tmp.dr, var1.dr.value);
 		} else {
-			if((sourceCode[i] == '+') || (sourceCode[i] == '-') || (sourceCode[i] == '*') || (sourceCode[i] == '/')) {
+			if((sourceCode[i] == '+') || (sourceCode[i] == '-') || (sourceCode[i] == '*') || (sourceCode[i] == '/') || (sourceCode[i] == '%') || (sourceCode[i] == '^')) {
 				char op = sourceCode[i];
 				i++;
 				while(sourceCode[i] == ' ') i++;
@@ -91,6 +91,14 @@ void catchOperationResult(uInt &tmp) {
 								
 								case '/':
 									setDataRangeValue(tmp.dr, var1.dr.value / var2.dr.value);
+									break;
+								
+								case '%':
+									setDataRangeValue(tmp.dr, var1.dr.value % var2.dr.value);
+									break;
+								
+								case '^':
+									setDataRangeValue(tmp.dr, pow(var1.dr.value, var2.dr.value));
 									break;
 								
 								default:
@@ -157,7 +165,10 @@ uInt catchVar() {
 			}
 		} else {
 			if(sourceCode[i] == '&') {
-				warning("Variable already assigned.");
+				string warn = "Variable @(";
+					   warn += tmp.name;
+					   warn += ") already assigned.";
+				warning(warn);
 				tmp.dr = catchDataRange(true);
 				tmp.dr.value = getDataRangeValue(tmp.dr);
 				while(sourceCode[i] == ' ') i++;

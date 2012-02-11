@@ -26,23 +26,23 @@ using namespace std;
 vector<unsigned char> mem(MEM_SIZE, 0);
 
 int catchAttr() {
-	char* tmpChar = new char;
+	char tmpStr[6];
 	int attr = -1;
 	if(sourceCode[i + 1] == '(') {
 		i++;
 		unsigned int temp = i + 1;
 		for(i++ ; sourceCode[i] != ')' ; i++) {
-			tmpChar[i - temp] = sourceCode[i];
+			tmpStr[i - temp] = sourceCode[i];
 		}
-		if(HEX) attr = (unsigned int)strtol(tmpChar, NULL, 16);
-		else	attr = atoi(tmpChar);
+		if(HEX) attr = (unsigned int)strtol(tmpStr, NULL, 16);
+		else	attr = atoi(tmpStr);
 	}
 	return attr;
 }
 
 Attr catchAttrs() {
-	char* tmpChar = new char;
-	char* tmpChar2 = new char;
+	char tmpStr[6];
+	char tmpStr2[6];
 	
 	Attr attr = {{-1, -1}, false, false, -1};
 	
@@ -53,28 +53,28 @@ Attr catchAttrs() {
 		for(i++ ; sourceCode[i] != ';' ; i++) {
 			if(sourceCode[i] == ',') { attr.sized = true; break; }
 			if(sourceCode[i] == ')') { attr.alone = true; break; }
-			tmpChar[i - temp] = sourceCode[i];
+			tmpStr[i - temp] = sourceCode[i];
 		}
 		
 		if(!attr.alone) {
 			temp = i + 1;
 			
 			for(i++ ; sourceCode[i] != ')' ; i++) {
-				tmpChar2[i - temp] = sourceCode[i];
+				tmpStr2[i - temp] = sourceCode[i];
 			}
 		}
 		
-		if(HEX) attr.tab[0] = (unsigned int)strtol(tmpChar, NULL, 16);
-		else	attr.tab[0] = atoi(tmpChar);
+		if(HEX) attr.tab[0] = (unsigned int)strtol(tmpStr, NULL, 16);
+		else	attr.tab[0] = atoi(tmpStr);
 		
 		if(!attr.alone) {
 			if(!attr.sized) {
-				if(HEX) attr.tab[1] = (unsigned int)strtol(tmpChar2, NULL, 16);
-				else	attr.tab[1] = atoi(tmpChar2);
+				if(HEX) attr.tab[1] = (unsigned int)strtol(tmpStr2, NULL, 16);
+				else	attr.tab[1] = atoi(tmpStr2);
 				attr.length = attr.tab[1] - attr.tab[0] + 1;
 			} else {
-				if(HEX) attr.length = (unsigned int)strtol(tmpChar2, NULL, 16);
-				else	attr.length = atoi(tmpChar2);
+				if(HEX) attr.length = (unsigned int)strtol(tmpStr2, NULL, 16);
+				else	attr.length = atoi(tmpStr2);
 			}
 		} else {
 			attr.length = 1;
@@ -94,21 +94,21 @@ int catchValue(bool onlyValue) {
 		
 		i--;
 		unsigned int temp = i + 1;
-		char* tmpChar = new char;
+		char tmpStr[6];
 		for(i++ ; ish(sourceCode[i]) ; i++) {
-			tmpChar[i - temp] = sourceCode[i];
+			tmpStr[i - temp] = sourceCode[i];
 		}
-		tmpChar[i - temp] = '\0';
+		tmpStr[i - temp] = '\0';
 		
-		if(HEX) value = (unsigned int)strtol(tmpChar, NULL, 16);
-		else	value = atoi(tmpChar);
+		if(HEX) value = (unsigned int)strtol(tmpStr, NULL, 16);
+		else	value = atoi(tmpStr);
 	}
 	
 	return value;
 }
 
 char* catchStringValue(bool onlyString) {
-	char* str = new char;
+	char* str = new char[65535];
 	
 	if((sourceCode[i + 1] == '(') || (onlyString)) {
 		if(onlyString) { while(sourceCode[i] == ' ') i++; }

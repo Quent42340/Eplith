@@ -29,7 +29,8 @@ int main(int argc, char* argv[]) {
 	HEX = false;
 	DEBUG = false;
 	
-	ifstream file(argv[1], ifstream::in);
+	ifstream file;
+	file.open(argv[1], ifstream::in);
 	if(file) {
 		string line;
 		
@@ -48,6 +49,8 @@ int main(int argc, char* argv[]) {
 	} else {
 		cerr << " *** FILE ERROR: File " << argv[1] << " not found. *** " << endl;
 	}
+	
+	file.close();
 	
 	return 0;
 }
