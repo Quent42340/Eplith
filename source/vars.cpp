@@ -104,21 +104,34 @@ void opSwitch(char op, DataRange &dr, int* values, int size) {
 }
 
 void doOperation(DataRange &dr, int value1) {
+	int values[255];
+	values[0] = value1;
 	char op = sourceCode[i];
 	i++;
 	whilespace();
 	if(sourceCode[i] == '@') {
 		uInt &var2 = findVar(catchVarName());
 		if(var2.name != NULL) {
+			values[1] = var2.dr.value;
 			whilespace();
 			if(sourceCode[i] == ';') {
-				int values[2]; values[0] = value1; values[1] = var2.dr.value;
 				opSwitch(op, dr, values, 2);
 			} else {
 				error(1, "Expecting a ';' here.");
 			}
 		} else {
 			error(2, "This variable doesn't exist");
+		}
+	}
+	else if(ish(sourceCode[i])) {
+		values[1] = catchValue(true);
+		if(values[1] != -1) {
+			whilespace();
+			if(sourceCode[i] == ';') {
+				opSwitch(op, dr, values, 2);
+			} else {
+				error(1, "Expecting a ';' here.");
+			}
 		}
 	}
 }
@@ -176,11 +189,16 @@ uInt catchVar() {
 					} else {
 						int tmpValue = catchValue(true);
 						if(tmpValue != -1) {
-							setDataRangeValue(temp.dr, tmpValue);
+							catchOperationResult(temp, true, tmpValue);
+						} else {
+							error(1, "Expecting a value or a variable.");
+						}
+						whilespace();
+						if(sourceCode[i] == ';') {
 							vars.push_back(temp);
 							return temp;
 						} else {
-							error(1, "Expecting a value or a variable.");
+							error(1, "Expecting a ';' here.");
 						}
 					}
 				} else {
@@ -213,7 +231,18 @@ uInt catchVar() {
 							catchOperationResult(tmp);
 							return tmp;
 						} else {
-							error(1, "Expecting a variable here.");
+							int tmpValue = catchValue(true);
+							if(tmpValue != -1) {
+								catchOperationResult(tmp, true, tmpValue);
+							} else {
+								error(1, "Expecting a value of a variable.");
+							}	
+							whilespace();
+							if(sourceCode[i] == ';') {
+								return tmp;
+							} else {
+								error(1, "Expecting a ';' here.");
+							}
 						}
 					} else {
 						error(1, "Expecting a ';' here.");
@@ -224,7 +253,12 @@ uInt catchVar() {
 				catchOperationResult(tmp);
 				return tmp;
 			} else {
-				setDataRangeValue(tmp.dr, catchValue(true));
+				int tmpValue = catchValue(true);
+				if(tmpValue != -1) {
+					catchOperationResult(tmp, true, tmpValue);
+				} else {
+					error(1, "Expecting a value of a variable.");
+				}	
 				whilespace();
 				if(sourceCode[i] == ';') {
 					return tmp;

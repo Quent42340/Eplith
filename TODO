@@ -2,9 +2,9 @@
 	1- + - / * sur var = addr; var = var + var;
 	2- + - / * sur var = addr = var + var;
 	3- % ^
-		1- var = value + var; var = var + value;
-		2- var = addr = value + var; var = addr = var + value;
-		3- var = value + var + value ... etc.
+		1- var = value + var; (OK) var = var + value; (OK)
+		2- var = addr = value + var; (OK) var = addr = var + value; (OK)
+		3- var = value + var + value ... etc. (NOK)
 	4- ++ --
 	5- += -= /= *=
 	6- ^= %=
