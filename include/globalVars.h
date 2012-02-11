@@ -36,8 +36,9 @@
 
 inline bool isd(char c) { return (c >= '0' && c <= '9'); }
 inline bool ish(char c) { return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || isd(c)); }
+inline bool isop(char c) { return ((c == '+') || (c == '-') || (c == '*') || (c == '/') || (c == '%') || (c == '^')); }
 
-#define whilenotspace() { while(sourceCode[i] == ' ') i++; }
+#define whilespace() { while(sourceCode[i] == ' ') i++; }
 
 extern bool HEX, DEBUG;
 

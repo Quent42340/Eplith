@@ -60,64 +60,95 @@ bool varExists(uInt var) {
 	return false;
 }
 
-void catchOperationResult(uInt &tmp) {
-	uInt &var1 = findVar(catchVarName());
-	if(var1.name != NULL) {
-		while(sourceCode[i] == ' ') i++;
-		if(sourceCode[i] == ';') {
-			setDataRangeValue(tmp.dr, var1.dr.value);
-		} else {
-			if((sourceCode[i] == '+') || (sourceCode[i] == '-') || (sourceCode[i] == '*') || (sourceCode[i] == '/') || (sourceCode[i] == '%') || (sourceCode[i] == '^')) {
-				char op = sourceCode[i];
-				i++;
-				while(sourceCode[i] == ' ') i++;
-				if(sourceCode[i] == '@') {
-					uInt &var2 = findVar(catchVarName());
-					if(var2.name != NULL) {
-						while(sourceCode[i] == ' ') i++;
-						if(sourceCode[i] == ';') {
-							switch(op) {
-								case '+':
-									setDataRangeValue(tmp.dr, var1.dr.value + var2.dr.value);
-									break;
-								
-								case '-':
-									setDataRangeValue(tmp.dr, var1.dr.value - var2.dr.value);
-									break;
-								
-								case '*':
-									setDataRangeValue(tmp.dr, var1.dr.value * var2.dr.value);
-									break;
-								
-								case '/':
-									setDataRangeValue(tmp.dr, var1.dr.value / var2.dr.value);
-									break;
-								
-								case '%':
-									setDataRangeValue(tmp.dr, var1.dr.value % var2.dr.value);
-									break;
-								
-								case '^':
-									setDataRangeValue(tmp.dr, pow(var1.dr.value, var2.dr.value));
-									break;
-								
-								default:
-									error(2, "Unexpected error.");
-									break;
-							}
-						} else {
-							error(1, "Expecting a ';' here.");
-						}
-					} else {
-						error(2, "This variable doesn't exist");
-					}
-				}
+void opSwitch(char op, DataRange &dr, int* values, int size) {
+	int value = -1;
+	switch(op) {
+		case '+':
+			value = values[0];
+			for(int j = 1 ; j < size ; j++) value += values[j];
+			setDataRangeValue(dr, value);
+			break;
+		
+		case '-':
+			value = values[0];
+			for(int j = 1 ; j < size ; j++) value -= values[j];
+			setDataRangeValue(dr, value);
+			break;
+		
+		case '*':
+			value = values[0];
+			for(int j = 1 ; j < size ; j++) value *= values[j];
+			setDataRangeValue(dr, value);
+			break;
+		
+		case '/':
+			value = values[0];
+			for(int j = 1 ; j < size ; j++) value /= values[j];
+			setDataRangeValue(dr, value);
+			break;
+		
+		case '%':
+			value = values[0];
+			for(int j = 1 ; j < size ; j++) value %= values[j];
+			setDataRangeValue(dr, value);
+			break;
+		
+		case '^':
+			setDataRangeValue(dr, pow(values[0], values[1]));
+			break;
+			
+		default:
+			error(2, "Unexpected error.");
+			break;
+	}
+}
+
+void doOperation(DataRange &dr, int value1) {
+	char op = sourceCode[i];
+	i++;
+	whilespace();
+	if(sourceCode[i] == '@') {
+		uInt &var2 = findVar(catchVarName());
+		if(var2.name != NULL) {
+			whilespace();
+			if(sourceCode[i] == ';') {
+				int values[2]; values[0] = value1; values[1] = var2.dr.value;
+				opSwitch(op, dr, values, 2);
 			} else {
 				error(1, "Expecting a ';' here.");
 			}
+		} else {
+			error(2, "This variable doesn't exist");
+		}
+	}
+}
+
+void catchOperationResult(uInt &tmp, bool withValueFirst = false, int value = -1) {
+	if(!withValueFirst) {
+		uInt &var1 = findVar(catchVarName());
+		if(var1.name != NULL) {
+			whilespace();
+			if(sourceCode[i] == ';') {
+				setDataRangeValue(tmp.dr, var1.dr.value);
+			} else {
+				if(isop(sourceCode[i])) {
+					doOperation(tmp.dr, var1.dr.value);
+				} else {
+					error(1, "Expecting a ';' here.");
+				}
+			}
+		} else {
+			error(2, "This variable doesn't exist.");
 		}
 	} else {
-		error(2, "This variable doesn't exist.");
+		whilespace();
+		if(sourceCode[i] == ';') {
+			setDataRangeValue(tmp.dr, value);
+		} else {
+			if(isop(sourceCode[i])) {
+				doOperation(tmp.dr, value);
+			}
+		}
 	}
 }
 
@@ -127,17 +158,17 @@ uInt catchVar() {
 	
 	uInt &tmp = findVar(temp.name);
 	
-	whilenotspace();
+	whilespace();
 	if(sourceCode[i] == '=') {
 		i++;
-		while(sourceCode[i] == ' ') i++;
+		whilespace();
 		if(!varExists(temp)) {
 			if(sourceCode[i] == '&') {
 				temp.dr = catchDataRange(true);
-				while(sourceCode[i] == ' ') i++;
+				whilespace();
 				if(sourceCode[i] == '=') {
 					i++;
-					while(sourceCode[i] == ' ') i++;
+					whilespace();
 					if(sourceCode[i] == '@') {
 						catchOperationResult(temp);
 						vars.push_back(temp);
@@ -171,13 +202,13 @@ uInt catchVar() {
 				warning(warn);
 				tmp.dr = catchDataRange(true);
 				tmp.dr.value = getDataRangeValue(tmp.dr);
-				while(sourceCode[i] == ' ') i++;
+				whilespace();
 				if(sourceCode[i] == ';') {
 					return tmp;
 				} else {
 					if(sourceCode[i] == '=') {
 						i++;
-						whilenotspace();
+						whilespace();
 						if(sourceCode[i] == '@') {
 							catchOperationResult(tmp);
 							return tmp;
@@ -194,7 +225,7 @@ uInt catchVar() {
 				return tmp;
 			} else {
 				setDataRangeValue(tmp.dr, catchValue(true));
-				while(sourceCode[i] == ' ') i++;
+				whilespace();
 				if(sourceCode[i] == ';') {
 					return tmp;
 				} else {
@@ -235,19 +266,19 @@ String catchString() {
 	
 	String &tmp = findString(temp.name);
 	
-	while(sourceCode[i] == ' ') i++;
+	whilespace();
 	if(sourceCode[i] == '=') {
 		i++;
-		while(sourceCode[i] == ' ') i++;
+		whilespace();
 		if(!stringExists(temp)) {
 			if(sourceCode[i] == '&') {
 				temp.dr = catchDataRange(true);
-				while(sourceCode[i] == ' ') i++;
+				whilespace();
 				if(sourceCode[i] == '=') {
 					i++;
 					setDataRangeStringValue(temp.dr, catchStringValue(true), true);
 				}
-				while(sourceCode[i] == ' ') i++;
+				whilespace();
 				if(sourceCode[i] == ';') {
 					strings.push_back(temp);
 					return temp;
@@ -269,7 +300,7 @@ String catchString() {
 				}
 			} else {
 				setDataRangeStringValue(tmp.dr, catchStringValue(true));
-				while(sourceCode[i] == ' ') i++;
+				whilespace();
 				if(sourceCode[i] == ';') {
 					return tmp;
 				} else {
