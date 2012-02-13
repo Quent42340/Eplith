@@ -172,48 +172,53 @@ uInt catchVar() {
 	uInt &tmp = findVar(temp.name);
 	
 	whilespace();
-	if(sourceCode[i] == '=') {
+	if(sourceCode[i] == '=') { // var = ...
 		i++;
 		whilespace();
-		if(!varExists(temp)) {
-			if(sourceCode[i] == '&') {
+		if(!varExists(temp)) { // If var exists
+			if(sourceCode[i] == '&') { // var = dr ...
 				temp.dr = catchDataRange(true);
 				whilespace();
-				if(sourceCode[i] == '=') {
+				if(sourceCode[i] == '=') { // var = dr = ...
 					i++;
 					whilespace();
-					if(sourceCode[i] == '@') {
+					if(sourceCode[i] == '@') { // var = dr = var ...
 						catchOperationResult(temp);
-						vars.push_back(temp);
-						return temp;
+						whilespace();
+						if(sourceCode[i] == ';') { // var = dr = var ... ;
+							vars.push_back(temp);
+							return temp;
+						} else { // var = dr = var ...
+							error(1, "Expecting a ';' here.");
+						}
 					} else {
 						int tmpValue = catchValue(true);
-						if(tmpValue != -1) {
+						if(tmpValue != -1) { // var = dr = value ...
 							catchOperationResult(temp, true, tmpValue);
-						} else {
+						} else { // var = dr =
 							error(1, "Expecting a value or a variable.");
 						}
 						whilespace();
-						if(sourceCode[i] == ';') {
+						if(sourceCode[i] == ';') { // var = dr = value ... ;
 							vars.push_back(temp);
 							return temp;
-						} else {
+						} else { // var = dr = value ...
 							error(1, "Expecting a ';' here.");
 						}
 					}
 				} else {
-					if(sourceCode[i] == ';') {
+					if(sourceCode[i] == ';') { // var = dr;
 						vars.push_back(temp);
 						return temp;
-					} else {
+					} else { // var = dr
 						error(1, "Expecting a ';' here.");
 					}
 				}
-			} else {
+			} else { // var = 
 				error(1, "A data range is expected here.");
 			}
-		} else {
-			if(sourceCode[i] == '&') {
+		} else { // If var doesn't exist
+			if(sourceCode[i] == '&') { // var = dr ...
 				string warn = "Variable @(";
 					   warn += tmp.name;
 					   warn += ") already assigned.";
@@ -221,53 +226,58 @@ uInt catchVar() {
 				tmp.dr = catchDataRange(true);
 				tmp.dr.value = getDataRangeValue(tmp.dr);
 				whilespace();
-				if(sourceCode[i] == ';') {
+				if(sourceCode[i] == ';') { // var = dr;
 					return tmp;
 				} else {
-					if(sourceCode[i] == '=') {
+					if(sourceCode[i] == '=') { // var = dr = ...
 						i++;
 						whilespace();
-						if(sourceCode[i] == '@') {
+						if(sourceCode[i] == '@') { // var = dr = var ...
 							catchOperationResult(tmp);
-							return tmp;
-						} else {
+							whilespace();
+							if(sourceCode[i] == ';') { // var = dr = var ... ;
+								return tmp;
+							} else { // var = dr = var ...
+								error(1, "Expecting a ';' here.");
+							}
+						} else { // var = dr = ...
 							int tmpValue = catchValue(true);
-							if(tmpValue != -1) {
+							if(tmpValue != -1) { // var = dr = value ...
 								catchOperationResult(tmp, true, tmpValue);
-							} else {
+							} else { // var = dr =
 								error(1, "Expecting a value of a variable.");
 							}	
 							whilespace();
-							if(sourceCode[i] == ';') {
+							if(sourceCode[i] == ';') { // var = dr = value ... ;
 								return tmp;
-							} else {
+							} else { // var = dr = value ...
 								error(1, "Expecting a ';' here.");
 							}
 						}
-					} else {
+					} else { // var = dr
 						error(1, "Expecting a ';' here.");
 					}
 				}
 			}
-			else if(sourceCode[i] == '@') {
+			else if(sourceCode[i] == '@') { // var = var ...
 				catchOperationResult(tmp);
 				return tmp;
-			} else {
+			} else { // var = ...
 				int tmpValue = catchValue(true);
-				if(tmpValue != -1) {
+				if(tmpValue != -1) { // var = value ...
 					catchOperationResult(tmp, true, tmpValue);
-				} else {
+					whilespace();
+					if(sourceCode[i] == ';') { // var = value ... ;
+						return tmp;
+					} else { // var = value ...
+						error(1, "Expecting a ';' here.");
+					}
+				} else { // var =
 					error(1, "Expecting a value of a variable.");
-				}	
-				whilespace();
-				if(sourceCode[i] == ';') {
-					return tmp;
-				} else {
-					error(1, "Expecting a ';' here.");
 				}
 			}
 		}
-	} else {
+	} else { // var
 		error(1, "Needs an '=' operator here.");
 	}
 	

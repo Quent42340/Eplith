@@ -5,9 +5,10 @@
 		1- var = value + var; (OK) var = var + value; (OK)
 		2- var = addr = value + var; (OK) var = addr = var + value; (OK)
 		3- var = value + var + value ... etc. (NOK)
+		4- string = ... (NOK) ( faire une fonction générale Var catchVar(int type) avec type = 0 : uInt, type = 1 : String et deux inline catchNumVar et catchString )
 	4- ++ --
 	5- += -= /= *=
-	6- ^= %=
+	6- ^= %=		
 	* make; git commit -am "Operations: OK."
 - Chercher toutes les erreurs possibles pour avertir le codeur
   -> voir notemment les erreurs hex/dec avec ish et isd dans + - < > *
