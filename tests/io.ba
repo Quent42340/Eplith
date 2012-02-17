@@ -1,0 +1,13 @@
+#HD
+.("Enter a number:"),$
+.("You wrote ").$.(" right? [y/n]"),
+.("You answered: ")..!.!
+
+@(age) = &(0);
+.("Please enter your age: "),(@(age))
+.("So you're ").(@(age)).("!\n").!
+
+$(str) = &(1,2) = " ";
+.("Please enter your name: "),($(str))
+.("So you're ").($(str)).("!\n")
+
