@@ -1,0 +1,17 @@
+WordSphere=/home/quentin/Bureau/FlexBison/WordSphere CD=. filter="*.c *.h *.l *.y AUTHORS ChangeLog COPYING Makefile TODO *.md *.ws" {
+ AUTHORS
+ ChangeLog
+ COPYING
+ Makefile
+ TODO
+ README.md
+ source=source {
+  functions.c
+  header.h
+  lexer.l
+  parser.y
+ }
+ tests=tests {
+  test.ws
+ }
+}
