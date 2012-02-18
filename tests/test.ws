@@ -1,3 +1,4 @@
+#debug
 @(var) = 52;
 $(str) = "string";
 @(var2) = 50;

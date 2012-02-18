@@ -30,7 +30,7 @@
 "if"						return IF;
 "else"						return ELSE;
 "print"						return PRINT;
-[a-zA-Z]+[0-9]*[a-zA-Z]*	yylval.sValue = strdup(yytext); return WORD;
+[a-zA-Z]([0-9]|[a-zA-Z])*	yylval.sValue = strdup(yytext); return WORD;
 \"(\\.|[^\\"])*\"			yylval.sValue =	strtok(strdup(yytext), "\""); return STRING;
 [0-9]+						yylval.iValue = atoi(yytext); return INTEGER;
 [-()<>=+*/{}.;^]			return *yytext;
@@ -40,6 +40,9 @@
 "<="						return LE;
 "=="						return EQ;
 "!="						return NE;
+^"#debug"[ \t\n]*$			return DEBUG;
+#!(.|\n)+!#					;	/* ignore comments */
+#.+$						;	/* ignore comments */
 [ \t\n]+					;	/* ignore whitespace */
 .							yyerror("Unknown character");
 %%

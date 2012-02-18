@@ -21,6 +21,7 @@
 
 bVar* vars;
 int sizeVars = 0;
+bool debug = false;
 
 bVar iVar(char* name, int value) {
 	bVar var;

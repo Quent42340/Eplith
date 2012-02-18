@@ -20,20 +20,33 @@
 %{
 #include "header.h"
 
+extern FILE* yyin;
+
 void yyerror(const char *str) {
 	extern int yylineno;
 	extern char* yytext;
-	fprintf(stderr,"Error: %s at symbol \"%s\" at line %d\n", str, yytext, yylineno);
+	fprintf(stderr, "Error: %s at symbol \"%s\" at line %d\n", str, yytext, yylineno);
 }
 
 int yywrap() {
 	return 1;
 } 
  
-void main() {
+void main(int argc, char* argv[]) {
+	yyin = fopen(argv[1], "r");
+	
+	if(yyin == NULL) {
+		fprintf(stderr, "Error: File %s doesn't exist.\n", argv[1]);
+		exit(0);
+	}
+	
 	vars = (bVar*)calloc(65535, sizeof(bVar));
+	
 	yyparse();
+	
 	free(vars);
+	
+	fclose(yyin);
 } 
 
 %}
@@ -47,6 +60,7 @@ void main() {
 %token <iValue> INTEGER
 %token <sValue> WORD
 %token <sValue> STRING
+%token DEBUG
 %token INTV STRV
 %token WHILE IF PRINT
 %token END
@@ -71,15 +85,18 @@ program:/* empty */
 		;
 
 instr:	';'
+		| DEBUG { debug = true; }
 		| exp ';' { printf("\t%d\n", $1); }
 		| assign ';' {
-			if(!strcmp(var_type($1), VAR_INT)) {
-				printf("Var name: %s | Value: %d | Nb of vars: %d\n", var_name($1), var_iValue($1), sizeVars);
-			}
-			else if(!strcmp(var_type($1), VAR_CHAR)) {
-				printf("Var name: %s | Value: %s | Nb of vars: %d\n", var_name($1), var_sValue($1), sizeVars);
-			} else {
-				yyerror("Unexpected type");
+			if(debug) {
+				if(!strcmp(var_type($1), VAR_INT)) {
+					printf("Var name: %s | Value: %d | Nb of vars: %d\n", var_name($1), var_iValue($1), sizeVars);
+				}
+				else if(!strcmp(var_type($1), VAR_CHAR)) {
+					printf("Var name: %s | Value: %s | Nb of vars: %d\n", var_name($1), var_sValue($1), sizeVars);
+				} else {
+					yyerror("Unexpected type");
+				}
 			}
 		}
 		;

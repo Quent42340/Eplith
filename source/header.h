@@ -31,6 +31,8 @@ typedef int bool;
 #define true 1
 #define false 0
 
+extern bool debug;
+
 #define VAR_INT "int"
 #define VAR_CHAR "char"
 
