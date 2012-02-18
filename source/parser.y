@@ -87,6 +87,7 @@ program:/* empty */
 instr:	';'
 		| DEBUG { debug = true; }
 		| exp ';' { printf("\t%d\n", $1); }
+		| stmt
 		| assign ';' {
 			if(debug) {
 				if(!strcmp(var_type($1), VAR_INT)) {
@@ -133,5 +134,7 @@ assign:	INTV WORD ')' '=' exp { $$ = iVar($2, $5); }
 		| STRV WORD ')' '=' str { $$ = sVar($2, $5); }
 		;
 
+stmt:	PRINT '(' str ')' ';' { printf("%s", $3); }
+		;
 %%
 

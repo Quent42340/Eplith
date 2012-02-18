@@ -20,18 +20,31 @@
 %{
 #include "header.h"
 #include "parser.tab.h"
-//"@("[a-z]+")"								printf("INT VAR\n");
-//"$("[a-z]+")"								printf("STR VAR\n");
-//"&("[0-9a-fA-F]+((";"|":")[0-9a-fA-F]+)?")"	printf("DATA RANGE\n");
+
+char stringBuf[1024];
+char* stringBufPtr;
+
 %}
 
+%x str
+
 %%
+\"							{ BEGIN str; stringBufPtr = stringBuf; }
+<str>\"						{ *stringBufPtr = '\0'; yylval.sValue = strdup(stringBuf); BEGIN 0; return STRING; }
+<str>\n						{ yyerror("Newline in string\n"); }
+<str>\\n					{ *stringBufPtr++ = '\n'; }
+<str>\\t					{ *stringBufPtr++ = '\t'; }
+<str>\\r					{ *stringBufPtr++ = '\r'; }
+<str>\\b					{ *stringBufPtr++ = '\b'; }
+<str>\\f					{ *stringBufPtr++ = '\f'; }
+<str>\\(.|\n)				{ *stringBufPtr++ = yytext[1]; }
+<str>[^\\\n\"]+				{ char* yPtr = yytext; while(*yPtr) { *stringBufPtr++ = *yPtr++; } }
+
 "while"						return WHILE;
 "if"						return IF;
 "else"						return ELSE;
 "print"						return PRINT;
 [a-zA-Z]([0-9]|[a-zA-Z])*	yylval.sValue = strdup(yytext); return WORD;
-\"(\\.|[^\\"])*\"			yylval.sValue =	strtok(strdup(yytext), "\""); return STRING;
 [0-9]+						yylval.iValue = atoi(yytext); return INTEGER;
 [-()<>=+*/{}.;^]			return *yytext;
 "@("						return INTV;
