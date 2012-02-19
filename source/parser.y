@@ -113,7 +113,6 @@ stmt_list:
 exp:
 	nbr { $$ = $1; }
 	| str { $$ = $1; }
-	| exp '+' exp { $$ = opr(EXPA, 2, $1, $3); }
 	;
 
 nbr:

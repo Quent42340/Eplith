@@ -85,10 +85,14 @@ typedef struct nodeTypeTag {
 	};
 } nodeType;
 
-typedef union {
-	int i;
-	char* s;
-	bVar v;
+typedef struct {
+	nodeEnum t;
+	
+	union {
+		int i;
+		char* s;
+		bVar v;
+	};
 } sType;
 
 sType ex(nodeType* p);

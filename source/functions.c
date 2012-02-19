@@ -116,50 +116,51 @@ char* itoa(int value, char* result, int base) {
 	return result;
 }
 
+void aprintf(sType t) {
+	if(t.t == typeStr) {
+		printf("%s", t.s);
+	}
+	else if(t.t == typeInt) {
+		printf("%d", t.i);
+	} else {
+		yyerror("Unexpected argument given to print function");
+	}
+}
+
 sType ex(nodeType* p) {
 	sType ret;
 	int i;
 	if(!p) { ret.i = 0; return ret; }
 	switch(p->type) {
-		case typeInt:	ret.i = p->val; return ret;
-		case typeStr:	ret.s = p->str; return ret;
-		case typeVar:	ret.s = p->var.sValue; return ret;
+		case typeInt:	ret.i = p->val; ret.t = typeInt; return ret;
+		case typeStr:	ret.s = p->str; ret.t = typeStr; return ret;
+		case typeVar:	ret.i = 1; ret.t = typeInt; return ret;
 		case typeOpr:
 			switch(p->opr.oper) {
-				case WHILE:		while(ex(p->opr.op[0]).i) ex(p->opr.op[1]); ret.i = 0; return ret;
+				case WHILE:		while(ex(p->opr.op[0]).i) ex(p->opr.op[1]); ret.i = 0; ret.t = typeInt; return ret;
 				case IF:		if(ex(p->opr.op[0]).i) ex(p->opr.op[1]);
 								else if(p->opr.nops > 2) ex(p->opr.op[2]);
-								ret.i = 0; return ret;
-				case PRINT:		printf("%s", ex(p->opr.op[0]).s); ret.i = 0; return ret;
+								ret.i = 0; ret.t = typeInt; return ret;
+				case PRINT:		aprintf(ex(p->opr.op[0])); ret.i = 0; ret.t = typeInt; return ret;
 				case ';':		ex(p->opr.op[0]); ret = ex(p->opr.op[1]); return ret;
-				case EQI:		ret.v = iVar(p->opr.op[0]->str, ex(p->opr.op[1]).i); return ret;
-				case EQS:		ret.v = sVar(p->opr.op[0]->str, ex(p->opr.op[1]).s); return ret;
-				case NEG:		ret.i = -ex(p->opr.op[0]).i; return ret;
-				case '+':		ret.i = ex(p->opr.op[0]).i + ex(p->opr.op[1]).i; return ret;
-				case STRA:		ret.s = strcat(ex(p->opr.op[0]).s, ex(p->opr.op[1]).s); return ret;
-				case EXPA: {	char** buf = calloc(p->opr.oper, sizeof(char*));
-								for(i = 0 ; i < p->opr.oper ; i++) {
-									if(p->opr.op[i]->type == typeInt) itoa(p->opr.op[i]->val, buf[i], 10);
-									else if(p->opr.op[i]->type == typeStr) buf[i] = p->opr.op[i]->str;
-									printf("cat: %s, %s", ret.s, buf[i]);
-									strcat(ret.s, buf[i]);
-								}
-								free(buf);
-								return ret;
-				}
-				case '-':		ret.i = ex(p->opr.op[0]).i - ex(p->opr.op[1]).i; return ret;
-				case '*':		ret.i = ex(p->opr.op[0]).i * ex(p->opr.op[1]).i; return ret;
-				case '/':		ret.i = ex(p->opr.op[0]).i / ex(p->opr.op[1]).i; return ret;
-				case '<':		ret.i = ex(p->opr.op[0]).i < ex(p->opr.op[1]).i; return ret;
-				case '>':		ret.i = ex(p->opr.op[0]).i > ex(p->opr.op[1]).i; return ret;
-				case GE:		ret.i = ex(p->opr.op[0]).i >= ex(p->opr.op[1]).i; return ret;
-				case LE:		ret.i = ex(p->opr.op[0]).i <= ex(p->opr.op[1]).i; return ret;
-				case NE:		ret.i = ex(p->opr.op[0]).i != ex(p->opr.op[1]).i; return ret;
-				case EQ:		ret.i = ex(p->opr.op[0]).i == ex(p->opr.op[1]).i; return ret;
-				case '^':		ret.i = pow(ex(p->opr.op[0]).i, ex(p->opr.op[1]).i); return ret;
+				case EQI:		ret.i = iVar(p->opr.op[0]->str, ex(p->opr.op[1]).i).iValue; ret.t = typeInt; return ret;
+				case EQS:		ret.s = sVar(p->opr.op[0]->str, ex(p->opr.op[1]).s).sValue; ret.t = typeStr; return ret;
+				case NEG:		ret.i = -ex(p->opr.op[0]).i; ret.t = typeInt; return ret;
+				case '+':		ret.i = ex(p->opr.op[0]).i + ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case STRA:		ret.s = strcat(ex(p->opr.op[0]).s, ex(p->opr.op[1]).s); ret.t = typeStr; return ret;
+				case '-':		ret.i = ex(p->opr.op[0]).i - ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case '*':		ret.i = ex(p->opr.op[0]).i * ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case '/':		ret.i = ex(p->opr.op[0]).i / ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case '<':		ret.i = ex(p->opr.op[0]).i < ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case '>':		ret.i = ex(p->opr.op[0]).i > ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case GE:		ret.i = ex(p->opr.op[0]).i >= ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case LE:		ret.i = ex(p->opr.op[0]).i <= ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case NE:		ret.i = ex(p->opr.op[0]).i != ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case EQ:		ret.i = ex(p->opr.op[0]).i == ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case '^':		ret.i = pow(ex(p->opr.op[0]).i, ex(p->opr.op[1]).i); ret.t = typeInt; return ret;
 			}
     }
-    ret.i = 0; return ret;
+    ret.i = 0; ret.t = typeInt; return ret;
 }
 
 void freeNode(nodeType* p) {
