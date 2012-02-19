@@ -20,7 +20,7 @@ LIBDIRS	:=
 TARGET	:=  $(shell basename $(CURDIR))
 BUILD	:=	build
 SOURCES	:=	source
-INCLUDES:=	source include
+INCLUDES:=	source include build
 
 #---------------------------------------------------------------------------------
 # Source files
@@ -71,7 +71,7 @@ all: $(OUTPUT)
 #---------------------------------------------------------------------------------
 $(OUTPUT): parser.tab.c lex.yy.c
 	@echo built ... $(notdir $@)
-	@$(CC) parser.tab.c lex.yy.c $(INCLUDE) $(CFILES) $(LIBS) -o $@
+	@$(CC) -g parser.tab.c lex.yy.c $(INCLUDE) $(CFILES) $(LIBS) -o $@
 
 #---------------------------------------------------------------------------------
 lex.yy.c: $(ADIR)/$(SOURCES)/lexer.l
@@ -83,7 +83,7 @@ lex.yy.c: $(ADIR)/$(SOURCES)/lexer.l
 parser.tab.c: $(ADIR)/$(SOURCES)/parser.y
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
-	@bison -d -o $@ $<
+	@bison -d -v -o $@ $<
 
 #---------------------------------------------------------------------------------
 endif

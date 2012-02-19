@@ -55,13 +55,21 @@ void main(int argc, char* argv[]) {
 	int iValue;
 	char* sValue;
 	bVar var;
+	nodeType* nPtr;
 }
 
 %token <iValue> INTEGER
 %token <sValue> WORD
 %token <sValue> STRING
+
 %token DEBUG
+%token vNULL
+
+%token STRA EXPA
+%token EQI EQS
+
 %token INTV STRV
+
 %token WHILE IF PRINT
 %token END
 %nonassoc IFX
@@ -75,66 +83,74 @@ void main(int argc, char* argv[]) {
 
 %start program
 
-%type <iValue> exp
-%type <sValue> str
-%type <var> ivar svar assign
+%type <nPtr> stmt nbr str assign stmt_list exp
+%type <var> ivar svar
 
 %%
-program:/* empty */
-		| program instr
-		;
+program:
+	function { exit(0); }
+	;
 
-instr:	';'
-		| DEBUG { debug = true; }
-		| exp ';' { printf("\t%d\n", $1); }
-		| stmt
-		| assign ';' {
-			if(debug) {
-				if(!strcmp(var_type($1), VAR_INT)) {
-					printf("Var name: %s | Value: %d | Nb of vars: %d\n", var_name($1), var_iValue($1), sizeVars);
-				}
-				else if(!strcmp(var_type($1), VAR_CHAR)) {
-					printf("Var name: %s | Value: %s | Nb of vars: %d\n", var_name($1), var_sValue($1), sizeVars);
-				} else {
-					yyerror("Unexpected type");
-				}
-			}
-		}
-		;
+function: /* empty */
+	| function stmt { ex($2); freeNode($2); }
+	;
 
-exp:	INTEGER { $$ = $1; }
-		| ivar { $$ = var_iValue($1); }
-		| exp '+' exp { $$ = $1 + $3; }
-		| exp '-' exp { $$ = $1 - $3; }
-		| exp '*' exp { $$ = $1 * $3; }
-		| exp '/' exp { $$ = $1 / $3; }
-		| '-' exp %prec NEG { $$ = -$2; }
-		| exp '^' exp { $$ = pow($1, $3); }
-		| '(' exp ')' { $$ = $2; }
-		| exp '<' exp { $$ = ($1 < $3); }
-		| exp '>' exp { $$ = ($1 > $3); }
-		| exp GE exp { $$ = ($1 >= $3); }
-		| exp LE exp { $$ = ($1 <= $3); }
-		| exp EQ exp { $$ = ($1 == $3); }
-		| exp NE exp { $$ = ($1 != $3); }
-		;
+stmt:
+	  ';' { $$ = opr(';', 2, NULL, NULL); }
+	| assign ';' { $$ = $1; }
+	| PRINT '(' exp ')' ';' { $$ = opr(PRINT, 1, $3); }
+	| WHILE '(' nbr ')' stmt { $$ = opr(WHILE, 2, $3, $5); }
+	| IF '(' nbr ')' stmt %prec IFX { $$ = opr(IF, 2, $3, $5); }
+	| IF '(' nbr ')' stmt ELSE stmt { $$ = opr(IF, 3, $3, $5, $7); }
+	| '{' stmt_list '}' { $$ = $2; }
+	;
 
-str:	STRING { $$ = $1; }
-		| svar { $$ = var_sValue($1); }
-		| str '+' str { $$ = strcat($1, $3); }
-		;
+stmt_list:
+	  stmt { $$ = $1; }
+	| stmt_list stmt { $$ = opr(';', 2, $1, $2); }
+	;
 
-ivar:	INTV WORD ')' { $$ = var_find($2); }
-		;
+exp:
+	nbr { $$ = $1; }
+	| str { $$ = $1; }
+	| exp '+' exp { $$ = opr(EXPA, 2, $1, $3); }
+	;
 
-svar:	STRV WORD ')' { $$ = var_find($2); }
-		;
+nbr:
+	  INTEGER { $$ = cInt($1); }
+	| ivar { $$ = cVar($1); }
+	| nbr '+' nbr { $$ = opr('+', 2, $1, $3); }
+	| nbr '-' nbr { $$ = opr('-', 2, $1, $3); }
+	| nbr '*' nbr { $$ = opr('*', 2, $1, $3); }
+	| nbr '/' nbr { $$ = opr('/', 2, $1, $3); }
+	| '-' nbr %prec NEG { $$ = opr(NEG, 1, $2); }
+	| nbr '^' nbr { $$ = opr('+', 2, $1, $3); }
+	| '(' nbr ')' { $$ = $2; }
+	| nbr '<' nbr { $$ = opr('<', 2, $1, $3); }
+	| nbr '>' nbr { $$ = opr('>', 2, $1, $3); }
+	| nbr GE nbr { $$ = opr(GE, 2, $1, $3); }
+	| nbr LE nbr { $$ = opr(LE, 2, $1, $3); }
+	| nbr EQ nbr { $$ = opr(EQ, 2, $1, $3); }
+	| nbr NE nbr { $$ = opr(NE, 2, $1, $3); }
+	;
 
-assign:	INTV WORD ')' '=' exp { $$ = iVar($2, $5); }
-		| STRV WORD ')' '=' str { $$ = sVar($2, $5); }
-		;
+str:
+	  STRING { $$ = cStr($1); }
+	| svar { $$ = cVar($1); }
+	| str '+' str { $$ = opr(STRA, 2, $1, $3); }
+	;
 
-stmt:	PRINT '(' str ')' ';' { printf("%s", $3); }
-		;
+ivar:
+	INTV WORD ')' { $$ = var_findByName($2); }
+	;
+
+svar:
+	STRV WORD ')' { $$ = var_findByName($2); }
+	;
+
+assign:
+	  INTV WORD ')' '=' nbr { $$ = opr(EQI, 2, cStr($2), $5); }
+	| STRV WORD ')' '=' str { $$ = opr(EQS, 2, cStr($2), $5); }
+	;
 %%
 

@@ -29,6 +29,7 @@ char* stringBufPtr;
 %x str
 
 %%
+	/* Strings */
 \"							{ BEGIN str; stringBufPtr = stringBuf; }
 <str>\"						{ *stringBufPtr = '\0'; yylval.sValue = strdup(stringBuf); BEGIN 0; return STRING; }
 <str>\n						{ yyerror("Newline in string\n"); }
@@ -40,12 +41,20 @@ char* stringBufPtr;
 <str>\\(.|\n)				{ *stringBufPtr++ = yytext[1]; }
 <str>[^\\\n\"]+				{ char* yPtr = yytext; while(*yPtr) { *stringBufPtr++ = *yPtr++; } }
 
+	/* Keywords */
 "while"						return WHILE;
 "if"						return IF;
 "else"						return ELSE;
 "print"						return PRINT;
+^"#debug"[ \t\n]*$			return DEBUG;
+
+	/* Variable name */
 [a-zA-Z]([0-9]|[a-zA-Z])*	yylval.sValue = strdup(yytext); return WORD;
+
+	/* Integer */
 [0-9]+						yylval.iValue = atoi(yytext); return INTEGER;
+
+	/* Operators */
 [-()<>=+*/{}.;^]			return *yytext;
 "@("						return INTV;
 "$("						return STRV;
@@ -53,10 +62,15 @@ char* stringBufPtr;
 "<="						return LE;
 "=="						return EQ;
 "!="						return NE;
-^"#debug"[ \t\n]*$			return DEBUG;
-#!(.|\n)+!#					;	/* ignore comments */
-#.+$						;	/* ignore comments */
-[ \t\n]+					;	/* ignore whitespace */
+
+	/* Comments */
+#!(.|\n)+!#					;	/* Ignore comments */
+#.+$						;	/* Ignore comments */
+	
+	/* Whitespace */
+[ \t\n]+					;	/* Ignore whitespace */
+	
+	/* Other */
 .							yyerror("Unknown character");
 %%
 
