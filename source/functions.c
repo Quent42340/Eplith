@@ -20,6 +20,8 @@
 #include "header.h"
 #include "parser.tab.h"
 
+using namespace std;
+
 bVar* vars;
 int sizeVars = 0;
 
@@ -28,7 +30,7 @@ bVar iVar(char* name, int value) {
 	
 	var.name = name;
 	var.id = sizeVars;
-	var.type = VAR_INT;
+	var.type = typeInt;
 	var.iValue = value;
 	
 	printf("Var name: %s | Value: %d | ID: %d | Nb of vars: %d\n", var.name, var.iValue, var.id, sizeVars);
@@ -44,7 +46,7 @@ bVar sVar(char* name, char* value) {
 	
 	var.name = name;
 	var.id = sizeVars;
-	var.type = VAR_CHAR;
+	var.type = typeStr;
 	var.sValue = value;
 	
 	printf("Var name: %s | Value: %s | ID: %d | Nb of vars: %d\n", var.name, var.sValue, var.id, sizeVars);
@@ -57,11 +59,11 @@ bVar sVar(char* name, char* value) {
 
 char* var_name(bVar var) { return var.name; }
 int var_id(bVar var) { return var.id; }
-char* var_type(bVar var) { return var.type; }
+nodeEnum var_type(bVar var) { return var.type; }
 int var_iValue(bVar var) { return var.iValue; }
 char* var_sValue(bVar var) { return var.sValue; }
 
-bVar bVarNULL = {"NULL", -1, "void", -1};
+bVar bVarNULL = {"NULL", -1, typeVoid, -1};
 
 bVar var_findByName(char* name) {
 	int i;
@@ -119,47 +121,86 @@ char* itoa(int value, char* result, int base) {
 sType ex(nodeType* p) {
 	sType ret;
 	int i;
-	if(!p) { ret.i = 0; return ret; }
+	if(!p) { ret.i = 0; ret.t = typeInt; return ret; }
 	switch(p->type) {
-		case typeInt:	ret.i = p->val; return ret;
-		case typeStr:	ret.s = p->str; return ret;
-		case typeVar:	ret.s = p->var.sValue; return ret;
+		case typeInt: {
+			ret.t = typeInt;
+			ret.i = p->val; return ret;
+		}
+		case typeStr: {
+			ret.t = typeStr;
+			ret.s = p->str; return ret;
+		}
+		case typeVar: {
+			if(p->var.type == typeInt) {
+				ret.t = typeInt; ret.i = p->var.iValue;
+			}
+			else if(p->var.type == typeStr) {
+				ret.t = typeStr; ret.s = p->var.sValue;
+			} else {
+				yyerror("Unexistant variable given to print function");
+			}
+			return ret;
+		}
 		case typeOpr:
 			switch(p->opr.oper) {
-				case WHILE:		while(ex(p->opr.op[0]).i) ex(p->opr.op[1]); ret.i = 0; return ret;
-				case IF:		if(ex(p->opr.op[0]).i) ex(p->opr.op[1]);
-								else if(p->opr.nops > 2) ex(p->opr.op[2]);
-								ret.i = 0; return ret;
-				case PRINT:		printf("%s", ex(p->opr.op[0]).s); ret.i = 0; return ret;
-				case ';':		ex(p->opr.op[0]); ret = ex(p->opr.op[1]); return ret;
-				case EQI:		ret.v = iVar(p->opr.op[0]->str, ex(p->opr.op[1]).i); return ret;
-				case EQS:		ret.v = sVar(p->opr.op[0]->str, ex(p->opr.op[1]).s); return ret;
-				case NEG:		ret.i = -ex(p->opr.op[0]).i; return ret;
-				case '+':		ret.i = ex(p->opr.op[0]).i + ex(p->opr.op[1]).i; return ret;
-				case STRA:		ret.s = strcat(ex(p->opr.op[0]).s, ex(p->opr.op[1]).s); return ret;
-				case EXPA: {	char** buf = calloc(p->opr.oper, sizeof(char*));
-								for(i = 0 ; i < p->opr.oper ; i++) {
-									if(p->opr.op[i]->type == typeInt) itoa(p->opr.op[i]->val, buf[i], 10);
-									else if(p->opr.op[i]->type == typeStr) buf[i] = p->opr.op[i]->str;
-									printf("cat: %s, %s", ret.s, buf[i]);
-									strcat(ret.s, buf[i]);
-								}
-								free(buf);
-								return ret;
+				case WHILE:	{
+					while(ex(p->opr.op[0]).i) {
+						ex(p->opr.op[1]);
+						ret.i = 0; ret.t = typeInt; return ret;
+					}
 				}
-				case '-':		ret.i = ex(p->opr.op[0]).i - ex(p->opr.op[1]).i; return ret;
-				case '*':		ret.i = ex(p->opr.op[0]).i * ex(p->opr.op[1]).i; return ret;
-				case '/':		ret.i = ex(p->opr.op[0]).i / ex(p->opr.op[1]).i; return ret;
-				case '<':		ret.i = ex(p->opr.op[0]).i < ex(p->opr.op[1]).i; return ret;
-				case '>':		ret.i = ex(p->opr.op[0]).i > ex(p->opr.op[1]).i; return ret;
-				case GE:		ret.i = ex(p->opr.op[0]).i >= ex(p->opr.op[1]).i; return ret;
-				case LE:		ret.i = ex(p->opr.op[0]).i <= ex(p->opr.op[1]).i; return ret;
-				case NE:		ret.i = ex(p->opr.op[0]).i != ex(p->opr.op[1]).i; return ret;
-				case EQ:		ret.i = ex(p->opr.op[0]).i == ex(p->opr.op[1]).i; return ret;
-				case '^':		ret.i = pow(ex(p->opr.op[0]).i, ex(p->opr.op[1]).i); return ret;
+				case IF: {
+					if(ex(p->opr.op[0]).i) {
+						ex(p->opr.op[1]);
+					}
+					else if(p->opr.nops > 2) {
+						ex(p->opr.op[2]);
+					}
+					ret.i = 0; ret.t = typeInt; return ret;
+				}
+				case PRINT: {
+					cout << "truc";
+					if(ret.t == typeInt) {
+						cout << ex(p->opr.op[0]).s;
+					}
+					else if(ret.t == typeStr) {
+						cout << ex(p->opr.op[0]).i;
+					}
+					else if(ret.t == typeVar) {
+						if(ret.v.type == typeInt) {
+							cout << ex(p->opr.op[0]).v.iValue;
+						}
+						else if(ret.v.type == typeStr) {
+							cout << ex(p->opr.op[0]).v.sValue;
+						} else {
+							yyerror("Unexistant variable given to print function");
+						}
+					} else {
+						yyerror("Unexpected argument given to print function");
+					}
+					cout << endl;
+					ret.i = 0; ret.t = typeInt; return ret;
+				}
+				case ';':		ex(p->opr.op[0]); ret = ex(p->opr.op[1]); return ret;
+				case EQI:		ret.v = iVar(p->opr.op[0]->str, ex(p->opr.op[1]).i); ret.t = typeVar; return ret;
+				case EQS:		ret.v = sVar(p->opr.op[0]->str, ex(p->opr.op[1]).s); ret.t = typeVar; return ret;
+				case NEG:		ret.i = -ex(p->opr.op[0]).i; ret.t = typeInt; return ret;
+				case '+':		ret.i = ex(p->opr.op[0]).i + ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case STRA:		ret.s = strcat(ex(p->opr.op[0]).s, ex(p->opr.op[1]).s); ret.t = typeStr; return ret;
+				case '-':		ret.i = ex(p->opr.op[0]).i - ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case '*':		ret.i = ex(p->opr.op[0]).i * ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case '/':		ret.i = ex(p->opr.op[0]).i / ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case '<':		ret.i = ex(p->opr.op[0]).i < ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case '>':		ret.i = ex(p->opr.op[0]).i > ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case GE:		ret.i = ex(p->opr.op[0]).i >= ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case LE:		ret.i = ex(p->opr.op[0]).i <= ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case NE:		ret.i = ex(p->opr.op[0]).i != ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case EQ:		ret.i = ex(p->opr.op[0]).i == ex(p->opr.op[1]).i; ret.t = typeInt; return ret;
+				case '^':		ret.i = pow(ex(p->opr.op[0]).i, ex(p->opr.op[1]).i); ret.t = typeInt; return ret;
 			}
     }
-    ret.i = 0; return ret;
+    ret.i = 0; ret.t = typeInt; return ret;
 }
 
 void freeNode(nodeType* p) {
@@ -182,11 +223,11 @@ nodeType* opr(int oper, int nops, ...) {
 	int i;
 	
 	/* allocate node */
-	if((p = malloc(sizeof(nodeType))) == NULL) {
+	if((p = (nodeType*)malloc(sizeof(nodeType))) == NULL) {
 		yyerror("Out of memory");
 	}
 	
-	if((p->opr.op = malloc(nops * sizeof(nodeType))) == NULL) {
+	if((p->opr.op = (nodeType**)malloc(nops * sizeof(nodeType))) == NULL) {
 		yyerror("Out of memory");
 	}
 	
@@ -210,7 +251,7 @@ nodeType* cInt(int value) {
 	nodeType *p;
 	
 	/* allocate node */
-	if((p = malloc(sizeof(nodeType))) == NULL)
+	if((p = (nodeType*)malloc(sizeof(nodeType))) == NULL)
 		yyerror("Out of memory");
 	
 	/* copy information */
@@ -224,7 +265,7 @@ nodeType* cStr(char* string) {
 	nodeType *p;
 	
 	/* allocate node */
-	if((p = malloc(sizeof(nodeType))) == NULL)
+	if((p = (nodeType*)malloc(sizeof(nodeType))) == NULL)
 		yyerror("Out of memory");
 	
 	/* copy information */
@@ -238,7 +279,7 @@ nodeType* cVar(bVar var) {
 	nodeType *p;
 	
 	/* allocate node */
-	if((p = malloc(sizeof(nodeType))) == NULL)
+	if((p = (nodeType*)malloc(sizeof(nodeType))) == NULL)
 		yyerror("Out of memory");
 	
 	/* copy information */

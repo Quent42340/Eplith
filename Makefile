@@ -1,7 +1,8 @@
 #---------------------------------------------------------------------------------
 # Compiler executables
 #---------------------------------------------------------------------------------
-CC		:=	gcc
+CXX		:=	g++
+CXXFLAGS:=	-g -Wno-write-strings -fpermissive
 
 #---------------------------------------------------------------------------------
 # Any extra libraries you wish to link with your project
@@ -71,7 +72,7 @@ all: $(OUTPUT)
 #---------------------------------------------------------------------------------
 $(OUTPUT): parser.tab.c lex.yy.c
 	@echo built ... $(notdir $@)
-	@$(CC) -g parser.tab.c lex.yy.c $(INCLUDE) $(CFILES) $(LIBS) -o $@
+	@$(CXX) $(CXXFLAGS) parser.tab.c lex.yy.c $(INCLUDE) $(CFILES) $(LIBS) -o $@
 
 #---------------------------------------------------------------------------------
 lex.yy.c: $(ADIR)/$(SOURCES)/lexer.l

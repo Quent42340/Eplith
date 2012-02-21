@@ -20,19 +20,23 @@
 %{
 #include "header.h"
 
+using namespace std;
+
 extern FILE* yyin;
 
-void yyerror(const char *str) {
+void yyerror(string str) {
 	extern int yylineno;
 	extern char* yytext;
-	fprintf(stderr, "Error: %s at symbol \"%s\" at line %d\n", str, yytext, yylineno);
+	cerr << "Error:" << str << " at symbol \"" << yytext << "\" at line " << yylineno << endl;
 }
 
+extern "C" {
 int yywrap() {
 	return 1;
 } 
- 
-void main(int argc, char* argv[]) {
+}
+
+main(int argc, char* argv[]) {
 	yyin = fopen(argv[1], "r");
 	
 	if(yyin == NULL) {
@@ -65,7 +69,7 @@ void main(int argc, char* argv[]) {
 %token DEBUG
 %token vNULL
 
-%token STRA EXPA
+%token STRA
 %token EQI EQS
 
 %token INTV STRV
@@ -83,7 +87,7 @@ void main(int argc, char* argv[]) {
 
 %start program
 
-%type <nPtr> stmt nbr str assign stmt_list exp
+%type <nPtr> stmt nbr str assign stmt_list
 %type <var> ivar svar
 
 %%
@@ -98,7 +102,8 @@ function: /* empty */
 stmt:
 	  ';' { $$ = opr(';', 2, NULL, NULL); }
 	| assign ';' { $$ = $1; }
-	| PRINT '(' exp ')' ';' { $$ = opr(PRINT, 1, $3); }
+	| PRINT '(' nbr ')' ';' { $$ = opr(PRINT, 1, $3); }
+	| PRINT '(' str ')' ';' { $$ = opr(PRINT, 1, $3); }
 	| WHILE '(' nbr ')' stmt { $$ = opr(WHILE, 2, $3, $5); }
 	| IF '(' nbr ')' stmt %prec IFX { $$ = opr(IF, 2, $3, $5); }
 	| IF '(' nbr ')' stmt ELSE stmt { $$ = opr(IF, 3, $3, $5, $7); }
@@ -108,12 +113,6 @@ stmt:
 stmt_list:
 	  stmt { $$ = $1; }
 	| stmt_list stmt { $$ = opr(';', 2, $1, $2); }
-	;
-
-exp:
-	nbr { $$ = $1; }
-	| str { $$ = $1; }
-	| exp '+' exp { $$ = opr(EXPA, 2, $1, $3); }
 	;
 
 nbr:

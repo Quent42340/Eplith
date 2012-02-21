@@ -20,29 +20,32 @@
 #ifndef HEADER_H
 #define HEADER_H
 
-#include <stdio.h>
-#include <math.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stddef.h>
-#include <stdarg.h>
+#include <iostream>
+#include <string>
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <cstddef>
+#include <cstdarg>
 
-// Booleans for C
-typedef int bool;
-#define true 1
-#define false 0
+extern "C" {
+	int yyparse(void);
+	int yylex(void);
+	int yywrap(void);
+}
+
+void yyerror(std::string str);
 
 #define DBG(n) { printf("\t%d\n", n); }
 
-#define VAR_INT "int"
-#define VAR_CHAR "char"
-#define VAR_VOID "void"
+typedef enum { typeInt, typeStr, typeVar, typeOpr, typeVoid } nodeEnum;
 
 typedef struct {
 	char* name;
 	int id;
 	
-	char* type;
+	nodeEnum type;
 	
 	union {
 		int iValue;
@@ -57,15 +60,13 @@ bVar iVar(char* name, int value);
 bVar sVar(char* name, char* value);
 
 char* var_name(bVar var);
-char* var_type(bVar var);
+nodeEnum var_type(bVar var);
 
 int var_iValue(bVar var);
 char* var_sValue(bVar var);
 
 bVar var_findByName(char* name);
 bVar var_findByID(int id);
-
-typedef enum { typeInt, typeStr, typeVar, typeOpr } nodeEnum;
 
 /* operators */
 typedef struct {
@@ -85,10 +86,14 @@ typedef struct nodeTypeTag {
 	};
 } nodeType;
 
-typedef union {
-	int i;
-	char* s;
-	bVar v;
+typedef struct {
+	nodeEnum t;
+	
+	union {
+		int i;
+		char* s;
+		bVar v;
+	};
 } sType;
 
 sType ex(nodeType* p);

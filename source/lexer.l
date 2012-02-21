@@ -21,6 +21,8 @@
 #include "header.h"
 #include "parser.tab.h"
 
+using namespace std;
+
 char stringBuf[1024];
 char* stringBufPtr;
 
