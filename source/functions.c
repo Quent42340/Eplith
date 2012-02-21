@@ -118,6 +118,17 @@ char* itoa(int value, char* result, int base) {
 	return result;
 }
 
+void aprintf(sType t) {
+	if(t.t == typeStr) {
+		printf("%s", t.s);
+	}
+	else if(t.t == typeInt) {
+		printf("%d", t.i);
+	} else {
+		yyerror("Unexpected argument given to print function");
+	}
+}
+
 sType ex(nodeType* p) {
 	sType ret;
 	int i;
