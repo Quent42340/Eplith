@@ -45,6 +45,19 @@ Value::Value(boost::any *value) {
 	}
 }
 
+Value::Value(Variable *var) {
+	m_value = var->value()->m_value;
+	
+	if(int *pi = boost::any_cast<int>(&m_value)) {
+		m_type = typeInt;
+	}
+	else if(string *pstr = boost::any_cast<string>(&m_value)) {
+		m_type = typeStr;
+	} else {
+		m_type = typeVoid;
+	}
+}
+
 Value::~Value() {
 }
 
@@ -61,6 +74,7 @@ void Value::print(Value* value) {
 }
 
 Value* Value::add(Value *val, Value *val2) {
+	//cout << "Test: " << typeInt << " : " << val->m_type << " / " << val2->m_type << endl;
 	if((val->m_type != typeInt) || (val2->m_type != typeInt)) {
 		string tmp, tmp2;
 		if(val->m_type == typeInt) {
@@ -77,9 +91,9 @@ Value* Value::add(Value *val, Value *val2) {
 		} else {
 			tmp2 = val2->value<string>();
 		}
-		return new Value(val->m_type, tmp + tmp2);
+		return new Value(typeStr, tmp + tmp2);
 	} else {
-		return new Value(val->m_type, val->value<int>() + val2->value<int>());
+		return new Value(typeInt, val->value<int>() + val2->value<int>());
 	}
 }
 
@@ -103,7 +117,6 @@ IntValue::~IntValue() {
 IntValue* IntValue::op(Value *val, int c, Value *val2) {
 	int r;
 	switch(c) {
-		case '+': r = val->value<int>() + val2->value<int>(); break;
 		case '-': r = val->value<int>() - val2->value<int>(); break;
 		case '*': r = val->value<int>() * val2->value<int>(); break;
 		case '/': r = val->value<int>() / val2->value<int>(); break;

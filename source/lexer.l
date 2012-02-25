@@ -30,6 +30,8 @@ char* stringBufPtr;
 
 %}
 
+%option yylineno
+
 %x str
 
 %%
@@ -60,8 +62,7 @@ char* stringBufPtr;
 
 	/* Operators */
 [-()<>=+*/{}.;^]			return *yytext;
-"@("						return INTV;
-"$("						return STRV;
+"@("						return VART;
 ">="						return GE;
 "<="						return LE;
 "=="						return EQ;

@@ -29,7 +29,8 @@ extern FILE* yyin;
 void yyerror(string str) {
 	extern int yylineno;
 	extern char* yytext;
-	cerr << "Error:" << str << " at symbol \"" << yytext << "\" at line " << yylineno << endl;
+	cerr << "Error: " << str << " at symbol \"" << yytext << "\" at line " << yylineno << endl;
+	exit(1);
 }
 
 extern "C" {
@@ -61,9 +62,6 @@ int main(int argc, char* argv[]) {
 	Variable *var;
 	Statement *stmt;
 	Function *func;
-	IntValue *intValue;
-	StrValue *strValue;
-	NullValue *nullValue;
 	Value* value;
 }
 
@@ -77,7 +75,7 @@ int main(int argc, char* argv[]) {
 %token STRA
 %token EQI EQS
 
-%token INTV STRV
+%token VART
 
 %token WHILE IF PRINT
 %token END
@@ -93,7 +91,7 @@ int main(int argc, char* argv[]) {
 %start program
 
 %type <value> expr
-%type <var> ivar svar assign
+%type <var> var assign
 %type <stmt> stmt stmt_list
 
 %%
@@ -123,9 +121,8 @@ stmt_list:
 expr:
 	  INTEGER { $$ = new IntValue($1); }
 	| STRING { $$ = new StrValue($1); }
-	| ivar { $$ = new IntValue($1); }
-	| svar { $$ = new StrValue($1); }
-	| expr '+' expr { $$ = Value::add($1, $3); /*$$ = IntValue::op($1, '+', $3);*/ }
+	| var { $$ = new Value($1); }
+	| expr '+' expr { $$ = Value::add($1, $3); }
 	| expr '-' expr { $$ = IntValue::op($1, '-', $3); }
 	| expr '*' expr { $$ = IntValue::op($1, '*', $3); }
 	| expr '/' expr { $$ = IntValue::op($1, '/', $3); }
@@ -141,16 +138,11 @@ expr:
 	;
 
 assign:
-	  INTV WORD ')' '=' expr { $$ = new Variable(string($2), $5); }
-	| STRV WORD ')' '=' expr { $$ = new Variable(string($2), $5); }
+	  VART WORD ')' '=' expr { $$ = new Variable(string($2), $5); }
 	;
 
-ivar:
-	INTV WORD ')' { $$ = Variable::findByName(string($2)); }
-	;
-
-svar:
-	STRV WORD ')' { $$ = Variable::findByName(string($2)); }
+var:
+	VART WORD ')' { $$ = Variable::findByName(string($2)); }
 	;
 %%
 

@@ -35,6 +35,7 @@ class Value {
 		Value();
 		Value(Type type, boost::any value);
 		Value(boost::any *value);
+		Value(Variable *var);
 		~Value();
 		
 		static void print(Value* value);
