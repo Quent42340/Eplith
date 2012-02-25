@@ -34,7 +34,7 @@ export OUTPUT	:=	$(CURDIR)/$(TARGET)
 
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
 
-export CFILES	:=	$(CURDIR)/$(foreach dir,$(SOURCES),$(wildcard $(dir)/*.c))
+export CPPFILES	:=	$(foreach dir,$(SOURCES),$(wildcard $(CURDIR)/$(dir)/*.cpp))
 
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir))
 
@@ -70,18 +70,18 @@ else
 all: $(OUTPUT)
 
 #---------------------------------------------------------------------------------
-$(OUTPUT): parser.tab.c lex.yy.c
+$(OUTPUT): parser.tab.cpp lex.yy.cpp
+	@$(CXX) $(CXXFLAGS) parser.tab.cpp lex.yy.cpp $(INCLUDE) $(CPPFILES) $(LIBS) -o $@
 	@echo built ... $(notdir $@)
-	@$(CXX) $(CXXFLAGS) parser.tab.c lex.yy.c $(INCLUDE) $(CFILES) $(LIBS) -o $@
 
 #---------------------------------------------------------------------------------
-lex.yy.c: $(ADIR)/$(SOURCES)/lexer.l
+lex.yy.cpp: $(ADIR)/$(SOURCES)/lexer.l
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
 	@flex -o $@ $<
 
 #---------------------------------------------------------------------------------
-parser.tab.c: $(ADIR)/$(SOURCES)/parser.y
+parser.tab.cpp: $(ADIR)/$(SOURCES)/parser.y
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
 	@bison -d -v -o $@ $<

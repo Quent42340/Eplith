@@ -19,6 +19,8 @@
 ---------------------------------------------------------------------------------*/
 %{
 #include "header.h"
+#include "statement.h"
+#include "variable.h"
 
 using namespace std;
 
@@ -36,7 +38,9 @@ int yywrap() {
 } 
 }
 
-main(int argc, char* argv[]) {
+Variable* vars;
+
+int main(int argc, char* argv[]) {
 	yyin = fopen(argv[1], "r");
 	
 	if(yyin == NULL) {
@@ -44,13 +48,15 @@ main(int argc, char* argv[]) {
 		exit(0);
 	}
 	
-	vars = (bVar*)calloc(65535, sizeof(bVar));
+	vars = (Variable*)calloc(65535, sizeof(Variable));
 	
 	yyparse();
 	
 	free(vars);
 	
 	fclose(yyin);
+	
+	return 0;
 } 
 
 %}
@@ -58,8 +64,8 @@ main(int argc, char* argv[]) {
 %union {
 	int iValue;
 	char* sValue;
-	bVar var;
-	nodeType* nPtr;
+	Variable *var;
+	Statement *stmt;
 }
 
 %token <iValue> INTEGER
@@ -87,69 +93,71 @@ main(int argc, char* argv[]) {
 
 %start program
 
+/*
 %type <nPtr> stmt nbr str assign stmt_list
 %type <var> ivar svar
+*/
 
 %%
 program:
-	function { exit(0); }
+	function { ; }
 	;
 
 function: /* empty */
-	| function stmt { ex($2); freeNode($2); }
+	| function stmt { ; }
 	;
 
 stmt:
-	  ';' { $$ = opr(';', 2, NULL, NULL); }
-	| assign ';' { $$ = $1; }
-	| PRINT '(' nbr ')' ';' { $$ = opr(PRINT, 1, $3); }
-	| PRINT '(' str ')' ';' { $$ = opr(PRINT, 1, $3); }
-	| WHILE '(' nbr ')' stmt { $$ = opr(WHILE, 2, $3, $5); }
-	| IF '(' nbr ')' stmt %prec IFX { $$ = opr(IF, 2, $3, $5); }
-	| IF '(' nbr ')' stmt ELSE stmt { $$ = opr(IF, 3, $3, $5, $7); }
-	| '{' stmt_list '}' { $$ = $2; }
+	  ';' { ; }
+	| assign ';' { ; }
+	| PRINT '(' nbr ')' ';' { ; }
+	| PRINT '(' str ')' ';' { ; }
+	| WHILE '(' nbr ')' stmt { ; }
+	| IF '(' nbr ')' stmt %prec IFX { ; }
+	| IF '(' nbr ')' stmt ELSE stmt { ; }
+	| '{' stmt_list '}' { ; }
 	;
 
 stmt_list:
-	  stmt { $$ = $1; }
-	| stmt_list stmt { $$ = opr(';', 2, $1, $2); }
+	  stmt { ; }
+	| stmt_list stmt { ; }
 	;
 
 nbr:
-	  INTEGER { $$ = cInt($1); }
-	| ivar { $$ = cVar($1); }
-	| nbr '+' nbr { $$ = opr('+', 2, $1, $3); }
-	| nbr '-' nbr { $$ = opr('-', 2, $1, $3); }
-	| nbr '*' nbr { $$ = opr('*', 2, $1, $3); }
-	| nbr '/' nbr { $$ = opr('/', 2, $1, $3); }
-	| '-' nbr %prec NEG { $$ = opr(NEG, 1, $2); }
-	| nbr '^' nbr { $$ = opr('+', 2, $1, $3); }
-	| '(' nbr ')' { $$ = $2; }
-	| nbr '<' nbr { $$ = opr('<', 2, $1, $3); }
-	| nbr '>' nbr { $$ = opr('>', 2, $1, $3); }
-	| nbr GE nbr { $$ = opr(GE, 2, $1, $3); }
-	| nbr LE nbr { $$ = opr(LE, 2, $1, $3); }
-	| nbr EQ nbr { $$ = opr(EQ, 2, $1, $3); }
-	| nbr NE nbr { $$ = opr(NE, 2, $1, $3); }
+	  INTEGER { ; }
+	| ivar { ; }
+	| nbr '+' nbr { ; }
+	| nbr '-' nbr { ; }
+	| nbr '*' nbr { ; }
+	| nbr '/' nbr { ; }
+	| '-' nbr %prec NEG { ; }
+	| nbr '^' nbr { ; }
+	| '(' nbr ')' { ; }
+	| nbr '<' nbr { ; }
+	| nbr '>' nbr { ; }
+	| nbr GE nbr { ; }
+	| nbr LE nbr { ; }
+	| nbr EQ nbr { ; }
+	| nbr NE nbr { ; }
 	;
 
 str:
-	  STRING { $$ = cStr($1); }
-	| svar { $$ = cVar($1); }
-	| str '+' str { $$ = opr(STRA, 2, $1, $3); }
+	  STRING { ; }
+	| svar { ; }
+	| str '+' str { ; }
 	;
 
 ivar:
-	INTV WORD ')' { $$ = var_findByName($2); }
+	INTV WORD ')' { ; }
 	;
 
 svar:
-	STRV WORD ')' { $$ = var_findByName($2); }
+	STRV WORD ')' { ; }
 	;
 
 assign:
-	  INTV WORD ')' '=' nbr { $$ = opr(EQI, 2, cStr($2), $5); }
-	| STRV WORD ')' '=' str { $$ = opr(EQS, 2, cStr($2), $5); }
+	  INTV WORD ')' '=' nbr { ; }
+	| STRV WORD ')' '=' str { ; }
 	;
 %%
 

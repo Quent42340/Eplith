@@ -21,6 +21,7 @@
 #define HEADER_H
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <cstdio>
 #include <cmath>
@@ -28,6 +29,14 @@
 #include <cstdlib>
 #include <cstddef>
 #include <cstdarg>
+
+static inline std::string getPtrAddr(void* ptr) {
+	std::stringstream oss;
+	std::string str;
+	oss << ptr;
+	str = oss.str(); 
+	return str;
+}
 
 extern "C" {
 	int yyparse(void);
@@ -39,69 +48,5 @@ void yyerror(std::string str);
 
 #define DBG(n) { printf("\t%d\n", n); }
 
-typedef enum { typeInt, typeStr, typeVar, typeOpr, typeVoid } nodeEnum;
-
-typedef struct {
-	char* name;
-	int id;
-	
-	nodeEnum type;
-	
-	union {
-		int iValue;
-		char* sValue;
-	};
-} bVar;
-
-extern bVar* vars;
-extern int sizeVars;
-
-bVar iVar(char* name, int value);
-bVar sVar(char* name, char* value);
-
-char* var_name(bVar var);
-nodeEnum var_type(bVar var);
-
-int var_iValue(bVar var);
-char* var_sValue(bVar var);
-
-bVar var_findByName(char* name);
-bVar var_findByID(int id);
-
-/* operators */
-typedef struct {
-	int oper;                   /* operator */
-	int nops;                   /* number of operands */
-	struct nodeTypeTag **op;	/* operands */
-} oprNodeType;
-
-typedef struct nodeTypeTag {
-	nodeEnum type;              /* type of node */
-	
-	union {
-		int	val;				/* integer values */
-		char* str;				/* string values */
-		bVar var;				/* variable */
-		oprNodeType opr;        /* operators */
-	};
-} nodeType;
-
-typedef struct {
-	nodeEnum t;
-	
-	union {
-		int i;
-		char* s;
-		bVar v;
-	};
-} sType;
-
-sType ex(nodeType* p);
-void freeNode(nodeType* p);
-
-nodeType* opr(int oper, int nops, ...);
-nodeType* cInt(int value);
-nodeType* cStr(char* string);
-nodeType* cVar(bVar var);
-
 #endif // HEADER_H
+

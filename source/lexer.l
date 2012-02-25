@@ -19,7 +19,9 @@
 ---------------------------------------------------------------------------------*/
 %{
 #include "header.h"
-#include "parser.tab.h"
+#include "variable.h"
+#include "statement.h"
+#include "parser.tab.hpp"
 
 using namespace std;
 
