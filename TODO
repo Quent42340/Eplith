@@ -1,5 +1,4 @@
-- C++ Types
-- Print
+- Print all types in a same call. Ex: print("The string is " + $(str2) + " and the number is " + @(var3));
 - Conditions
 - Loops
 - Functions
