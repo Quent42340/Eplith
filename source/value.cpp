@@ -51,9 +51,27 @@ void Value::print() {
 	}
 }
 
+/*template <typename T>
+T Value::value() {
+	if(m_type == typeInt) {
+		return m_values.i;
+	}
+	else if(m_type == typeStr) {
+		return m_values.s;
+	}
+	else if(m_type == typeVoid) {
+		if(m_values.v == NULL) {
+			return "(null)";
+		} else {
+			return m_values.v;
+		}
+	}
+}*/
+
 IntValue::IntValue(int value) {
 	m_type = typeInt;
 	m_values.i = value;
+	cout << "Value: " << m_values.i << endl;
 }
 
 IntValue::IntValue(Variable* var) {
@@ -62,7 +80,7 @@ IntValue::IntValue(Variable* var) {
 	}
 	
 	m_type = typeInt;
-	m_values.i = var->value()->value<int>();
+	m_values.i = var->value()->value().i;
 }
 
 IntValue::~IntValue() {
@@ -102,7 +120,7 @@ StrValue::StrValue(Variable* var) {
 	}
 	
 	m_type = typeStr;
-	m_values.s = var->value()->value<std::string*>();
+	m_values.s = var->value()->value().s;
 }
 
 StrValue::~StrValue() {

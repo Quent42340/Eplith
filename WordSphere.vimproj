@@ -6,6 +6,7 @@ WordSphere=/home/quentin/Bureau/FlexBison/WordSphere CD=. filter="*.c *.h *.l *.
  TODO
  README.md
  include=include {
+  expression.h
   function.h
   header.h
   program.h
@@ -14,16 +15,17 @@ WordSphere=/home/quentin/Bureau/FlexBison/WordSphere CD=. filter="*.c *.h *.l *.
   variable.h
  }
  source=source {
-  functions.c
   lexer.l
   parser.y
-  main.cpp
+  expression.cpp
+  function.cpp
   program.cpp
   statement.cpp
   value.cpp
   variable.cpp
  }
  tests=tests {
+  operations.ws
   test.ws
  }
 }

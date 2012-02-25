@@ -18,29 +18,11 @@
 
 ---------------------------------------------------------------------------------*/
 #include "header.h"
-#include "variable.h"
+#include "expression.h"
 
-using namespace std;
-
-vector<Variable*> Variable::vars;
-
-Variable::Variable(string name, Value *value) {
-	m_name = name;
-	m_value = new Value(*value);
-	
-	vars.push_back(this);
-	
-	cout << "Var name: " << m_name << " | Value: "; value->print(); cout << " | Nb of vars: " << vars.size() << endl;
+Expression::Expression() {
 }
 
-Variable::~Variable() {
-}
-
-Variable* Variable::findByName(std::string name) {
-	for(int i = 0 ; i < vars.size() ; i++) {
-		if(vars[i]->name() == name) {
-			return vars[i];
-		}
-	}
+Expression::~Expression() {
 }
 

@@ -147,7 +147,7 @@ str:
 
 assign:
 	  INTV WORD ')' '=' nbr { $$ = new Variable(string($2), $5); }
-	| STRV WORD ')' '=' str { $$ = new Variable(string($2), $5); }
+	| STRV WORD ')' '=' str { ; }
 	;
 
 ivar:

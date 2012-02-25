@@ -42,8 +42,9 @@ class Value {
 		
 		void print();
 		
-		template <typename T>
-			T value() { ; }
+		//template <typename T>
+		//	T value();
+		Values value() { return m_values; }
 		
 		Type type() { return m_type; }
 		

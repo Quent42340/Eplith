@@ -17,30 +17,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#include "header.h"
-#include "variable.h"
+#ifndef EXPRESSION_H
+#define EXPRESSION_H
 
-using namespace std;
+class Expression {
+	public:
+		Expression();
+		~Expression();
+		
+	private:
+		
+};
 
-vector<Variable*> Variable::vars;
-
-Variable::Variable(string name, Value *value) {
-	m_name = name;
-	m_value = new Value(*value);
-	
-	vars.push_back(this);
-	
-	cout << "Var name: " << m_name << " | Value: "; value->print(); cout << " | Nb of vars: " << vars.size() << endl;
-}
-
-Variable::~Variable() {
-}
-
-Variable* Variable::findByName(std::string name) {
-	for(int i = 0 ; i < vars.size() ; i++) {
-		if(vars[i]->name() == name) {
-			return vars[i];
-		}
-	}
-}
+#endif // EXPRESSION_H
 
