@@ -151,11 +151,11 @@ assign:
 	;
 
 ivar:
-	INTV WORD ')' { Variable::findByName(string($2)); }
+	INTV WORD ')' { $$ = Variable::findByName(string($2)); }
 	;
 
 svar:
-	STRV WORD ')' { Variable::findByName(string($2)); }
+	STRV WORD ')' { $$ = Variable::findByName(string($2)); }
 	;
 %%
 
