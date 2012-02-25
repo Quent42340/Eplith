@@ -32,6 +32,19 @@ Value::Value(Type type, boost::any value) {
 	m_value = value;
 }
 
+Value::Value(boost::any *value) {
+	m_value = *value;
+	
+	if(int *pi = boost::any_cast<int>(&m_value)) {
+		m_type = typeInt;
+	}
+	else if(string *pstr = boost::any_cast<string>(&m_value)) {
+		m_type = typeStr;
+	} else {
+		m_type = typeVoid;
+	}
+}
+
 Value::~Value() {
 }
 
@@ -47,20 +60,28 @@ void Value::print(Value* value) {
 	}
 }
 
-/*template <typename T>
-T Value::value() {
-	if(int *pi = boost::any_cast<int>(&m_value)) {
-		return *pi;
-	}
-	else if(string *pstr = boost::any_cast<string>(&m_value)) {
-		return *pstr;
-	}
-	else if(m_type == typeVoid) {
-		return "(null)";
+Value* Value::add(Value *val, Value *val2) {
+	if((val->m_type != typeInt) || (val2->m_type != typeInt)) {
+		string tmp, tmp2;
+		if(val->m_type == typeInt) {
+			stringstream out;
+			out << val->value<int>();
+			tmp = out.str();
+		} else {
+			tmp = val->value<string>();
+		}
+		if(val2->m_type == typeInt) {
+			stringstream out2;
+			out2 << val2->value<int>();
+			tmp2 = out2.str();
+		} else {
+			tmp2 = val2->value<string>();
+		}
+		return new Value(val->m_type, tmp + tmp2);
 	} else {
-		yyerror("Unexpected type of value");
+		return new Value(val->m_type, val->value<int>() + val2->value<int>());
 	}
-}*/
+}
 
 IntValue::IntValue(int value) {
 	m_type = typeInt;
@@ -79,22 +100,22 @@ IntValue::IntValue(Variable* var) {
 IntValue::~IntValue() {
 }
 
-IntValue* IntValue::op(IntValue *val, int c, IntValue *val2) {
+IntValue* IntValue::op(Value *val, int c, Value *val2) {
 	int r;
 	switch(c) {
-		case '+': r = val->value() + val2->value(); break;
-		case '-': r = val->value() - val2->value(); break;
-		case '*': r = val->value() * val2->value(); break;
-		case '/': r = val->value() / val2->value(); break;
-		case '^': r = pow(val->value(), val2->value()); break;
-		case '<': r = val->value() < val2->value(); break;
-		case '>': r = val->value() > val2->value(); break;
-		case GE: r = val->value() >= val2->value(); break;
-		case LE: r = val->value() <= val2->value(); break;
-		case EQ: r = val->value() == val2->value(); break;
-		case NE: r = val->value() != val2->value(); break;
+		case '+': r = val->value<int>() + val2->value<int>(); break;
+		case '-': r = val->value<int>() - val2->value<int>(); break;
+		case '*': r = val->value<int>() * val2->value<int>(); break;
+		case '/': r = val->value<int>() / val2->value<int>(); break;
+		case '^': r = pow(val->value<int>(), val2->value<int>()); break;
+		case '<': r = val->value<int>() < val2->value<int>(); break;
+		case '>': r = val->value<int>() > val2->value<int>(); break;
+		case GE: r = val->value<int>() >= val2->value<int>(); break;
+		case LE: r = val->value<int>() <= val2->value<int>(); break;
+		case EQ: r = val->value<int>() == val2->value<int>(); break;
+		case NE: r = val->value<int>() != val2->value<int>(); break;
 	}
-	return new IntValue(r); // TO IMPROVE see ~/.xchat2/xchatlogs/NETWORK-##c++.log at line 320
+	return new IntValue(r); // TO IMPROVE see ~/.xchat2/xchatlogs/NETWORK-##c++.log at line 320: Just avoid passing pointers.
 }
 
 StrValue::StrValue(string str) {

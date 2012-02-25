@@ -92,9 +92,7 @@ int main(int argc, char* argv[]) {
 
 %start program
 
-%type <intValue> nbr
-%type <strValue> str
-%type <value> exp
+%type <value> expr
 %type <var> ivar svar assign
 %type <stmt> stmt stmt_list
 
@@ -110,10 +108,10 @@ function: /* empty */
 stmt:
 	  ';' { ; }
 	| assign ';' { ; }
-	| PRINT '(' exp ')' ';' { Value::print($3); }
-	| WHILE '(' nbr ')' stmt { ; }
-	| IF '(' nbr ')' stmt %prec IFX { ; }
-	| IF '(' nbr ')' stmt ELSE stmt { ; }
+	| PRINT '(' expr ')' ';' { Value::print($3); }
+	| WHILE '(' expr ')' stmt { ; }
+	| IF '(' expr ')' stmt %prec IFX { ; }
+	| IF '(' expr ')' stmt ELSE stmt { ; }
 	| '{' stmt_list '}' { $$ = $2; }
 	;
 
@@ -122,38 +120,29 @@ stmt_list:
 	| stmt_list stmt { ; }
 	;
 
-exp:
-	  nbr { $$ = $1; }
-	| str { $$ = $1; }
-	;
-
-nbr:
+expr:
 	  INTEGER { $$ = new IntValue($1); }
+	| STRING { $$ = new StrValue($1); }
 	| ivar { $$ = new IntValue($1); }
-	| nbr '+' nbr { $$ = IntValue::op($1, '+', $3); }
-	| nbr '-' nbr { $$ = IntValue::op($1, '-', $3); }
-	| nbr '*' nbr { $$ = IntValue::op($1, '*', $3); }
-	| nbr '/' nbr { $$ = IntValue::op($1, '/', $3); }
-	| '-' nbr %prec NEG { $$ = IntValue::op($2, NEG); }
-	| nbr '^' nbr { $$ = IntValue::op($1, '^', $3); }
-	| '(' nbr ')' { $$ = $2; }
-	| nbr '<' nbr { $$ = IntValue::op($1, '<', $3); }
-	| nbr '>' nbr { $$ = IntValue::op($1, '>', $3); }
-	| nbr GE nbr { $$ = IntValue::op($1, GE, $3); }
-	| nbr LE nbr { $$ = IntValue::op($1, LE, $3); }
-	| nbr EQ nbr { $$ = IntValue::op($1, EQ, $3); }
-	| nbr NE nbr { $$ = IntValue::op($1, NE, $3); }
-	;
-
-str:
-	  STRING { $$ = new StrValue($1); }
 	| svar { $$ = new StrValue($1); }
-	| str '+' str { $$ = StrValue::op($1, '+', $3); }
+	| expr '+' expr { $$ = Value::add($1, $3); /*$$ = IntValue::op($1, '+', $3);*/ }
+	| expr '-' expr { $$ = IntValue::op($1, '-', $3); }
+	| expr '*' expr { $$ = IntValue::op($1, '*', $3); }
+	| expr '/' expr { $$ = IntValue::op($1, '/', $3); }
+	| '-' expr %prec NEG { $$ = IntValue::op($2, NEG); }
+	| expr '^' expr { $$ = IntValue::op($1, '^', $3); }
+	| '(' expr ')' { $$ = $2; }
+	| expr '<' expr { $$ = IntValue::op($1, '<', $3); }
+	| expr '>' expr { $$ = IntValue::op($1, '>', $3); }
+	| expr GE expr { $$ = IntValue::op($1, GE, $3); }
+	| expr LE expr { $$ = IntValue::op($1, LE, $3); }
+	| expr EQ expr { $$ = IntValue::op($1, EQ, $3); }
+	| expr NE expr { $$ = IntValue::op($1, NE, $3); }
 	;
 
 assign:
-	  INTV WORD ')' '=' nbr { $$ = new Variable(string($2), $5); }
-	| STRV WORD ')' '=' str { $$ = new Variable(string($2), $5); }
+	  INTV WORD ')' '=' expr { $$ = new Variable(string($2), $5); }
+	| STRV WORD ')' '=' expr { $$ = new Variable(string($2), $5); }
 	;
 
 ivar:

@@ -33,7 +33,8 @@ typedef enum {
 class Value {
 	public:
 		Value();
-		Value(Type type, boost::any m_value);
+		Value(Type type, boost::any value);
+		Value(boost::any *value);
 		~Value();
 		
 		static void print(Value* value);
@@ -42,6 +43,8 @@ class Value {
 			T value() { return *boost::any_cast<T>(&m_value); }
 		
 		Type type() { return m_type; }
+		
+		static Value* add(Value *val, Value *val2);
 		
 	protected:
 		Type m_type;
@@ -56,8 +59,8 @@ class IntValue : public Value {
 		
 		int value() { return *boost::any_cast<int>(&m_value); }
 		
-		static IntValue* op(IntValue *val, int c, IntValue *val2);
-		static IntValue* op(IntValue *val, int c) { int r = -val->value(); return new IntValue(r); }
+		static IntValue* op(Value *val, int c, Value *val2);
+		static IntValue* op(Value *val, int c) { int r = -val->value<int>(); return new IntValue(r); }
 };
 
 class StrValue : public Value {

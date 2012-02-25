@@ -4,7 +4,7 @@ $(str) = "string";
 @(var3) = @(var) + @(var2);
 @(var4) = @(var) < @(var2);
 $(str2) = "I found a " + $(str) + "!";
-print("\ttest: " + $(str2) + " and @(var3) = "); print(@(var3)); print(";\n");
+print("\ttest: " + $(str2) + " and @(var3) = " + @(var3) + ";\n");
 
 #!
 @(x) = 0;
