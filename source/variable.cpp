@@ -30,7 +30,7 @@ Variable::Variable(string name, Value *value) {
 	
 	vars.push_back(this);
 	
-	cout << "Var name: " << m_name << " | Value: "; value->print(); cout << " | Nb of vars: " << vars.size() << endl;
+	cout << "Var name: " << m_name << " | Value: "; Value::print(value); cout << " | Nb of vars: " << vars.size() << endl;
 }
 
 Variable::~Variable() {

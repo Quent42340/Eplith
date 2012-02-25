@@ -36,7 +36,7 @@ class Value {
 		Value(Type type, boost::any m_value);
 		~Value();
 		
-		void print();
+		static void print(Value* value);
 		
 		template <typename T>
 			T value() { return *boost::any_cast<T>(&m_value); }

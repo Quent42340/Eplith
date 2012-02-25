@@ -64,6 +64,7 @@ int main(int argc, char* argv[]) {
 	IntValue *intValue;
 	StrValue *strValue;
 	NullValue *nullValue;
+	Value* value;
 }
 
 %token <iValue> INTEGER
@@ -93,6 +94,7 @@ int main(int argc, char* argv[]) {
 
 %type <intValue> nbr
 %type <strValue> str
+%type <value> exp
 %type <var> ivar svar assign
 %type <stmt> stmt stmt_list
 
@@ -108,8 +110,7 @@ function: /* empty */
 stmt:
 	  ';' { ; }
 	| assign ';' { ; }
-	| PRINT '(' nbr ')' ';' { cout << $3; }
-	| PRINT '(' str ')' ';' { cout << $3; }
+	| PRINT '(' exp ')' ';' { Value::print($3); }
 	| WHILE '(' nbr ')' stmt { ; }
 	| IF '(' nbr ')' stmt %prec IFX { ; }
 	| IF '(' nbr ')' stmt ELSE stmt { ; }
@@ -119,6 +120,11 @@ stmt:
 stmt_list:
 	  stmt { $$ = $1; }
 	| stmt_list stmt { ; }
+	;
+
+exp:
+	  nbr { $$ = $1; }
+	| str { $$ = $1; }
 	;
 
 nbr:
@@ -147,7 +153,7 @@ str:
 
 assign:
 	  INTV WORD ')' '=' nbr { $$ = new Variable(string($2), $5); }
-	| STRV WORD ')' '=' str { ; }
+	| STRV WORD ')' '=' str { $$ = new Variable(string($2), $5); }
 	;
 
 ivar:

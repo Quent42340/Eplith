@@ -28,7 +28,7 @@ class Variable {
 		Variable(std::string name, Value *value);
 		~Variable();
 		
-		void print() { m_value->print(); }
+		void print() { Value::print(m_value); }
 		
 		Value* value() { return m_value; }
 		std::string name() { return m_name; }

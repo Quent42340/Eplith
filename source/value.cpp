@@ -35,14 +35,14 @@ Value::Value(Type type, boost::any value) {
 Value::~Value() {
 }
 
-void Value::print() {
-	if(int *pi = boost::any_cast<int>(&m_value)) {
+void Value::print(Value* value) {
+	if(int *pi = boost::any_cast<int>(&value->m_value)) {
 		cout << *pi;
 	}
-	else if(string *pstr = boost::any_cast<string>(&m_value)) {
+	else if(string *pstr = boost::any_cast<string>(&value->m_value)) {
 		cout << *pstr;
 	}
-	else if(m_type == typeVoid) {
+	else if(value->m_type == typeVoid) {
 		cout << "(null)";
 	}
 }

@@ -1,12 +1,10 @@
 @(var) = 52;
-print(@(var));
-#!$(str) = "string";
+$(str) = "string";
 @(var2) = 50;
 @(var3) = @(var) + @(var2);
 @(var4) = @(var) < @(var2);
 $(str2) = "I found a " + $(str) + "!";
-print("\ttest: " + $(str2) + "\n");
-!#
+print("\ttest: " + $(str2) + " and @(var3) = "); print(@(var3)); print(";\n");
 
 #!
 @(x) = 0;
