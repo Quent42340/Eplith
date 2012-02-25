@@ -115,6 +115,7 @@ IntValue::~IntValue() {
 }
 
 IntValue* IntValue::op(Value *val, int c, Value *val2) {
+	if((val->m_type != typeInt) || (val2->m_type != typeInt)) yyerror("Operator not available with these type");
 	int r;
 	switch(c) {
 		case '-': r = val->value<int>() - val2->value<int>(); break;
