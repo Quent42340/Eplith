@@ -19,8 +19,8 @@
 ---------------------------------------------------------------------------------*/
 %{
 #include "header.h"
-#include "statement.h"
 #include "variable.h"
+#include "function.h"
 
 using namespace std;
 
@@ -66,6 +66,10 @@ int main(int argc, char* argv[]) {
 	char* sValue;
 	Variable *var;
 	Statement *stmt;
+	Function *func;
+	IntValue *intValue;
+	StrValue *strValue;
+	NullValue *nullValue;
 }
 
 %token <iValue> INTEGER
@@ -93,10 +97,9 @@ int main(int argc, char* argv[]) {
 
 %start program
 
-/*
-%type <nPtr> stmt nbr str assign stmt_list
-%type <var> ivar svar
-*/
+%type <intValue> nbr
+%type <strValue> str
+%type <var> ivar svar assign
 
 %%
 program:
@@ -109,6 +112,8 @@ function: /* empty */
 
 stmt:
 	  ';' { ; }
+	| nbr ';' { ; }
+	| str ';' { ; }
 	| assign ';' { ; }
 	| PRINT '(' nbr ')' ';' { ; }
 	| PRINT '(' str ')' ';' { ; }
@@ -124,27 +129,32 @@ stmt_list:
 	;
 
 nbr:
-	  INTEGER { ; }
+	  INTEGER { $$ = new IntValue($1); }
 	| ivar { ; }
-	| nbr '+' nbr { ; }
-	| nbr '-' nbr { ; }
-	| nbr '*' nbr { ; }
-	| nbr '/' nbr { ; }
-	| '-' nbr %prec NEG { ; }
-	| nbr '^' nbr { ; }
-	| '(' nbr ')' { ; }
-	| nbr '<' nbr { ; }
-	| nbr '>' nbr { ; }
-	| nbr GE nbr { ; }
-	| nbr LE nbr { ; }
-	| nbr EQ nbr { ; }
-	| nbr NE nbr { ; }
+	| nbr '+' nbr { $$ = IntValue::op($1, '+', $3); }
+	| nbr '-' nbr { $$ = IntValue::op($1, '-', $3); }
+	| nbr '*' nbr { $$ = IntValue::op($1, '*', $3); }
+	| nbr '/' nbr { $$ = IntValue::op($1, '/', $3); }
+	| '-' nbr %prec NEG { $$ = IntValue::op($2, NEG); }
+	| nbr '^' nbr { $$ = IntValue::op($1, '^', $3); }
+	| '(' nbr ')' { $$ = $2; }
+	| nbr '<' nbr { $$ = IntValue::op($1, '<', $3); }
+	| nbr '>' nbr { $$ = IntValue::op($1, '>', $3); }
+	| nbr GE nbr { $$ = IntValue::op($1, GE, $3); }
+	| nbr LE nbr { $$ = IntValue::op($1, LE, $3); }
+	| nbr EQ nbr { $$ = IntValue::op($1, EQ, $3); }
+	| nbr NE nbr { $$ = IntValue::op($1, NE, $3); }
 	;
 
 str:
-	  STRING { ; }
+	  STRING { $$ = new StrValue($1); }
 	| svar { ; }
-	| str '+' str { ; }
+	| str '+' str { $$ = StrValue::op($1, '+', $3); }
+	;
+
+assign:
+	  INTV WORD ')' '=' nbr { ; }
+	| STRV WORD ')' '=' str { ; }
 	;
 
 ivar:
@@ -153,11 +163,6 @@ ivar:
 
 svar:
 	STRV WORD ')' { ; }
-	;
-
-assign:
-	  INTV WORD ')' '=' nbr { ; }
-	| STRV WORD ')' '=' str { ; }
 	;
 %%
 

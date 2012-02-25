@@ -22,7 +22,7 @@
 
 using namespace std;
 
-Variable::Variable(string name, Value value) {
+Variable::Variable(string name, Value *value) {
 	m_name = name;
 	m_value = value;
 }

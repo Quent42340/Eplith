@@ -18,7 +18,9 @@
 
 ---------------------------------------------------------------------------------*/
 #include "header.h"
-#include "value.h"
+#include "variable.h"
+#include "function.h"
+#include "parser.tab.hpp"
 
 using namespace std;
 
@@ -57,12 +59,43 @@ IntValue::IntValue(int value) {
 IntValue::~IntValue() {
 }
 
+IntValue* IntValue::op(IntValue *val, int c, IntValue *val2) {
+	int r;
+	switch(c) {
+		case '+': r = val->value() + val2->value(); break;
+		case '-': r = val->value() - val2->value(); break;
+		case '*': r = val->value() * val2->value(); break;
+		case '/': r = val->value() / val2->value(); break;
+		case '^': r = pow(val->value(), val2->value()); break;
+		case '<': r = val->value() < val2->value(); break;
+		case '>': r = val->value() > val2->value(); break;
+		case GE: r = val->value() >= val2->value(); break;
+		case LE: r = val->value() <= val2->value(); break;
+		case EQ: r = val->value() == val2->value(); break;
+		case NE: r = val->value() != val2->value(); break;
+	}
+	return new IntValue(r);
+}
+
 StrValue::StrValue(string *str) {
 	m_type = typeStr;
 	m_values.s = str;
 }
 
+StrValue::StrValue(char *str) {
+	m_type = typeStr;
+	m_values.s = new string(str);
+}
+
 StrValue::~StrValue() {
+}
+
+string strr;
+StrValue* StrValue::op(StrValue *val, int c, StrValue *val2) {
+	switch(c) {
+		case '+': strr = val->value() + val2->value(); break;
+	}
+	return new StrValue(&strr);
 }
 
 NullValue::NullValue() {
@@ -71,5 +104,20 @@ NullValue::NullValue() {
 }
 
 NullValue::~NullValue() {
+}
+
+ostream &operator<<(ostream &out, IntValue *val) {
+    out << val->value();
+    return out;
+}
+
+ostream &operator<<(ostream &out, StrValue *str) {
+    out << str->value();
+    return out;
+}
+
+ostream &operator<<(ostream &out, NullValue *null) {
+    out << null->value();
+    return out;
 }
 

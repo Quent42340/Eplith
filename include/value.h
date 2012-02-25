@@ -51,14 +51,20 @@ class IntValue : public Value {
 		~IntValue();
 		
 		int value() { return m_values.i; }
+		
+		static IntValue* op(IntValue *val, int c, IntValue *val2);
+		static IntValue* op(IntValue *val, int c) { int r = -val->value(); return new IntValue(r); }
 };
 
 class StrValue : public Value {
 	public:
 		StrValue(std::string *str);
+		StrValue(char *str);
 		~StrValue();
 		
 		std::string value() { return *m_values.s; }
+		
+		static StrValue* op(StrValue *val, int c, StrValue *val2);
 };
 
 class NullValue : public Value {
@@ -68,5 +74,8 @@ class NullValue : public Value {
 		
 		void* value() { return m_values.v; }
 };
+
+std::ostream &operator<<(std::ostream &out, IntValue *val);
+std::ostream &operator<<(std::ostream &out, StrValue *str);
 
 #endif // VALUE_H

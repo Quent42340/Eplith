@@ -24,15 +24,15 @@
 
 class Variable {
 	public:
-		Variable(std::string name, Value value);
+		Variable(std::string name, Value *value);
 		~Variable();
 		
-		Value value() { return m_value; }
-		void print() { m_value.print(); }
+		Value* value() { return m_value; }
+		void print() { m_value->print(); }
 		
 	private:
 		std::string m_name;
-		Value m_value;
+		Value* m_value;
 };
 
 #endif // VARIABLE_H
