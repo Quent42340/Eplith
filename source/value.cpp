@@ -27,51 +27,44 @@ using namespace std;
 Value::Value() {
 }
 
-Value::Value(Type type, Values values) {
+Value::Value(Type type, boost::any value) {
 	m_type = type;
-	m_values = values;
+	m_value = value;
 }
 
 Value::~Value() {
 }
 
 void Value::print() {
-	if(m_type == typeInt) {
-		cout << m_values.i;
+	if(int *pi = boost::any_cast<int>(&m_value)) {
+		cout << *pi;
 	}
-	else if(m_type == typeStr) {
-		cout << m_values.s;
+	else if(string *pstr = boost::any_cast<string>(&m_value)) {
+		cout << *pstr;
 	}
 	else if(m_type == typeVoid) {
-		if(m_values.v == NULL) {
-			cout << "(null)";
-		} else {
-			cout << m_values.v;
-		}
+		cout << "(null)";
 	}
 }
 
 /*template <typename T>
 T Value::value() {
-	if(m_type == typeInt) {
-		return m_values.i;
+	if(int *pi = boost::any_cast<int>(&m_value)) {
+		return *pi;
 	}
-	else if(m_type == typeStr) {
-		return m_values.s;
+	else if(string *pstr = boost::any_cast<string>(&m_value)) {
+		return *pstr;
 	}
 	else if(m_type == typeVoid) {
-		if(m_values.v == NULL) {
-			return "(null)";
-		} else {
-			return m_values.v;
-		}
+		return "(null)";
+	} else {
+		yyerror("Unexpected type of value");
 	}
 }*/
 
 IntValue::IntValue(int value) {
 	m_type = typeInt;
-	m_values.i = value;
-	cout << "Value: " << m_values.i << endl;
+	m_value = value;
 }
 
 IntValue::IntValue(Variable* var) {
@@ -80,7 +73,7 @@ IntValue::IntValue(Variable* var) {
 	}
 	
 	m_type = typeInt;
-	m_values.i = var->value()->value().i;
+	m_value = var->value()->value<int>();
 }
 
 IntValue::~IntValue() {
@@ -101,17 +94,17 @@ IntValue* IntValue::op(IntValue *val, int c, IntValue *val2) {
 		case EQ: r = val->value() == val2->value(); break;
 		case NE: r = val->value() != val2->value(); break;
 	}
-	return new IntValue(r);
+	return new IntValue(r); // TO IMPROVE see ~/.xchat2/xchatlogs/NETWORK-##c++.log at line 320
 }
 
-StrValue::StrValue(string *str) {
+StrValue::StrValue(string str) {
 	m_type = typeStr;
-	m_values.s = str;
+	m_value = str;
 }
 
 StrValue::StrValue(char *str) {
 	m_type = typeStr;
-	m_values.s = new string(str);
+	m_value = string(str);
 }
 
 StrValue::StrValue(Variable* var) {
@@ -120,23 +113,23 @@ StrValue::StrValue(Variable* var) {
 	}
 	
 	m_type = typeStr;
-	m_values.s = var->value()->value().s;
+	m_value = var->value()->value<string>();
 }
 
 StrValue::~StrValue() {
 }
 
-string strr;
 StrValue* StrValue::op(StrValue *val, int c, StrValue *val2) {
+	string strr;
 	switch(c) {
 		case '+': strr = val->value() + val2->value(); break;
 	}
-	return new StrValue(&strr);
+	return new StrValue(strr);
 }
 
 NullValue::NullValue() {
 	m_type = typeVoid;
-	m_values.v = NULL;
+	m_value = string("(null)");
 }
 
 NullValue::~NullValue() {

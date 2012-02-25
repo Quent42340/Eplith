@@ -20,6 +20,8 @@
 #ifndef VALUE_H
 #define VALUE_H
 
+#include <boost/any.hpp>
+
 class Variable;
 
 typedef enum {
@@ -28,29 +30,22 @@ typedef enum {
 	typeVoid
 } Type;
 
-typedef union {
-	int i;
-	std::string* s;
-	void* v;
-} Values;
-
 class Value {
 	public:
 		Value();
-		Value(Type type, Values m_values);
+		Value(Type type, boost::any m_value);
 		~Value();
 		
 		void print();
 		
-		//template <typename T>
-		//	T value();
-		Values value() { return m_values; }
+		template <typename T>
+			T value() { return *boost::any_cast<T>(&m_value); }
 		
 		Type type() { return m_type; }
 		
 	protected:
 		Type m_type;
-		Values m_values;
+		boost::any m_value;
 };
 
 class IntValue : public Value {
@@ -59,7 +54,7 @@ class IntValue : public Value {
 		IntValue(Variable *var);
 		~IntValue();
 		
-		int value() { return m_values.i; }
+		int value() { return *boost::any_cast<int>(&m_value); }
 		
 		static IntValue* op(IntValue *val, int c, IntValue *val2);
 		static IntValue* op(IntValue *val, int c) { int r = -val->value(); return new IntValue(r); }
@@ -67,12 +62,12 @@ class IntValue : public Value {
 
 class StrValue : public Value {
 	public:
-		StrValue(std::string *str);
+		StrValue(std::string str);
 		StrValue(char *str);
 		StrValue(Variable *var);
 		~StrValue();
 		
-		std::string value() { return *m_values.s; }
+		std::string value() { return *boost::any_cast<std::string>(&m_value); }
 		
 		static StrValue* op(StrValue *val, int c, StrValue *val2);
 };
@@ -82,7 +77,7 @@ class NullValue : public Value {
 		NullValue();
 		~NullValue();
 		
-		void* value() { return m_values.v; }
+		std::string value() { return "(null)"; }
 };
 
 std::ostream &operator<<(std::ostream &out, IntValue *val);
