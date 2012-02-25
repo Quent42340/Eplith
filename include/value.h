@@ -20,6 +20,8 @@
 #ifndef VALUE_H
 #define VALUE_H
 
+class Variable;
+
 typedef enum {
 	typeInt,
 	typeStr,
@@ -40,6 +42,11 @@ class Value {
 		
 		void print();
 		
+		template <typename T>
+			T value() { ; }
+		
+		Type type() { return m_type; }
+		
 	protected:
 		Type m_type;
 		Values m_values;
@@ -48,6 +55,7 @@ class Value {
 class IntValue : public Value {
 	public:
 		IntValue(int value);
+		IntValue(Variable *var);
 		~IntValue();
 		
 		int value() { return m_values.i; }
@@ -60,6 +68,7 @@ class StrValue : public Value {
 	public:
 		StrValue(std::string *str);
 		StrValue(char *str);
+		StrValue(Variable *var);
 		~StrValue();
 		
 		std::string value() { return *m_values.s; }
@@ -77,5 +86,6 @@ class NullValue : public Value {
 
 std::ostream &operator<<(std::ostream &out, IntValue *val);
 std::ostream &operator<<(std::ostream &out, StrValue *str);
+std::ostream &operator<<(std::ostream &out, NullValue *null);
 
 #endif // VALUE_H

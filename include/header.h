@@ -23,6 +23,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <vector>
 #include <cstdio>
 #include <cmath>
 #include <cstring>

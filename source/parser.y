@@ -38,8 +38,6 @@ int yywrap() {
 } 
 }
 
-Variable* vars;
-
 int main(int argc, char* argv[]) {
 	yyin = fopen(argv[1], "r");
 	
@@ -48,11 +46,7 @@ int main(int argc, char* argv[]) {
 		exit(0);
 	}
 	
-	vars = (Variable*)calloc(65535, sizeof(Variable));
-	
 	yyparse();
-	
-	free(vars);
 	
 	fclose(yyin);
 	
@@ -100,6 +94,7 @@ int main(int argc, char* argv[]) {
 %type <intValue> nbr
 %type <strValue> str
 %type <var> ivar svar assign
+%type <stmt> stmt stmt_list
 
 %%
 program:
@@ -112,25 +107,23 @@ function: /* empty */
 
 stmt:
 	  ';' { ; }
-	| nbr ';' { ; }
-	| str ';' { ; }
 	| assign ';' { ; }
-	| PRINT '(' nbr ')' ';' { ; }
-	| PRINT '(' str ')' ';' { ; }
+	| PRINT '(' nbr ')' ';' { cout << $3; }
+	| PRINT '(' str ')' ';' { cout << $3; }
 	| WHILE '(' nbr ')' stmt { ; }
 	| IF '(' nbr ')' stmt %prec IFX { ; }
 	| IF '(' nbr ')' stmt ELSE stmt { ; }
-	| '{' stmt_list '}' { ; }
+	| '{' stmt_list '}' { $$ = $2; }
 	;
 
 stmt_list:
-	  stmt { ; }
+	  stmt { $$ = $1; }
 	| stmt_list stmt { ; }
 	;
 
 nbr:
 	  INTEGER { $$ = new IntValue($1); }
-	| ivar { ; }
+	| ivar { $$ = new IntValue($1); }
 	| nbr '+' nbr { $$ = IntValue::op($1, '+', $3); }
 	| nbr '-' nbr { $$ = IntValue::op($1, '-', $3); }
 	| nbr '*' nbr { $$ = IntValue::op($1, '*', $3); }
@@ -148,21 +141,21 @@ nbr:
 
 str:
 	  STRING { $$ = new StrValue($1); }
-	| svar { ; }
+	| svar { $$ = new StrValue($1); }
 	| str '+' str { $$ = StrValue::op($1, '+', $3); }
 	;
 
 assign:
-	  INTV WORD ')' '=' nbr { ; }
-	| STRV WORD ')' '=' str { ; }
+	  INTV WORD ')' '=' nbr { $$ = new Variable(string($2), $5); }
+	| STRV WORD ')' '=' str { $$ = new Variable(string($2), $5); }
 	;
 
 ivar:
-	INTV WORD ')' { ; }
+	INTV WORD ')' { Variable::findByName(string($2)); }
 	;
 
 svar:
-	STRV WORD ')' { ; }
+	STRV WORD ')' { Variable::findByName(string($2)); }
 	;
 %%
 

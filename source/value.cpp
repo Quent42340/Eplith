@@ -56,6 +56,15 @@ IntValue::IntValue(int value) {
 	m_values.i = value;
 }
 
+IntValue::IntValue(Variable* var) {
+	if(var->value()->type() != typeInt) {
+		yyerror("Value type error");
+	}
+	
+	m_type = typeInt;
+	m_values.i = var->value()->value<int>();
+}
+
 IntValue::~IntValue() {
 }
 
@@ -85,6 +94,15 @@ StrValue::StrValue(string *str) {
 StrValue::StrValue(char *str) {
 	m_type = typeStr;
 	m_values.s = new string(str);
+}
+
+StrValue::StrValue(Variable* var) {
+	if(var->value()->type() != typeStr) {
+		yyerror("Value type error");
+	}
+	
+	m_type = typeStr;
+	m_values.s = var->value()->value<std::string*>();
 }
 
 StrValue::~StrValue() {

@@ -20,6 +20,7 @@
 #ifndef VARIABLE_H
 #define VARIABLE_H
 
+#include <vector>
 #include "value.h"
 
 class Variable {
@@ -27,8 +28,14 @@ class Variable {
 		Variable(std::string name, Value *value);
 		~Variable();
 		
-		Value* value() { return m_value; }
 		void print() { m_value->print(); }
+		
+		Value* value() { return m_value; }
+		std::string name() { return m_name; }
+		
+		static Variable* findByName(std::string name);
+		
+		static std::vector<Variable*> vars;
 		
 	private:
 		std::string m_name;
