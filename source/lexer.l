@@ -19,7 +19,7 @@
 ---------------------------------------------------------------------------------*/
 %{
 #include "header.h"
-#include "variable.h"
+#include "expression.h"
 #include "function.h"
 #include "parser.tab.hpp"
 

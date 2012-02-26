@@ -41,9 +41,11 @@ class Value {
 		static void print(Value* value);
 		
 		template <typename T>
-			T value() { return *boost::any_cast<T>(&m_value); }
+			T value() const { return *boost::any_cast<T>(&m_value); }
 		
-		Type type() { return m_type; }
+		boost::any* any() { return &m_value; }
+		
+		Type type() const { return m_type; }
 		
 		static Value* add(Value *val, Value *val2);
 		
@@ -57,7 +59,7 @@ class IntValue : public Value {
 		IntValue(int value);
 		~IntValue() {}
 		
-		int value() { return *boost::any_cast<int>(&m_value); }
+		int value() const { return *boost::any_cast<int>(&m_value); }
 		
 		static IntValue* op(Value *val, int c, Value *val2);
 		static IntValue* op(Value *val, int c) { int r = -val->value<int>(); return new IntValue(r); }
@@ -69,7 +71,7 @@ class StrValue : public Value {
 		StrValue(char *str);
 		~StrValue() {}
 		
-		std::string value() { return *boost::any_cast<std::string>(&m_value); }
+		std::string value() const { return *boost::any_cast<std::string>(&m_value); }
 		
 		static StrValue* op(StrValue *val, int c, StrValue *val2);
 };
@@ -79,7 +81,7 @@ class BoolValue : public Value {
 		BoolValue(bool b);
 		~BoolValue() {}
 		
-		bool value() { return *boost::any_cast<bool>(&m_value); }
+		bool value() const { return *boost::any_cast<bool>(&m_value); }
 };
 
 class NullValue : public Value {
@@ -87,7 +89,7 @@ class NullValue : public Value {
 		NullValue();
 		~NullValue() {}
 		
-		std::string value() { return "(null)"; }
+		std::string value() const { return "(null)"; }
 };
 
 std::ostream &operator<<(std::ostream &out, IntValue *val);

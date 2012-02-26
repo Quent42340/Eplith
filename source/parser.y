@@ -19,7 +19,7 @@
 ---------------------------------------------------------------------------------*/
 %{
 #include "header.h"
-#include "variable.h"
+#include "expression.h"
 #include "function.h"
 
 using namespace std;
@@ -40,6 +40,8 @@ int yywrap() {
 }
 
 int main(int argc, char* argv[]) {
+	Variable::initNullVar();
+	
 	yyin = fopen(argv[1], "r");
 	
 	if(yyin == NULL) {
@@ -59,10 +61,7 @@ int main(int argc, char* argv[]) {
 %union {
 	int iValue;
 	char* sValue;
-	Variable *var;
-	Statement *stmt;
-	Function *func;
-	Value* value;
+	Expression *exp;
 }
 
 %token <iValue> INTEGER
@@ -91,9 +90,7 @@ int main(int argc, char* argv[]) {
 
 %start program
 
-%type <value> expr
-%type <var> var assign
-%type <stmt> stmt stmt_list
+%type <exp> expr var assign stmt stmt_list
 
 %%
 program:
@@ -107,7 +104,7 @@ function: /* empty */
 stmt:
 	  ';' { ; }
 	| assign ';' { ; }
-	| PRINT '(' expr ')' ';' { Value::print($3); }
+	| PRINT '(' expr ')' ';' { Value::print($3->evaluate()); }
 	| WHILE '(' expr ')' stmt { ; }
 	| IF '(' expr ')' stmt %prec IFX { ; }
 	| IF '(' expr ')' stmt ELSE stmt { ; }
@@ -120,32 +117,32 @@ stmt_list:
 	;
 
 expr:
-	  INTEGER { $$ = new IntValue($1); }
-	| STRING { $$ = new StrValue($1); }
-	| TRUE { $$ = new BoolValue(true); }
-	| FALSE { $$ = new BoolValue(false); }
-	| var { $$ = new Value($1); }
-	| expr '+' expr { $$ = Value::add($1, $3); }
-	| expr '-' expr { $$ = IntValue::op($1, '-', $3); }
-	| expr '*' expr { $$ = IntValue::op($1, '*', $3); }
-	| expr '/' expr { $$ = IntValue::op($1, '/', $3); }
-	| '-' expr %prec NEG { $$ = IntValue::op($2, NEG); }
-	| expr '^' expr { $$ = IntValue::op($1, '^', $3); }
+	  INTEGER { $$ = new IntExpression($1); }
+	| STRING { $$ = new StrExpression($1); }
+	| TRUE { $$ = new BoolExpression(true); }
+	| FALSE { $$ = new BoolExpression(false); }
+	| var { $$ = $1; }
+	| expr '+' expr { $$ = new OpExpression($1, '+', $3); }
+	| expr '-' expr { $$ = new OpExpression($1, '-', $3); }
+	| expr '*' expr { $$ = new OpExpression($1, '*', $3); }
+	| expr '/' expr { $$ = new OpExpression($1, '/', $3); }
+	| '-' expr %prec NEG { $$ = new OpExpression($2, NEG); }
+	| expr '^' expr { $$ = new OpExpression($1, '^', $3); }
 	| '(' expr ')' { $$ = $2; }
-	| expr '<' expr { $$ = IntValue::op($1, '<', $3); }
-	| expr '>' expr { $$ = IntValue::op($1, '>', $3); }
-	| expr GE expr { $$ = IntValue::op($1, GE, $3); }
-	| expr LE expr { $$ = IntValue::op($1, LE, $3); }
-	| expr EQ expr { $$ = IntValue::op($1, EQ, $3); }
-	| expr NE expr { $$ = IntValue::op($1, NE, $3); }
+	| expr '<' expr { $$ = new OpExpression($1, '<', $3); }
+	| expr '>' expr { $$ = new OpExpression($1, '>', $3); }
+	| expr GE expr { $$ = new OpExpression($1, GE, $3); }
+	| expr LE expr { $$ = new OpExpression($1, LE, $3); }
+	| expr EQ expr { $$ = new OpExpression($1, EQ, $3); }
+	| expr NE expr { $$ = new OpExpression($1, NE, $3); }
 	;
 
 assign:
-	VART WORD ')' '=' expr { $$ = new Variable(string($2), $5); }
+	VART WORD ')' '=' expr { $$ = new AssignExpression(string($2), $5); }
 	;
 
 var:
-	VART WORD ')' { $$ = Variable::findByName(string($2)); }
+	VART WORD ')' { $$ = new VarExpression(string($2)); }
 	;
 %%
 

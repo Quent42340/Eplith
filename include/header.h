@@ -31,6 +31,8 @@
 #include <cstddef>
 #include <cstdarg>
 
+#define VAR_DEBUG
+
 static inline std::string getPtrAddr(void* ptr) {
 	std::stringstream oss;
 	std::string str;

@@ -31,7 +31,7 @@ class Function {
 		std::string name() const { return m_name; }
 		std::string address() const { return m_address; }
 		
-		void addStatement(Statement statement);
+		void addStatement(Statement &statement);
 	
 	private:
 		std::string m_name;

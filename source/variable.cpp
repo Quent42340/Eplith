@@ -30,17 +30,25 @@ Variable::Variable(string name, Value *value) {
 	
 	vars.push_back(this);
 	
-	cout << "Var name: " << m_name << " | Value: "; Value::print(value); cout << " | Nb of vars: " << vars.size() << endl;
+#ifdef VAR_DEBUG
+	cout << "Var name: " << m_name << " | Value: "; Value::print(value); cout << " | Nb of vars: " << vars.size() - 1 << endl;
+#endif
 }
 
 Variable::~Variable() {
 }
 
 Variable* Variable::findByName(std::string name) {
-	for(int i = 0 ; i < vars.size() ; i++) {
+	for(int i = 1 ; i < vars.size() ; i++) {
 		if(vars[i]->name() == name) {
 			return vars[i];
 		}
 	}
+	return vars[0];
+}
+
+void Variable::initNullVar() {
+	NullValue *nullValue = new NullValue();
+	Variable *nullVar = new Variable("<null>", nullValue);
 }
 

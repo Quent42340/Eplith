@@ -28,7 +28,7 @@ Function::Function(std::string name) {
 Function::~Function() {
 }
 
-void Function::addStatement(Statement statement) {
+void Function::addStatement(Statement &statement) {
 	m_statements.push_back(statement);
 }
 

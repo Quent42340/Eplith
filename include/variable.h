@@ -35,6 +35,8 @@ class Variable {
 		
 		static Variable* findByName(std::string name);
 		
+		static void initNullVar();
+		
 		static std::vector<Variable*> vars;
 		
 	private:
