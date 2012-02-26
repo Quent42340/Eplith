@@ -29,6 +29,7 @@ class Expression {
 		~Expression();
 		
 		virtual Value* evaluate() = 0;
+		virtual void doThings() = 0;
 };
 
 class IntExpression : public Expression {
@@ -37,6 +38,7 @@ class IntExpression : public Expression {
 		~IntExpression();
 		
 		Value* evaluate() { return new IntValue(m_value); }
+		void doThings() {}
 	
 	private:
 		int m_value;
@@ -48,7 +50,8 @@ class StrExpression : public Expression {
 		~StrExpression();
 		
 		Value* evaluate() { return new StrValue(m_str); }
-	
+		void doThings() {}
+		
 	private:
 		std::string m_str;
 };
@@ -59,7 +62,8 @@ class BoolExpression : public Expression {
 		~BoolExpression();
 		
 		Value* evaluate() { return new BoolValue(m_value); }
-	
+		void doThings() {}
+		
 	private:
 		bool m_value;
 };
@@ -70,7 +74,8 @@ class OpExpression : public Expression {
 		~OpExpression();
 		
 		Value* evaluate();
-	
+		void doThings() {}
+		
 	private:
 		int m_oper;
 		Expression *m_exp1;
@@ -84,7 +89,8 @@ class VarExpression : public Expression {
 		~VarExpression();
 		
 		Value* evaluate() { return m_var->value(); };
-	
+		void doThings() {}
+		
 	private:
 		Variable *m_var;
 };
@@ -95,10 +101,38 @@ class AssignExpression : public Expression {
 		~AssignExpression();
 		
 		Value* evaluate();
+		void doThings() { m_var = new Variable(m_varName, m_valExp->evaluate()); }
 		
 	private:
+		std::string m_varName;
+		Expression *m_valExp;
 		Variable *m_var;
 };
+
+class IfExpression : public Expression {
+	public:
+		IfExpression(Expression *ifExp, Expression *thenExp);
+		IfExpression(Expression *ifExp, Expression *thenExp, Expression *elseExp);
+		~IfExpression();
+		
+		Value* evaluate();
+		void doThings();
+		
+	private:
+		Expression *m_ifExp, *m_thenExp, *m_elseExp;
+};
+
+class PrintExpression : public Expression {
+	public:
+		PrintExpression(std::string str);
+		~PrintExpression();
+		
+		Value* evaluate() { return new StrValue(m_str); }
+		void doThings() { Value::print(this->evaluate()); }
+		
+	private:
+		std::string m_str;
+}
 
 #endif // EXPRESSION_H
 

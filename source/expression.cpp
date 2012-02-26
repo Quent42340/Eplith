@@ -58,6 +58,8 @@ OpExpression::OpExpression(Expression *exp1, int oper, Expression *exp2) {
 }
 
 OpExpression::~OpExpression() {
+	delete m_exp1;
+	delete m_exp2;
 }
 
 Value* OpExpression::evaluate() {
@@ -125,16 +127,60 @@ VarExpression::VarExpression(string varName) {
 }
 
 VarExpression::~VarExpression() {
+	delete m_var;
 }
 
 AssignExpression::AssignExpression(string varName, Expression *valExp) {
-	m_var = new Variable(varName, valExp->evaluate());
+	m_varName = varName;
+	m_valExp = valExp;
+	doThings();
 }
 
 AssignExpression::~AssignExpression() {
+	delete m_var;
 }
 
 Value* AssignExpression::evaluate() {
 	return m_var->value();
 }
+
+IfExpression::IfExpression(Expression *ifExp, Expression *thenExp) {
+	m_ifExp = ifExp;
+	m_thenExp = thenExp;
+	m_elseExp = 0;
+}
+
+IfExpression::IfExpression(Expression *ifExp, Expression *thenExp, Expression *elseExp) {
+	m_ifExp = ifExp;
+	m_thenExp = thenExp;
+	m_elseExp = elseExp;
+}
+
+IfExpression::~IfExpression() {
+	delete m_ifExp;
+	delete m_thenExp;
+	delete m_elseExp;
+}
+
+Value* IfExpression::evaluate() {
+	if(m_ifExp->evaluate()->value<bool>()) {
+		return m_thenExp->evaluate();
+	} else {
+		if(m_elseExp != 0) {
+			return m_elseExp->evaluate();
+		}
+	}
+}
+
+void IfExpression::doThings() {
+	if(m_ifExp->evaluate()->value<bool>()) {
+		m_thenExp->doThings();
+	} else {
+		if(m_elseExp != 0) {
+			m_elseExp->doThings();
+		}
+	}
+}
+
+PrintExpression // OKAY I'M DOING PRINTEXP
 
