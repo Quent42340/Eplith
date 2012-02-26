@@ -5,6 +5,7 @@
 @(var4) = @(var) < @(var2);
 @(str2) = "I found a " + @(str) + "!";
 @(bool) = true;
+@(var5) = 5 - (2 + 3) + 1 * (4 - 2);
 print("\ttest: " + @(str2) + " and @(var3) = " + @(var3) + "; That's " + @(bool) + "\n");
 
 #!

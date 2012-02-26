@@ -25,7 +25,11 @@ WordSphere=/home/quentin/Bureau/FlexBison/WordSphere CD=. filter="*.c *.h *.l *.
   variable.cpp
  }
  tests=tests {
-  operations.ws
   test.ws
+ }
+ wiki=wiki {
+  Code-samples.md
+  Home.md
+  WordSphere Documentation.md
  }
 }

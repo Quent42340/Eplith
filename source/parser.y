@@ -141,7 +141,7 @@ expr:
 	;
 
 assign:
-	  VART WORD ')' '=' expr { $$ = new Variable(string($2), $5); }
+	VART WORD ')' '=' expr { $$ = new Variable(string($2), $5); }
 	;
 
 var:
