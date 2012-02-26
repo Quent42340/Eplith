@@ -40,6 +40,9 @@ Value::Value(boost::any *value) {
 	}
 	else if(string *pstr = boost::any_cast<string>(&m_value)) {
 		m_type = typeStr;
+	}
+	else if(bool *pb = boost::any_cast<bool>(&m_value)) {
+		m_type = typeInt;
 	} else {
 		m_type = typeVoid;
 	}
@@ -53,12 +56,12 @@ Value::Value(Variable *var) {
 	}
 	else if(string *pstr = boost::any_cast<string>(&m_value)) {
 		m_type = typeStr;
+	}
+	else if(bool *pb = boost::any_cast<bool>(&m_value)) {
+		m_type = typeInt;
 	} else {
 		m_type = typeVoid;
 	}
-}
-
-Value::~Value() {
 }
 
 void Value::print(Value* value) {
@@ -68,25 +71,38 @@ void Value::print(Value* value) {
 	else if(string *pstr = boost::any_cast<string>(&value->m_value)) {
 		cout << *pstr;
 	}
+	else if(bool *pb = boost::any_cast<bool>(&value->m_value)) {
+		cout << ((*pb) ? "true" : "false");
+	}
 	else if(value->m_type == typeVoid) {
 		cout << "(null)";
 	}
 }
 
 Value* Value::add(Value *val, Value *val2) {
-	//cout << "Test: " << typeInt << " : " << val->m_type << " / " << val2->m_type << endl;
+	bool pb;
 	if((val->m_type != typeInt) || (val2->m_type != typeInt)) {
 		string tmp, tmp2;
 		if(val->m_type == typeInt) {
 			stringstream out;
-			out << val->value<int>();
+			if(val->m_value.type() == typeid(bool)) {
+				pb = *boost::any_cast<bool>(&val->m_value);
+				out << ((pb) ? "true" : "false");
+			} else {
+				out << val->value<int>();
+			}
 			tmp = out.str();
 		} else {
 			tmp = val->value<string>();
 		}
 		if(val2->m_type == typeInt) {
 			stringstream out2;
-			out2 << val2->value<int>();
+			if(val2->m_value.type() == typeid(bool)) {
+				pb = *boost::any_cast<bool>(&val2->m_value);
+				out2 << ((pb) ? "true" : "false");
+			} else {
+				out2 << val2->value<int>();
+			}
 			tmp2 = out2.str();
 		} else {
 			tmp2 = val2->value<string>();
@@ -102,20 +118,8 @@ IntValue::IntValue(int value) {
 	m_value = value;
 }
 
-IntValue::IntValue(Variable* var) {
-	if(var->value()->type() != typeInt) {
-		yyerror("Value type error");
-	}
-	
-	m_type = typeInt;
-	m_value = var->value()->value<int>();
-}
-
-IntValue::~IntValue() {
-}
-
 IntValue* IntValue::op(Value *val, int c, Value *val2) {
-	if((val->type() != typeInt) || (val2->type() != typeInt)) yyerror("Operator not available with these type");
+	if((val->type() != typeInt) || (val2->type() != typeInt)) yyerror("Operation not available with these type");
 	int r;
 	switch(c) {
 		case '-': r = val->value<int>() - val2->value<int>(); break;
@@ -142,18 +146,6 @@ StrValue::StrValue(char *str) {
 	m_value = string(str);
 }
 
-StrValue::StrValue(Variable* var) {
-	if(var->value()->type() != typeStr) {
-		yyerror("Value type error");
-	}
-	
-	m_type = typeStr;
-	m_value = var->value()->value<string>();
-}
-
-StrValue::~StrValue() {
-}
-
 StrValue* StrValue::op(StrValue *val, int c, StrValue *val2) {
 	string strr;
 	switch(c) {
@@ -162,12 +154,14 @@ StrValue* StrValue::op(StrValue *val, int c, StrValue *val2) {
 	return new StrValue(strr);
 }
 
+BoolValue::BoolValue(bool b) {
+	m_type = typeInt;
+	m_value = b;
+}
+
 NullValue::NullValue() {
 	m_type = typeVoid;
 	m_value = string("(null)");
-}
-
-NullValue::~NullValue() {
 }
 
 ostream &operator<<(ostream &out, IntValue *val) {
@@ -177,6 +171,11 @@ ostream &operator<<(ostream &out, IntValue *val) {
 
 ostream &operator<<(ostream &out, StrValue *str) {
     out << str->value();
+    return out;
+}
+
+ostream &operator<<(ostream &out, BoolValue *b) {
+    out << ((b->value()) ? "true" : "false");
     return out;
 }
 

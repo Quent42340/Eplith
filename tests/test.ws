@@ -4,7 +4,8 @@
 @(var3) = @(var) + @(var2);
 @(var4) = @(var) < @(var2);
 @(str2) = "I found a " + @(str) + "!";
-print("\ttest: " + @(str2) + " and @(var3) = " + @(var3) + ";\n");
+@(bool) = true;
+print("\ttest: " + @(str2) + " and @(var3) = " + @(var3) + "; That's " + @(bool) + "\n");
 
 #!
 @(x) = 0;

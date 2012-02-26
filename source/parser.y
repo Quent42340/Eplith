@@ -78,6 +78,7 @@ int main(int argc, char* argv[]) {
 %token VART
 
 %token WHILE IF PRINT
+%token TRUE FALSE
 %token END
 %nonassoc IFX
 %nonassoc ELSE
@@ -121,6 +122,8 @@ stmt_list:
 expr:
 	  INTEGER { $$ = new IntValue($1); }
 	| STRING { $$ = new StrValue($1); }
+	| TRUE { $$ = new BoolValue(true); }
+	| FALSE { $$ = new BoolValue(false); }
 	| var { $$ = new Value($1); }
 	| expr '+' expr { $$ = Value::add($1, $3); }
 	| expr '-' expr { $$ = IntValue::op($1, '-', $3); }

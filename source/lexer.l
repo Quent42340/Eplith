@@ -54,6 +54,10 @@ char* stringBufPtr;
 "print"						return PRINT;
 ^"#debug"[ \t\n]*$			return DEBUG;
 
+	/* Booleans */
+"true"						return TRUE;
+"false"						return FALSE;
+
 	/* Variable name */
 [a-zA-Z]([0-9]|[a-zA-Z])*	yylval.sValue = strdup(yytext); return WORD;
 
