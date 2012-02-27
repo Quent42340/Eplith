@@ -104,8 +104,8 @@ stmt:
 	| assign ';' { ; }
 	| PRINT '(' expr ')' ';' { $$ = new PrintExpression($3); }
 	| WHILE '(' expr ')' stmt { ; }
-	| IF '(' expr ')' stmt %prec IFX { ; }
-	| IF '(' expr ')' stmt ELSE stmt { ; }
+	| IF '(' expr ')' stmt %prec IFX { $$ = new IfExpression($3, $5); }
+	| IF '(' expr ')' stmt ELSE stmt { $$ = new IfExpression($3, $5, $7); }
 	| '{' stmt_list '}' { $$ = $2; }
 	;
 

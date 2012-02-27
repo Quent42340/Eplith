@@ -29,7 +29,13 @@ class Expression {
 		~Expression();
 		
 		virtual Value* evaluate() = 0;
-		virtual void doThings() = 0;
+		virtual void doExp() = 0;
+		
+		void doThings() { if(!m_inScope) { doExp(); } }
+		void doThings(bool inScope) { m_inScope = inScope; doExp(); m_inScope = !inScope; }
+	
+	private:
+		bool m_inScope;
 };
 
 class IntExpression : public Expression {
@@ -38,7 +44,7 @@ class IntExpression : public Expression {
 		~IntExpression();
 		
 		Value* evaluate() { return new IntValue(m_value); }
-		void doThings() {}
+		void doExp() {}
 	
 	private:
 		int m_value;
@@ -50,7 +56,7 @@ class StrExpression : public Expression {
 		~StrExpression();
 		
 		Value* evaluate() { return new StrValue(m_str); }
-		void doThings() {}
+		void doExp() {}
 		
 	private:
 		std::string m_str;
@@ -62,7 +68,7 @@ class BoolExpression : public Expression {
 		~BoolExpression();
 		
 		Value* evaluate() { return new BoolValue(m_value); }
-		void doThings() {}
+		void doExp() {}
 		
 	private:
 		bool m_value;
@@ -74,7 +80,7 @@ class OpExpression : public Expression {
 		~OpExpression();
 		
 		Value* evaluate();
-		void doThings() {}
+		void doExp() {}
 		
 	private:
 		int m_oper;
@@ -89,7 +95,7 @@ class VarExpression : public Expression {
 		~VarExpression();
 		
 		Value* evaluate() { return m_var->value(); };
-		void doThings() {}
+		void doExp() {}
 		
 	private:
 		Variable *m_var;
@@ -101,7 +107,7 @@ class AssignExpression : public Expression {
 		~AssignExpression();
 		
 		Value* evaluate();
-		void doThings() { m_var = new Variable(m_varName, m_valExp->evaluate()); }
+		void doExp() { m_var = new Variable(m_varName, m_valExp->evaluate()); }
 		
 	private:
 		std::string m_varName;
@@ -116,7 +122,7 @@ class IfExpression : public Expression {
 		~IfExpression();
 		
 		Value* evaluate();
-		void doThings();
+		void doExp();
 		
 	private:
 		Expression *m_ifExp, *m_thenExp, *m_elseExp;
@@ -128,7 +134,7 @@ class PrintExpression : public Expression {
 		~PrintExpression();
 		
 		Value* evaluate() { return new StrValue(m_exp->evaluate()->value<std::string>()); }
-		void doThings() { Value::print(this->evaluate()); }
+		void doExp() { Value::print(this->evaluate()); }
 		
 	private:
 		Expression *m_exp;
