@@ -59,14 +59,13 @@ char* stringBufPtr;
 "false"						return FALSE;
 
 	/* Variable name */
-[a-zA-Z]([0-9]|[a-zA-Z])*	yylval.sValue = strdup(yytext); return WORD;
+[a-zA-Z]([0-9]|[a-zA-Z])*	yylval.sValue = strdup(yytext); return VARNAME;
 
 	/* Integer */
 [0-9]+						yylval.iValue = atoi(yytext); return INTEGER;
 
 	/* Operators */
 [-()<>=+*/{}.;^]			return *yytext;
-"@("						return VART;
 ">="						return GE;
 "<="						return LE;
 "=="						return EQ;

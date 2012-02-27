@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
 }
 
 %token <iValue> INTEGER
-%token <sValue> WORD
+%token <sValue> VARNAME
 %token <sValue> STRING
 
 %token DEBUG
@@ -73,8 +73,6 @@ int main(int argc, char* argv[]) {
 
 %token STRA
 %token EQI EQS
-
-%token VART
 
 %token WHILE IF PRINT
 %token TRUE FALSE
@@ -104,7 +102,7 @@ function: /* empty */
 stmt:
 	  ';' { ; }
 	| assign ';' { ; }
-	| PRINT '(' expr ')' ';' { Value::print($3->evaluate()); }
+	| PRINT '(' expr ')' ';' { $$ = new PrintExpression($3); }
 	| WHILE '(' expr ')' stmt { ; }
 	| IF '(' expr ')' stmt %prec IFX { ; }
 	| IF '(' expr ')' stmt ELSE stmt { ; }
@@ -138,11 +136,11 @@ expr:
 	;
 
 assign:
-	VART WORD ')' '=' expr { $$ = new AssignExpression(string($2), $5); }
+	VARNAME '=' expr { $$ = new AssignExpression(string($1), $3); }
 	;
 
 var:
-	VART WORD ')' { $$ = new VarExpression(string($2)); }
+	VARNAME { $$ = new VarExpression(string($1)); }
 	;
 %%
 

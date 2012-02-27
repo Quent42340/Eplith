@@ -124,15 +124,15 @@ class IfExpression : public Expression {
 
 class PrintExpression : public Expression {
 	public:
-		PrintExpression(std::string str);
+		PrintExpression(Expression *exp);
 		~PrintExpression();
 		
-		Value* evaluate() { return new StrValue(m_str); }
+		Value* evaluate() { return new StrValue(m_exp->evaluate()->value<std::string>()); }
 		void doThings() { Value::print(this->evaluate()); }
 		
 	private:
-		std::string m_str;
-}
+		Expression *m_exp;
+};
 
 #endif // EXPRESSION_H
 

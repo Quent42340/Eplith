@@ -182,5 +182,12 @@ void IfExpression::doThings() {
 	}
 }
 
-PrintExpression // OKAY I'M DOING PRINTEXP
+PrintExpression::PrintExpression(Expression *exp) {
+	m_exp = exp;
+	doThings();
+}
+
+PrintExpression::~PrintExpression() {
+	delete m_exp;
+}
 
