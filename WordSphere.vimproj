@@ -10,7 +10,6 @@ WordSphere=/home/quentin/Bureau/FlexBison/WordSphere CD=. filter="*.c *.h *.l *.
   function.h
   header.h
   program.h
-  statement.h
   value.h
   variable.h
  }
@@ -20,7 +19,6 @@ WordSphere=/home/quentin/Bureau/FlexBison/WordSphere CD=. filter="*.c *.h *.l *.
   expression.cpp
   function.cpp
   program.cpp
-  statement.cpp
   value.cpp
   variable.cpp
  }

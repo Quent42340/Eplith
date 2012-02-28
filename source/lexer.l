@@ -51,7 +51,7 @@ char* stringBufPtr;
 "while"						return WHILE;
 "if"						return IF;
 "else"						return ELSE;
-"print"						return PRINT;
+"function"					return FUNCTION;
 ^"#debug"[ \t\n]*$			return DEBUG;
 
 	/* Booleans */
@@ -59,13 +59,13 @@ char* stringBufPtr;
 "false"						return FALSE;
 
 	/* Variable name */
-[a-zA-Z]([0-9]|[a-zA-Z])*	yylval.sValue = strdup(yytext); return VARNAME;
+[a-zA-Z]([0-9]|[a-zA-Z])*	yylval.sValue = strdup(yytext); return NAME;
 
 	/* Integer */
 [0-9]+						yylval.iValue = atoi(yytext); return INTEGER;
 
 	/* Operators */
-[-()<>=+*/{}.;^]			return *yytext;
+[-()<>=+*/!{}.;^]			return *yytext;
 ">="						return GE;
 "<="						return LE;
 "=="						return EQ;

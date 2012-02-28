@@ -62,10 +62,11 @@ int main(int argc, char* argv[]) {
 	int iValue;
 	char* sValue;
 	Expression *exp;
+	std::vector<Expression*> *expsList;
 }
 
 %token <iValue> INTEGER
-%token <sValue> VARNAME
+%token <sValue> NAME
 %token <sValue> STRING
 
 %token DEBUG
@@ -76,6 +77,7 @@ int main(int argc, char* argv[]) {
 
 %token WHILE IF PRINT
 %token TRUE FALSE
+%token FUNCTION
 %token END
 %nonassoc IFX
 %nonassoc ELSE
@@ -84,28 +86,31 @@ int main(int argc, char* argv[]) {
 %left '+' '-'
 %left '*' '/'
 %left NEG
+%left NOT
 %right '^'
 
 %start program
 
-%type <exp> expr var assign stmt stmt_list
+%type <exp> exp var assign stmt stmt_list
+%type <expsList> listOfExps
 
 %%
 program:
-	function { ; }
+	instruction { ; }
 	;
 
-function: /* empty */
-	| function stmt { ; }
+instruction: /* empty */
+	| instruction stmt { ; }
 	;
 
 stmt:
 	  ';' { ; }
 	| assign ';' { ; }
-	| PRINT '(' expr ')' ';' { $$ = new PrintExpression($3); }
-	| WHILE '(' expr ')' stmt { ; }
-	| IF '(' expr ')' stmt %prec IFX { $$ = new IfExpression($3, $5); }
-	| IF '(' expr ')' stmt ELSE stmt { $$ = new IfExpression($3, $5, $7); }
+	| PRINT '(' exp ')' ';' { $$ = new PrintExpression($3); }
+	| WHILE '(' exp ')' stmt { ; }
+	| IF '(' exp ')' stmt %prec IFX { $$ = new IfExpression($3, $5); }
+	| IF '(' exp ')' stmt ELSE stmt { $$ = new IfExpression($3, $5, $7); }
+	| NAME '(' listOfExps ')' { $$ = new CallExpression(string($1), $3); }
 	| '{' stmt_list '}' { $$ = $2; }
 	;
 
@@ -114,33 +119,42 @@ stmt_list:
 	| stmt_list stmt { ; }
 	;
 
-expr:
+listOfExps:
+	  exp { vector<Expression*> *v = new vector<Expression*>;
+			v->push_back($1);
+			$$ = v; }
+	| listOfExps ',' exp { vector<Expression*> *v = $1;
+						   v->push_back($3);
+						   $$ = v; }
+
+exp:
 	  INTEGER { $$ = new IntExpression($1); }
 	| STRING { $$ = new StrExpression($1); }
 	| TRUE { $$ = new BoolExpression(true); }
 	| FALSE { $$ = new BoolExpression(false); }
 	| var { $$ = $1; }
-	| expr '+' expr { $$ = new OpExpression($1, '+', $3); }
-	| expr '-' expr { $$ = new OpExpression($1, '-', $3); }
-	| expr '*' expr { $$ = new OpExpression($1, '*', $3); }
-	| expr '/' expr { $$ = new OpExpression($1, '/', $3); }
-	| '-' expr %prec NEG { $$ = new OpExpression($2, NEG); }
-	| expr '^' expr { $$ = new OpExpression($1, '^', $3); }
-	| '(' expr ')' { $$ = $2; }
-	| expr '<' expr { $$ = new OpExpression($1, '<', $3); }
-	| expr '>' expr { $$ = new OpExpression($1, '>', $3); }
-	| expr GE expr { $$ = new OpExpression($1, GE, $3); }
-	| expr LE expr { $$ = new OpExpression($1, LE, $3); }
-	| expr EQ expr { $$ = new OpExpression($1, EQ, $3); }
-	| expr NE expr { $$ = new OpExpression($1, NE, $3); }
+	| exp '+' exp { $$ = new OpExpression($1, '+', $3); }
+	| exp '-' exp { $$ = new OpExpression($1, '-', $3); }
+	| exp '*' exp { $$ = new OpExpression($1, '*', $3); }
+	| exp '/' exp { $$ = new OpExpression($1, '/', $3); }
+	| '-' exp %prec NEG { $$ = new OpExpression($2, NEG); }
+	| '!' exp %prec NOT { $$ = new OpExpression($2, NOT); }
+	| exp '^' exp { $$ = new OpExpression($1, '^', $3); }
+	| '(' exp ')' { $$ = $2; }
+	| exp '<' exp { $$ = new OpExpression($1, '<', $3); }
+	| exp '>' exp { $$ = new OpExpression($1, '>', $3); }
+	| exp GE exp { $$ = new OpExpression($1, GE, $3); }
+	| exp LE exp { $$ = new OpExpression($1, LE, $3); }
+	| exp EQ exp { $$ = new OpExpression($1, EQ, $3); }
+	| exp NE exp { $$ = new OpExpression($1, NE, $3); }
 	;
 
 assign:
-	VARNAME '=' expr { $$ = new AssignExpression(string($1), $3); }
+	NAME '=' exp { $$ = new AssignExpression(string($1), $3); }
 	;
 
 var:
-	VARNAME { $$ = new VarExpression(string($1)); }
+	NAME { $$ = new VarExpression(string($1)); }
 	;
 %%
 

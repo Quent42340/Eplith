@@ -67,6 +67,9 @@ Value* OpExpression::evaluate() {
 	Value* val = m_exp1->evaluate();
 	if(m_oper == NEG) {
 		return new IntValue(-val->value<int>());
+	}
+	else if(m_oper == NOT) {
+		return new BoolValue(!val->value<bool>());
 	} else {
 		Value* val2 = m_exp2->evaluate();
 		if(m_oper == '+') {
@@ -183,6 +186,21 @@ void IfExpression::doExp() {
 			m_elseExp->doThings(true);
 		}
 	}
+}
+
+CallExpression::CallExpression(string funcName, vector<Expression*> *args) {
+	m_funcName = funcName;
+	m_func = Function::findByName(m_funcName);
+	m_args = args;
+}
+
+CallExpression::~CallExpression() {
+	delete m_func;
+	delete m_args;
+}
+
+void CallExpression::doExp() {
+	//m_func->doFuncInstr();
 }
 
 PrintExpression::PrintExpression(Expression *exp) {

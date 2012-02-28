@@ -36,6 +36,7 @@ Variable::Variable(string name, Value *value) {
 }
 
 Variable::~Variable() {
+	delete m_value;
 }
 
 Variable* Variable::findByName(std::string name) {

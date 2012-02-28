@@ -20,15 +20,15 @@
 #include "header.h"
 #include "function.h"
 
-Function::Function(std::string name) {
+using namespace std;
+
+vector<Function*> Function::funcs;
+
+Function::Function(string name, vector<Expression*> *args, boost::any returnValue) {
 	m_name = name;
-	m_address = getPtrAddr((void*)this);
 }
 
 Function::~Function() {
-}
-
-void Function::addStatement(Statement &statement) {
-	m_statements.push_back(statement);
+	delete m_args;
 }
 

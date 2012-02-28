@@ -31,7 +31,7 @@ class Variable {
 		void print() { Value::print(m_value); }
 		
 		Value* value() { return m_value; }
-		std::string name() { return m_name; }
+		std::string name() const { return m_name; }
 		
 		static Variable* findByName(std::string name);
 		

@@ -21,22 +21,26 @@
 #define FUNCTION_H
 
 #include <vector>
-#include "statement.h"
+#include <boost/any.hpp>
+
+class Expression;
 
 class Function {
 	public:
-		Function(std::string name);
+		Function(std::string name, std::vector<Expression*> *args, boost::any returnValue = -1);
 		~Function();
 		
 		std::string name() const { return m_name; }
-		std::string address() const { return m_address; }
 		
-		void addStatement(Statement &statement);
-	
+		static Function* findByName(std::string name) { return 0; }
+		
+		static void initMainFunc() { ; }
+		
+		static std::vector<Function*> funcs;
+		
 	private:
 		std::string m_name;
-		std::string m_address;
-		std::vector<Statement> m_statements;
+		std::vector<Expression*> *m_args;
 };
 
 #endif // FUNCTION_H

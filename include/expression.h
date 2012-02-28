@@ -23,6 +23,8 @@
 #include <boost/any.hpp>
 #include "variable.h"
 
+class Function;
+
 class Expression {
 	public:
 		Expression();
@@ -128,17 +130,30 @@ class IfExpression : public Expression {
 		Expression *m_ifExp, *m_thenExp, *m_elseExp;
 };
 
+class CallExpression : public Expression {
+	public:
+		CallExpression(std::string funcName, std::vector<Expression*> *args);
+		~CallExpression();
+		
+		Value* evaluate() { return new NullValue(); }
+		void doExp();
+		
+	private:
+		std::string m_funcName;
+		Function *m_func;
+		std::vector<Expression*> *m_args;
+};
+
 class PrintExpression : public Expression {
 	public:
 		PrintExpression(Expression *exp);
 		~PrintExpression();
-		
+
 		Value* evaluate() { return new StrValue(m_exp->evaluate()->value<std::string>()); }
 		void doExp() { Value::print(this->evaluate()); }
-		
+
 	private:
 		Expression *m_exp;
 };
 
 #endif // EXPRESSION_H
-
