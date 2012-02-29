@@ -1,4 +1,5 @@
-WordSphere=/home/quentin/Bureau/FlexBison/WordSphere CD=. filter="*.c *.h *.l *.y AUTHORS ChangeLog COPYING Makefile TODO *.md *.ws *.cpp" {
+WordSphere=/home/quentin/Bureau/FlexBison/WordSphere CD=. filter=".gitignore *.c *.h *.l *.y *.diff AUTHORS ChangeLog COPYING Makefile TODO *.md *.ws *.cpp" {
+ WordSphere.diff
  AUTHORS
  ChangeLog
  COPYING

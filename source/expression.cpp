@@ -123,10 +123,6 @@ Value* OpExpression::evaluate() {
 	}
 }
 
-VarExpression::VarExpression(Variable *var) {
-	m_var = var;
-}
-
 VarExpression::VarExpression(string varName) {
 	m_var = Variable::findByName(varName);
 }
@@ -143,10 +139,19 @@ AssignExpression::AssignExpression(string varName, Expression *valExp) {
 
 AssignExpression::~AssignExpression() {
 	delete m_var;
+	delete m_valExp;
 }
 
 Value* AssignExpression::evaluate() {
 	return m_var->value();
+}
+
+void AssignExpression::doExp() {
+	if(Variable::exists(m_varName)) {
+		m_var = Variable::findByName(m_varName);
+	} else {
+		m_var = new Variable(m_varName, m_valExp->evaluate());
+	}
 }
 
 IfExpression::IfExpression(Expression *ifExp, Expression *thenExp) {

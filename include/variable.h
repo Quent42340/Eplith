@@ -32,8 +32,12 @@ class Variable {
 		
 		Value* value() { return m_value; }
 		std::string name() const { return m_name; }
+		std::string address() const { return m_address; }
+		
+		void value(Value *value);
 		
 		static Variable* findByName(std::string name);
+		static bool exists(std::string name);
 		
 		static void initNullVar();
 		
@@ -41,6 +45,7 @@ class Variable {
 		
 	private:
 		std::string m_name;
+		std::string m_address;
 		Value* m_value;
 };
 

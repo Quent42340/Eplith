@@ -25,18 +25,26 @@ using namespace std;
 vector<Variable*> Variable::vars;
 
 Variable::Variable(string name, Value *value) {
+	m_address = getPtrAddr((void*)this);
 	m_name = name;
-	m_value = new Value(*value);
+	m_value = value;
 	
 	vars.push_back(this);
 	
 #ifdef VAR_DEBUG
-	cout << "Var name: " << m_name << " | Value: "; value->print(); cout << " | Nb of vars: " << vars.size() - 1 << endl;
+	cout << "Var name: " << m_name << " | Value: "; m_value->print(); cout << " | Nb of vars: " << vars.size() - 1 << endl;
 #endif
 }
 
 Variable::~Variable() {
 	delete m_value;
+}
+
+void Variable::value(Value *value) {
+	m_value = value;
+#ifdef VAR_DEBUG
+	cout << "Variable \"" << m_name << "\" has a new value: "; m_value->print(); cout << std::endl;
+#endif
 }
 
 Variable* Variable::findByName(std::string name) {
@@ -46,6 +54,15 @@ Variable* Variable::findByName(std::string name) {
 		}
 	}
 	return vars[0];
+}
+
+bool Variable::exists(std::string name) {
+	for(int i = 1 ; i < vars.size() ; i++) {
+		if(vars[i]->name() == name) {
+			return true;
+		}
+	}
+	return false;
 }
 
 void Variable::initNullVar() {
