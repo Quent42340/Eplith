@@ -31,7 +31,7 @@ Variable::Variable(string name, Value *value) {
 	vars.push_back(this);
 	
 #ifdef VAR_DEBUG
-	cout << "Var name: " << m_name << " | Value: "; Value::print(value); cout << " | Nb of vars: " << vars.size() - 1 << endl;
+	cout << "Var name: " << m_name << " | Value: "; value->print(); cout << " | Nb of vars: " << vars.size() - 1 << endl;
 #endif
 }
 
@@ -49,7 +49,7 @@ Variable* Variable::findByName(std::string name) {
 }
 
 void Variable::initNullVar() {
-	NullValue *nullValue = new NullValue();
+	Value *nullValue = new Value();
 	Variable *nullVar = new Variable("<null>", nullValue);
 }
 

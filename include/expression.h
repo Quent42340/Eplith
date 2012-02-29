@@ -44,7 +44,7 @@ class IntExpression : public Expression {
 		IntExpression(int value);
 		~IntExpression();
 		
-		Value* evaluate() { return new IntValue(m_value); }
+		Value* evaluate() { return new Value(m_value); }
 		void doExp() {}
 	
 	private:
@@ -56,7 +56,7 @@ class StrExpression : public Expression {
 		StrExpression(std::string str);
 		~StrExpression();
 		
-		Value* evaluate() { return new StrValue(m_str); }
+		Value* evaluate() { return new Value(m_str); }
 		void doExp() {}
 		
 	private:
@@ -68,7 +68,7 @@ class BoolExpression : public Expression {
 		BoolExpression(bool value);
 		~BoolExpression();
 		
-		Value* evaluate() { return new BoolValue(m_value); }
+		Value* evaluate() { return new Value(m_value); }
 		void doExp() {}
 		
 	private:
@@ -134,7 +134,7 @@ class CallExpression : public Expression {
 		CallExpression(std::string funcName, std::vector<Expression*> *args);
 		~CallExpression();
 		
-		Value* evaluate() { return new NullValue(); }
+		Value* evaluate() { return new Value(); }
 		void doExp();
 		
 	private:
@@ -148,8 +148,8 @@ class PrintExpression : public Expression {
 		PrintExpression(Expression *exp);
 		~PrintExpression();
 
-		Value* evaluate() { return new StrValue(m_exp->evaluate()->value<std::string>()); }
-		void doExp() { Value::print(this->evaluate()); }
+		Value* evaluate() { return new Value(m_exp->evaluate()->value<std::string>()); }
+		void doExp() { this->evaluate()->print(); }
 
 	private:
 		Expression *m_exp;

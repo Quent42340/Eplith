@@ -26,6 +26,7 @@ vector<Function*> Function::funcs;
 
 Function::Function(string name, vector<Expression*> *args, boost::any returnValue) {
 	m_name = name;
+	m_address = getPtrAddr((void*)this);
 }
 
 Function::~Function() {

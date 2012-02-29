@@ -31,6 +31,7 @@ class Function {
 		~Function();
 		
 		std::string name() const { return m_name; }
+		std::string address() const { return m_address; }
 		
 		static Function* findByName(std::string name) { return 0; }
 		
@@ -40,6 +41,7 @@ class Function {
 		
 	private:
 		std::string m_name;
+		std::string m_address;
 		std::vector<Expression*> *m_args;
 };
 

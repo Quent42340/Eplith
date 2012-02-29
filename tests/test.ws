@@ -16,7 +16,7 @@ if(var4) {
 	}
 } else {
 	if(!bool) {
-		print("Err, there is sth wrong.\n");
+		print("Err, there is something wrong.\n");
 	} else {
 		print("Yeah, it's normal!\n");
 	}
@@ -26,7 +26,7 @@ if(5 < 1) {
 	print("Are you kidding me?\n");
 } 
 else if(4 > 2) {
-	print("Okay that's good\n");
+	print("Okay that's good.\n");
 } else {
 	print("But what the fuck?\n");
 }

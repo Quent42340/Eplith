@@ -33,68 +33,26 @@ typedef enum {
 class Value {
 	public:
 		Value();
+		Value(int value);
+		Value(std::string value);
+		Value(char *value);
+		Value(bool value);
 		Value(Type type, boost::any value);
 		Value(boost::any *value);
 		Value(Variable *var);
 		~Value() {}
 		
-		static void print(Value* value);
+		void print();
 		
 		template <typename T>
 			T value() const { return *boost::any_cast<T>(&m_value); }
 		
 		boost::any* any() { return &m_value; }
-		
 		Type type() const { return m_type; }
-		
-		static Value* add(Value *val, Value *val2);
 		
 	protected:
 		Type m_type;
 		boost::any m_value;
 };
-
-class IntValue : public Value {
-	public:
-		IntValue(int value);
-		~IntValue() {}
-		
-		int value() const { return *boost::any_cast<int>(&m_value); }
-		
-		static IntValue* op(Value *val, int c, Value *val2);
-		static IntValue* op(Value *val, int c) { int r = -val->value<int>(); return new IntValue(r); }
-};
-
-class StrValue : public Value {
-	public:
-		StrValue(std::string str);
-		StrValue(char *str);
-		~StrValue() {}
-		
-		std::string value() const { return *boost::any_cast<std::string>(&m_value); }
-		
-		static StrValue* op(StrValue *val, int c, StrValue *val2);
-};
-
-class BoolValue : public Value {
-	public:
-		BoolValue(bool b);
-		~BoolValue() {}
-		
-		bool value() const { return *boost::any_cast<bool>(&m_value); }
-};
-
-class NullValue : public Value {
-	public:
-		NullValue();
-		~NullValue() {}
-		
-		std::string value() const { return "(null)"; }
-};
-
-std::ostream &operator<<(std::ostream &out, IntValue *val);
-std::ostream &operator<<(std::ostream &out, StrValue *str);
-std::ostream &operator<<(std::ostream &out, BoolValue *b);
-std::ostream &operator<<(std::ostream &out, NullValue *null);
 
 #endif // VALUE_H

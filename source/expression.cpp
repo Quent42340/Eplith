@@ -67,10 +67,10 @@ OpExpression::~OpExpression() {
 Value* OpExpression::evaluate() {
 	Value* val = m_exp1->evaluate();
 	if(m_oper == NEG) {
-		return new IntValue(-val->value<int>());
+		return new Value(-val->value<int>());
 	}
 	else if(m_oper == NOT) {
-		return new BoolValue(!val->value<bool>());
+		return new Value(!val->value<bool>());
 	} else {
 		Value* val2 = m_exp2->evaluate();
 		if(m_oper == '+') {
@@ -108,16 +108,16 @@ Value* OpExpression::evaluate() {
 		} else {
 			if((val->type() != typeInt) || (val2->type() != typeInt)) yyerror("Operation not available with these type");
 			switch(m_oper) {
-				case '-': return new IntValue(val->value<int>() - val2->value<int>());
-				case '*': return new IntValue(val->value<int>() * val2->value<int>());
-				case '/': return new IntValue(val->value<int>() / val2->value<int>());
-				case '^': return new IntValue(pow(val->value<int>(), val2->value<int>()));
-				case '<': return new BoolValue(val->value<int>() < val2->value<int>());
-				case '>': return new BoolValue(val->value<int>() > val2->value<int>());
-				case GE: return new BoolValue(val->value<int>() >= val2->value<int>());
-				case LE: return new BoolValue(val->value<int>() <= val2->value<int>());
-				case EQ: return new BoolValue(val->value<int>() == val2->value<int>());
-				case NE: return new BoolValue(val->value<int>() != val2->value<int>());
+				case '-': return new Value(val->value<int>() - val2->value<int>());
+				case '*': return new Value(val->value<int>() * val2->value<int>());
+				case '/': return new Value(val->value<int>() / val2->value<int>());
+				case '^': return new Value((int)pow(val->value<int>(), val2->value<int>()));
+				case '<': return new Value(val->value<int>() < val2->value<int>());
+				case '>': return new Value(val->value<int>() > val2->value<int>());
+				case GE: return new Value(val->value<int>() >= val2->value<int>());
+				case LE: return new Value(val->value<int>() <= val2->value<int>());
+				case EQ: return new Value(val->value<int>() == val2->value<int>());
+				case NE: return new Value(val->value<int>() != val2->value<int>());
 			}
 		}
 	}
