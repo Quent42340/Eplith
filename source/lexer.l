@@ -49,6 +49,7 @@ char* stringBufPtr;
 
 	/* Keywords */
 "while"						Expression::scopes++; return WHILE;
+"do"						return DO;
 "if"						Expression::scopes++; return IF;
 "else"						return ELSE;
 "print"						return PRINT;

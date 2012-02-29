@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
 %token STRA
 %token EQI EQS
 
-%token WHILE IF PRINT
+%token DO WHILE IF PRINT
 %token TRUE FALSE
 %token FUNCTION
 %token END
@@ -106,6 +106,7 @@ stmt:
 	| assign ';' { ; }
 	| PRINT '(' exp ')' ';' { $$ = new PrintExpression($3); }
 	| WHILE '(' exp ')' stmts { $$ = new WhileExpression($3, $5); }
+	| DO stmts WHILE '(' exp ')' ';' { $$ = new WhileExpression($5, $2); }
 	| IF '(' exp ')' stmts %prec IFX { $$ = new IfExpression($3, $5); }
 	| IF '(' exp ')' stmts ELSE stmts { $$ = new IfExpression($3, $5, $7); }
 	| NAME '(' exp_list ')' ';' { $$ = new CallExpression(string($1), $3); }

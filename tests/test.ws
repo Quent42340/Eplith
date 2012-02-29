@@ -37,3 +37,8 @@ while(x < 3) {
 	x = x + 1;
 }
 
+do {
+	print(x + "\n");
+	x = x - 1;
+} while(x > -1);
+
