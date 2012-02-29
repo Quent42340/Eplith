@@ -31,10 +31,9 @@ else if(4 > 2) {
 	print("But what the fuck?\n");
 }
 
-#!
 x = 0;
 while(x < 3) {
-	print(x);
+	print(x + "\n");
 	x = x + 1;
 }
-!#
+

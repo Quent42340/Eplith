@@ -32,6 +32,10 @@
 #include <cstdarg>
 
 #define VAR_DEBUG
+//#define SETVAR_DEBUG
+
+extern int yylineno;
+extern char* yytext;
 
 static inline std::string getPtrAddr(void* ptr) {
 	std::stringstream oss;

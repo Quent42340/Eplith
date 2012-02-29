@@ -27,8 +27,6 @@ using namespace std;
 extern FILE* yyin;
 
 void yyerror(string str) {
-	extern int yylineno;
-	extern char* yytext;
 	cerr << "Error: " << str << " at symbol \"" << yytext << "\" at line " << yylineno << endl;
 	exit(1);
 }
@@ -62,7 +60,7 @@ int main(int argc, char* argv[]) {
 	int iValue;
 	char* sValue;
 	Expression *exp;
-	std::vector<Expression*> *expsList;
+	std::vector<Expression*> *list;
 }
 
 %token <iValue> INTEGER
@@ -91,8 +89,8 @@ int main(int argc, char* argv[]) {
 
 %start program
 
-%type <exp> exp var assign stmt stmt_list
-%type <expsList> listOfExps
+%type <exp> exp var assign stmt
+%type <list> exp_list stmt_list stmts
 
 %%
 program:
@@ -107,25 +105,34 @@ stmt:
 	  ';' { ; }
 	| assign ';' { ; }
 	| PRINT '(' exp ')' ';' { $$ = new PrintExpression($3); }
-	| WHILE '(' exp ')' stmt { ; }
-	| IF '(' exp ')' stmt %prec IFX { $$ = new IfExpression($3, $5); }
-	| IF '(' exp ')' stmt ELSE stmt { $$ = new IfExpression($3, $5, $7); }
-	| NAME '(' listOfExps ')' { $$ = new CallExpression(string($1), $3); }
-	| '{' stmt_list '}' { $$ = $2; }
+	| WHILE '(' exp ')' stmts { $$ = new WhileExpression($3, $5); }
+	| IF '(' exp ')' stmts %prec IFX { $$ = new IfExpression($3, $5); }
+	| IF '(' exp ')' stmts ELSE stmts { $$ = new IfExpression($3, $5, $7); }
+	| NAME '(' exp_list ')' ';' { $$ = new CallExpression(string($1), $3); }
 	;
+
+stmts:
+	  stmt { vector<Expression*> *v = new vector<Expression*>;
+			 v->push_back($1);
+			 $$ = v; }
+	| '{' stmt_list '}' { $$ = $2; }
 
 stmt_list:
-	  stmt { $$ = $1; }
-	| stmt_list stmt { ; }
+	  stmt { vector<Expression*> *v = new vector<Expression*>;
+			 v->push_back($1);
+			 $$ = v; }
+	| stmt_list stmt { vector<Expression*> *v = $1;
+						   v->push_back($2);
+						   $$ = v; }
 	;
 
-listOfExps:
+exp_list:
 	  exp { vector<Expression*> *v = new vector<Expression*>;
 			v->push_back($1);
 			$$ = v; }
-	| listOfExps ',' exp { vector<Expression*> *v = $1;
-						   v->push_back($3);
-						   $$ = v; }
+	| exp_list ',' exp { vector<Expression*> *v = $1;
+						 v->push_back($3);
+						 $$ = v; }
 
 exp:
 	  INTEGER { $$ = new IntExpression($1); }

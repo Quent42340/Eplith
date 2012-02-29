@@ -48,7 +48,7 @@ char* stringBufPtr;
 <str>[^\\\n\"]+				{ char* yPtr = yytext; while(*yPtr) { *stringBufPtr++ = *yPtr++; } }
 
 	/* Keywords */
-"while"						return WHILE;
+"while"						Expression::scopes++; return WHILE;
 "if"						Expression::scopes++; return IF;
 "else"						return ELSE;
 "print"						return PRINT;

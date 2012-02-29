@@ -42,7 +42,7 @@ Variable::~Variable() {
 
 void Variable::value(Value *value) {
 	m_value = value;
-#ifdef VAR_DEBUG
+#ifdef SETVAR_DEBUG
 	cout << "Variable \"" << m_name << "\" has a new value: "; m_value->print(); cout << std::endl;
 #endif
 }

@@ -117,15 +117,17 @@ class AssignExpression : public Expression {
 
 class IfExpression : public Expression {
 	public:
-		IfExpression(Expression *ifExp, Expression *thenExp);
-		IfExpression(Expression *ifExp, Expression *thenExp, Expression *elseExp);
+		IfExpression(Expression *ifExp, std::vector<Expression*> *statements);
+		IfExpression(Expression *ifExp, std::vector<Expression*> *statements, std::vector<Expression*> *elseStatements);
 		~IfExpression();
 		
-		Value* evaluate();
+		Value* evaluate() { return new Value(); }
 		void doExp();
 		
 	private:
-		Expression *m_ifExp, *m_thenExp, *m_elseExp;
+		Expression *m_ifExp;
+		std::vector<Expression*> *m_statements;
+		std::vector<Expression*> *m_elseStatements;
 };
 
 class CallExpression : public Expression {
@@ -152,6 +154,19 @@ class PrintExpression : public Expression {
 
 	private:
 		Expression *m_exp;
+};
+
+class WhileExpression : public Expression {
+	public:
+		WhileExpression(Expression *whileExp, std::vector<Expression*> *statements);
+		~WhileExpression();
+		
+		Value* evaluate() { return new Value(); };
+		void doExp();
+		
+	private:
+		Expression *m_whileExp;
+		std::vector<Expression*> *m_statements;
 };
 
 #endif // EXPRESSION_H

@@ -149,49 +149,44 @@ Value* AssignExpression::evaluate() {
 void AssignExpression::doExp() {
 	if(Variable::exists(m_varName)) {
 		m_var = Variable::findByName(m_varName);
+		m_var->value(m_valExp->evaluate());
 	} else {
 		m_var = new Variable(m_varName, m_valExp->evaluate());
 	}
 }
 
-IfExpression::IfExpression(Expression *ifExp, Expression *thenExp) {
+IfExpression::IfExpression(Expression *ifExp, vector<Expression*> *statements) {
 	m_ifExp = ifExp;
-	m_thenExp = thenExp;
-	m_elseExp = 0;
+	m_statements = statements;
+	m_elseStatements = 0;
 	doThings(true);
 	scopes--;
 }
 
-IfExpression::IfExpression(Expression *ifExp, Expression *thenExp, Expression *elseExp) {
+IfExpression::IfExpression(Expression *ifExp, vector<Expression*> *statements, vector<Expression*> *elseStatements) {
 	m_ifExp = ifExp;
-	m_thenExp = thenExp;
-	m_elseExp = elseExp;
+	m_statements = statements;
+	m_elseStatements = elseStatements;
 	doThings(true);
 	scopes--;
 }
 
 IfExpression::~IfExpression() {
 	delete m_ifExp;
-	delete m_thenExp;
-	delete m_elseExp;
-}
-
-Value* IfExpression::evaluate() {
-	if(m_ifExp->evaluate()->value<bool>()) {
-		return m_thenExp->evaluate();
-	} else {
-		if(m_elseExp != 0) {
-			return m_elseExp->evaluate();
-		}
-	}
+	delete m_statements;
+	delete m_elseStatements;
 }
 
 void IfExpression::doExp() {
 	if(m_ifExp->evaluate()->value<bool>()) {
-		m_thenExp->doExp();
+		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
+			(*m_statements)[i]->doExp();
+		}
 	} else {
-		if(m_elseExp != 0) {
-			m_elseExp->doExp();
+		if(m_elseStatements != 0) {
+			for(unsigned int i = 0 ; i < m_elseStatements->size() ; i++) {
+				(*m_elseStatements)[i]->doExp();
+			}
 		}
 	}
 }
@@ -218,5 +213,25 @@ PrintExpression::PrintExpression(Expression *exp) {
 
 PrintExpression::~PrintExpression() {
 	delete m_exp;
+}
+
+WhileExpression::WhileExpression(Expression *whileExp, vector<Expression*> *statements) {
+	m_whileExp = whileExp;
+	m_statements = statements;
+	doThings(true);
+	scopes--;
+}
+
+WhileExpression::~WhileExpression() {
+	delete m_whileExp;
+	delete m_statements;
+}
+
+void WhileExpression::doExp() {
+	while(m_whileExp->evaluate()->value<bool>()) {
+		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
+			(*m_statements)[i]->doExp();
+		}
+	}
 }
 
