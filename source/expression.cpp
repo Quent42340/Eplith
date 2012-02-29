@@ -24,8 +24,9 @@
 
 using namespace std;
 
+int Expression::scopes = 0;
+
 Expression::Expression() {
-	m_inScope = false;
 }
 
 Expression::~Expression() {
@@ -152,14 +153,16 @@ IfExpression::IfExpression(Expression *ifExp, Expression *thenExp) {
 	m_ifExp = ifExp;
 	m_thenExp = thenExp;
 	m_elseExp = 0;
-	doThings();
+	doThings(true);
+	scopes--;
 }
 
 IfExpression::IfExpression(Expression *ifExp, Expression *thenExp, Expression *elseExp) {
 	m_ifExp = ifExp;
 	m_thenExp = thenExp;
 	m_elseExp = elseExp;
-	doThings();
+	doThings(true);
+	scopes--;
 }
 
 IfExpression::~IfExpression() {
@@ -180,10 +183,10 @@ Value* IfExpression::evaluate() {
 
 void IfExpression::doExp() {
 	if(m_ifExp->evaluate()->value<bool>()) {
-		m_thenExp->doThings(true);
+		m_thenExp->doExp();
 	} else {
 		if(m_elseExp != 0) {
-			m_elseExp->doThings(true);
+			m_elseExp->doExp();
 		}
 	}
 }

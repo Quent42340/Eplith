@@ -49,8 +49,9 @@ char* stringBufPtr;
 
 	/* Keywords */
 "while"						return WHILE;
-"if"						return IF;
+"if"						Expression::scopes++; return IF;
 "else"						return ELSE;
+"print"						return PRINT;
 "function"					return FUNCTION;
 ^"#debug"[ \t\n]*$			return DEBUG;
 

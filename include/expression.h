@@ -33,11 +33,10 @@ class Expression {
 		virtual Value* evaluate() = 0;
 		virtual void doExp() = 0;
 		
-		void doThings() { if(!m_inScope) { doExp(); } }
-		void doThings(bool inScope) { m_inScope = inScope; doExp(); m_inScope = !inScope; }
-	
-	private:
-		bool m_inScope;
+		void doThings() { if(scopes == 0) doExp(); }
+		void doThings(bool inScope) { if(scopes - 1 == 0) doExp(); }
+		
+		static int scopes;
 };
 
 class IntExpression : public Expression {
