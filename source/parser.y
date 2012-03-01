@@ -86,10 +86,11 @@ int main(int argc, char* argv[]) {
 %left NEG
 %left NOT
 %right '^'
+%right '='
 
 %start program
 
-%type <exp> exp var assign stmt
+%type <exp> exp var assign assignExpVal stmt
 %type <list> exp_list stmt_list stmts
 
 %%
@@ -160,7 +161,12 @@ exp:
 	;
 
 assign:
-	NAME '=' exp { $$ = new AssignExpression(string($1), $3); }
+	NAME '=' assignExpVal { $$ = new AssignExpression(string($1), $3); }
+	;
+
+assignExpVal:
+	exp { $$ = $1; }
+	| assign { $$ = $1; }
 	;
 
 var:

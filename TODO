@@ -1,3 +1,9 @@
+- Modulo Cp20
+- Logical operators ( && ( and ), || ( or ) Cp23
+- Bitwise operators ( >>, <<, etc.) Cp24 & 29
+- +=, etc. Cp20-21
+- ++x, --x, x++, x-- Cp20-21
+- See Cp26-27
 - Switch
 - Functions
 - Tables
