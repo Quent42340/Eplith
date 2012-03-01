@@ -254,8 +254,8 @@ ForExpression::~ForExpression() {
 }
 
 void ForExpression::doExp() {
-	while(m_whileExp->evaluate()->value<bool>()) {
-		//ToDo
+	if(m_stepExp == 0) m_stepExp = new Value(0);
+	for(unsigned int i = m_fromExp->evaluate()->value<int>() ; i <= m_fromExp->evaluate()->value<int>() ; i += m_stepExp->evaluate()->value<int>()) {
 		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
 			(*m_statements)[i]->doExp();
 		}
