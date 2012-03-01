@@ -42,3 +42,7 @@ do {
 	x = x - 1;
 } while(x > -1);
 
+for(i = 0->2) {
+	print(x + "\n");
+}
+

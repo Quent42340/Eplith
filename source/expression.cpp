@@ -235,7 +235,7 @@ void WhileExpression::doExp() {
 	}
 }
 
-ForExpression::ForExpression(Expression *varExp, std::vector<Expression*> *statements, Expression *toExp, Expression *stepExp = 0);
+ForExpression::ForExpression(Expression *varExp, std::vector<Expression*> *statements, Expression *toExp, Expression *stepExp) {
 	m_varExp = varExp;
 	m_statements = statements;
 	m_toExp = toExp;
@@ -252,7 +252,7 @@ ForExpression::~ForExpression() {
 }
 
 void ForExpression::doExp() {
-	if(m_stepExp == 0) m_stepExp = new Value(0);
+	if(m_stepExp == 0) m_stepExp = new IntExpression(1);
 	for(unsigned int i = m_varExp->evaluate()->value<int>() ; i <= m_toExp->evaluate()->value<int>() ; i += m_stepExp->evaluate()->value<int>()) {
 		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
 			(*m_statements)[i]->doExp();
