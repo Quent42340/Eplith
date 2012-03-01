@@ -254,7 +254,7 @@ ForExpression::~ForExpression() {
 void ForExpression::doExp() {
 	if(m_stepExp == 0) m_stepExp = new IntExpression(1);
 	for(unsigned int i = m_varExp->evaluate()->value<int>() ; i <= m_toExp->evaluate()->value<int>() ; i += m_stepExp->evaluate()->value<int>()) {
-		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
+		for(unsigned int j = 0 ; j < m_statements->size() ; j++) {
 			(*m_statements)[i]->doExp();
 		}
 	}
