@@ -112,6 +112,7 @@ Value* OpExpression::evaluate() {
 				case '*': return new Value(val->value<int>() * val2->value<int>());
 				case '/': return new Value(val->value<int>() / val2->value<int>());
 				case '^': return new Value((int)pow(val->value<int>(), val2->value<int>()));
+				case '%': return new Value(val->value<int>() % val2->value<int>());
 				case '<': return new Value(val->value<int>() < val2->value<int>());
 				case '>': return new Value(val->value<int>() > val2->value<int>());
 				case GE: return new Value(val->value<int>() >= val2->value<int>());

@@ -69,7 +69,7 @@ char* stringBufPtr;
 [0-9]+						yylval.iValue = atoi(yytext); return INTEGER;
 
 	/* Operators */
-[-()<>=+*/!{}.;^]			return *yytext;
+[-()<>=+*/%!{}.;^]			return *yytext;
 ">="						return GE;
 "<="						return LE;
 "=="						return EQ;

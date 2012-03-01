@@ -82,14 +82,15 @@ int main(int argc, char* argv[]) {
 
 %left GE LE EQ NE '>' '<'
 %left '+' '-'
-%left '*' '/'
+%left '*' '/' '%'
 %left NEG
 %left NOT
 %right '^'
+%right '='
 
 %start program
 
-%type <exp> exp var assign stmt
+%type <exp> exp var assign assignExpVal stmt
 %type <list> exp_list stmt_list stmts
 
 %%
@@ -150,6 +151,7 @@ exp:
 	| '-' exp %prec NEG { $$ = new OpExpression($2, NEG); }
 	| '!' exp %prec NOT { $$ = new OpExpression($2, NOT); }
 	| exp '^' exp { $$ = new OpExpression($1, '^', $3); }
+	| exp '%' exp { $$ = new OpExpression($1, '%', $3); }
 	| '(' exp ')' { $$ = $2; }
 	| exp '<' exp { $$ = new OpExpression($1, '<', $3); }
 	| exp '>' exp { $$ = new OpExpression($1, '>', $3); }
@@ -160,7 +162,12 @@ exp:
 	;
 
 assign:
-	NAME '=' exp { $$ = new AssignExpression(string($1), $3); }
+	NAME '=' assignExpVal { $$ = new AssignExpression(string($1), $3); }
+	;
+
+assignExpVal:
+	exp { $$ = $1; }
+	| assign { $$ = $1; }
 	;
 
 var:
