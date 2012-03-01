@@ -235,3 +235,30 @@ void WhileExpression::doExp() {
 	}
 }
 
+ForExpression::ForExpression(Expression *varExp, std::vector<Expression*> *statements, Expression *fromExp, Expression *toExp, Expression *stepExp = 0);
+	m_varExp = varExp;
+	m_statements = statements;
+	m_fromExp = fromExp;
+	m_toExp = toExp;
+	m_stepExp = stepExp;
+	doThings(true);
+	scopes--;
+}
+
+ForExpression::~ForExpression() {
+	delete m_varExp;
+	delete m_statements;
+	delete m_fromExp;
+	delete m_toExp;
+	delete m_stepExp;
+}
+
+void ForExpression::doExp() {
+	while(m_whileExp->evaluate()->value<bool>()) {
+		//ToDo
+		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
+			(*m_statements)[i]->doExp();
+		}
+	}
+}
+

@@ -169,4 +169,20 @@ class WhileExpression : public Expression {
 		std::vector<Expression*> *m_statements;
 };
 
+class ForExpression : public Expression {
+	public:
+		ForExpression(Expression *varExp, std::vector<Expression*> *statements, Expression *fromExp, Expression *toExp, Expression *stepExp = 0);
+		~ForExpression();
+		
+		Value* evaluate() { return new Value(); };
+		void doExp();
+		
+	private:
+		Expression *m_varExp;
+		Expression *m_fromExp;
+		Expression *m_toExp;
+		Expression *m_stepExp;
+		std::vector<Expression*> *m_statements;
+};
+
 #endif // EXPRESSION_H
