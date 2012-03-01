@@ -47,6 +47,9 @@ class Value {
 		template <typename T>
 			T value() const { return *boost::any_cast<T>(&m_value); }
 		
+		template <typename T>
+			T value(T value) { m_value = value; }
+		
 		boost::any* any() { return &m_value; }
 		
 		Type type() const { return m_type; }

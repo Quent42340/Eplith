@@ -43,6 +43,6 @@ do {
 } while(x > -1);
 
 for(i = 0->2) {
-	print(x + "\n");
+	print(i + "\n");
 }
 

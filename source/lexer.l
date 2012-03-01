@@ -54,7 +54,7 @@ char* stringBufPtr;
 "else"						return ELSE;
 "print"						return PRINT;
 "function"					return FUNCTION;
-"for"						return FOR;
+"for"						Expression::scopes++; return FOR;
 "->"						return TO;
 ^"#debug"[ \t\n]*$			return DEBUG;
 

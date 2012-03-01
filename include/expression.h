@@ -94,10 +94,11 @@ class VarExpression : public Expression {
 		VarExpression(std::string varName);
 		~VarExpression();
 		
-		Value* evaluate() { return m_var->value(); };
-		void doExp() {}
+		Value* evaluate() { doExp(); return m_var->value(); };
+		void doExp() { m_var = Variable::findByName(m_varName); }
 		
 	private:
+		std::string m_varName;
 		Variable *m_var;
 };
 
@@ -108,6 +109,8 @@ class AssignExpression : public Expression {
 		
 		Value* evaluate();
 		void doExp();
+		
+		virtual Variable* getVar() { return m_var; }
 		
 	private:
 		std::string m_varName;
@@ -149,7 +152,7 @@ class PrintExpression : public Expression {
 		PrintExpression(Expression *exp);
 		~PrintExpression();
 
-		Value* evaluate() { return new Value(m_exp->evaluate()->value<std::string>()); }
+		Value* evaluate() { return m_exp->evaluate(); }
 		void doExp() { this->evaluate()->print(); }
 
 	private:
@@ -178,7 +181,7 @@ class ForExpression : public Expression {
 		void doExp();
 		
 	private:
-		Expression *m_varExp;
+		AssignExpression *m_varExp;
 		Expression *m_toExp;
 		Expression *m_stepExp;
 		std::vector<Expression*> *m_statements;

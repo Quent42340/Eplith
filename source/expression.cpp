@@ -124,7 +124,8 @@ Value* OpExpression::evaluate() {
 }
 
 VarExpression::VarExpression(string varName) {
-	m_var = Variable::findByName(varName);
+	m_varName = varName;
+	doThings();
 }
 
 VarExpression::~VarExpression() {
@@ -236,27 +237,32 @@ void WhileExpression::doExp() {
 }
 
 ForExpression::ForExpression(Expression *varExp, std::vector<Expression*> *statements, Expression *toExp, Expression *stepExp) {
-	m_varExp = varExp;
-	m_statements = statements;
+	m_varExp = (AssignExpression*)varExp;
 	m_toExp = toExp;
 	m_stepExp = stepExp;
+	m_statements = statements;
 	doThings(true);
 	scopes--;
 }
 
 ForExpression::~ForExpression() {
 	delete m_varExp;
-	delete m_statements;
 	delete m_toExp;
 	delete m_stepExp;
+	delete m_statements;
 }
 
 void ForExpression::doExp() {
 	if(m_stepExp == 0) m_stepExp = new IntExpression(1);
+	m_varExp->doExp();
+	Value *vi = new Value((int)-1);
 	for(unsigned int i = m_varExp->evaluate()->value<int>() ; i <= m_toExp->evaluate()->value<int>() ; i += m_stepExp->evaluate()->value<int>()) {
+		vi->value<int>(i);
+		m_varExp->getVar()->value(vi);
 		for(unsigned int j = 0 ; j < m_statements->size() ; j++) {
-			(*m_statements)[i]->doExp();
+			(*m_statements)[j]->doExp();
 		}
 	}
+	delete vi;
 }
 
