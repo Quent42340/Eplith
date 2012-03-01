@@ -110,7 +110,7 @@ stmt:
 	| IF '(' exp ')' stmts %prec IFX { $$ = new IfExpression($3, $5); }
 	| IF '(' exp ')' stmts ELSE stmts { $$ = new IfExpression($3, $5, $7); }
 	| FOR '(' assign TO exp ';' exp ')' stmts { $$ = new ForExpression($3, $9, $5, $7);  }
-	| FOR '(' assign TO exp ')' stmts { $$ = new ForExpression($3, $9, $5);  }
+	| FOR '(' assign TO exp ')' stmts { $$ = new ForExpression($3, $7, $5);  }
 	| NAME '(' exp_list ')' ';' { $$ = new CallExpression(string($1), $3); }
 	;
 
