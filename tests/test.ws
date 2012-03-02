@@ -51,4 +51,3 @@ c = 5 % 2;
 d = bool && var4;
 e = bool || var4;
 
-

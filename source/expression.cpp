@@ -115,12 +115,14 @@ Value* OpExpression::evaluate() {
 				case '%': return new Value(val->value<int>() % val2->value<int>());
 				case '<': return new Value(val->value<int>() < val2->value<int>());
 				case '>': return new Value(val->value<int>() > val2->value<int>());
-				case GE: return new Value(val->value<int>() >= val2->value<int>());
-				case LE: return new Value(val->value<int>() <= val2->value<int>());
-				case EQ: return new Value(val->value<int>() == val2->value<int>());
-				case NE: return new Value(val->value<int>() != val2->value<int>());
-				case AND: return new Value(val->value<bool>() && val2->value<bool>());
-				case OR: return new Value(val->value<bool>() || val2->value<bool>());
+				case GE:  return new Value(val->value<int>() >= val2->value<int>());
+				case LE:  return new Value(val->value<int>() <= val2->value<int>());
+				case EQ:  return new Value(val->value<int>() == val2->value<int>());
+				case NE:  return new Value(val->value<int>() != val2->value<int>());
+				case AND: return new Value(((val->any()->type() == typeid(int)) ? (bool)val->value<int>() : val->value<bool>())
+										&& ((val2->any()->type() == typeid(int)) ? (bool)val2->value<int>() : val2->value<bool>()));
+				case OR: return new Value(((val->any()->type() == typeid(int)) ? (bool)val->value<int>() : val->value<bool>())
+										|| ((val2->any()->type() == typeid(int)) ? (bool)val2->value<int>() : val2->value<bool>()));
 			}
 		}
 	}
@@ -182,7 +184,7 @@ IfExpression::~IfExpression() {
 }
 
 void IfExpression::doExp() {
-	if(m_ifExp->evaluate()->value<bool>()) {
+	if(((m_ifExp->evaluate()->any()->type() == typeid(int)) ? (bool)m_ifExp->evaluate()->value<int>() : m_ifExp->evaluate()->value<bool>())) {
 		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
 			(*m_statements)[i]->doExp();
 		}
@@ -232,7 +234,7 @@ WhileExpression::~WhileExpression() {
 }
 
 void WhileExpression::doExp() {
-	while(m_whileExp->evaluate()->value<bool>()) {
+	while(((m_whileExp->evaluate()->any()->type() == typeid(int)) ? (bool)m_whileExp->evaluate()->value<int>() : m_whileExp->evaluate()->value<bool>())) {
 		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
 			(*m_statements)[i]->doExp();
 		}
