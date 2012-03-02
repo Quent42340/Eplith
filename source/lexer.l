@@ -74,6 +74,8 @@ char* stringBufPtr;
 "<="						return LE;
 "=="						return EQ;
 "!="						return NE;
+("&&"|"and")				return AND;
+("||"|"or")					return OR;
 
 	/* Comments */
 #!(.|\n)+!#					;	/* Ignore comments */

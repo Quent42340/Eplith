@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
 %nonassoc IFX
 %nonassoc ELSE
 
-%left GE LE EQ NE '>' '<'
+%left GE LE EQ NE '>' '<' AND OR
 %left '+' '-'
 %left '*' '/' '%'
 %left NEG
@@ -159,6 +159,8 @@ exp:
 	| exp LE exp { $$ = new OpExpression($1, LE, $3); }
 	| exp EQ exp { $$ = new OpExpression($1, EQ, $3); }
 	| exp NE exp { $$ = new OpExpression($1, NE, $3); }
+	| exp AND exp { $$ = new OpExpression($1, AND, $3); }
+	| exp OR exp { $$ = new OpExpression($1, OR, $3); }
 	;
 
 assign:

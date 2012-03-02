@@ -119,6 +119,8 @@ Value* OpExpression::evaluate() {
 				case LE: return new Value(val->value<int>() <= val2->value<int>());
 				case EQ: return new Value(val->value<int>() == val2->value<int>());
 				case NE: return new Value(val->value<int>() != val2->value<int>());
+				case AND: return new Value(val->value<bool>() && val2->value<bool>());
+				case OR: return new Value(val->value<bool>() || val2->value<bool>());
 			}
 		}
 	}

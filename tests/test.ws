@@ -48,4 +48,7 @@ for(i = 0->2) {
 
 a = b = 50;
 c = 5 % 2;
+d = bool && var4;
+e = bool || var4;
+
 
