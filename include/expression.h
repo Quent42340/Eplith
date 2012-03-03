@@ -110,7 +110,7 @@ class VarExpression : public Expression {
 
 class AssignExpression : public Expression {
 	public:
-		AssignExpression(std::string varName, Expression *valExp);
+		AssignExpression(std::string varName, Expression *valExp, int op = -1);
 		~AssignExpression();
 		
 		Value* evaluate();
@@ -122,6 +122,7 @@ class AssignExpression : public Expression {
 		std::string m_varName;
 		Variable *m_var;
 		Expression *m_valExp;
+		int m_op;
 };
 
 class IfExpression : public Expression {

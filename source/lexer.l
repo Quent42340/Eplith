@@ -89,9 +89,15 @@ char* stringBufPtr;
 ("<="|"leq_")				return LE;
 ("=="|"eq_")				return EQ;
 ("!="|"not_eq")				return NE;
-("&="|"and_eq")				return BAND_EQ;
-("|="|"or_eq")				return BOR_EQ;
-("\/="|"><="|"xor_eq")	 	return XOR_EQ;
+"+="						yylval.op = ADD; return ASSIGN_OP;
+"-="						yylval.op = SUB; return ASSIGN_OP;
+"*="						yylval.op = MUL; return ASSIGN_OP;
+"/="						yylval.op = DIV; return ASSIGN_OP;
+"^="						yylval.op = EXP; return ASSIGN_OP;
+"%="						yylval.op = MOD; return ASSIGN_OP;
+("&="|"and_eq")				yylval.op = BAND_EQ; return ASSIGN_OP;
+("|="|"or_eq")				yylval.op = BOR_EQ; return ASSIGN_OP;
+("\/="|"><="|"xor_eq")	 	yylval.op = XOR_EQ; return ASSIGN_OP;
 
 	/* Comments */
 #[^\[].*\n						;

@@ -61,6 +61,7 @@ int main(int argc, char* argv[]) {
 	char* sValue;
 	Expression *exp;
 	std::vector<Expression*> *list;
+	int op;
 }
 
 %token <iValue> INTEGER
@@ -70,6 +71,12 @@ int main(int argc, char* argv[]) {
 
 %token DEC HEX
 %token OCT BIN
+
+%token ADD SUB
+%token MUL DIV
+%token EXP MOD
+
+%token <op> ASSIGN_OP
 
 %token DEBUG
 %token vNULL
@@ -96,7 +103,7 @@ int main(int argc, char* argv[]) {
 %left '+' '-'
 %left '*' '/' '%'
 %left '^'
-%right NOT BNOT NEG
+%right NOT BNOT NEG POS
 
 %start program
 
@@ -161,6 +168,7 @@ exp:
 	| exp '*' exp { $$ = new OpExpression($1, '*', $3); }
 	| exp '/' exp { $$ = new OpExpression($1, '/', $3); }
 	| '-' exp %prec NEG { $$ = new OpExpression($2, NEG); }
+	| '+' exp %prec POS { $$ = new OpExpression($2, POS); }
 	| exp '^' exp { $$ = new OpExpression($1, '^', $3); }
 	| exp '%' exp { $$ = new OpExpression($1, '%', $3); }
 	| exp '<' exp { $$ = new OpExpression($1, '<', $3); }
@@ -195,6 +203,7 @@ integer:
 
 assign:
 	NAME '=' assignExpVal { $$ = new AssignExpression(string($1), $3); }
+	| NAME ASSIGN_OP assignExpVal { $$ = new AssignExpression(string($1), $3, $2); }
 	;
 
 assignExpVal:
