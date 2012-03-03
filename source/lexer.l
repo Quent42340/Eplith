@@ -33,12 +33,13 @@ char* stringBufPtr;
 %option yylineno
 
 %x str
+%x COMMENT
 
 %%
 	/* Strings */
 \"							{ BEGIN str; stringBufPtr = stringBuf; }
 <str>\"						{ *stringBufPtr = '\0'; yylval.sValue = strdup(stringBuf); BEGIN 0; return STRING; }
-<str>\n						{ yyerror("Newline in string\n"); }
+	/*<str>\n						{ yyerror("Newline in string\n"); }*/
 <str>\\n					{ *stringBufPtr++ = '\n'; }
 <str>\\t					{ *stringBufPtr++ = '\t'; }
 <str>\\r					{ *stringBufPtr++ = '\r'; }
@@ -48,6 +49,7 @@ char* stringBufPtr;
 <str>[^\\\n\"]+				{ char* yPtr = yytext; while(*yPtr) { *stringBufPtr++ = *yPtr++; } }
 
 	/* Keywords */
+^"#debug"[ \t\n]*$			return DEBUG;
 "while"						Expression::scopes++; return WHILE;
 "do"						return DO;
 "if"						Expression::scopes++; return IF;
@@ -55,8 +57,11 @@ char* stringBufPtr;
 "print"						return PRINT;
 "function"					return FUNCTION;
 "for"						Expression::scopes++; return FOR;
-"->"						return TO;
-^"#debug"[ \t\n]*$			return DEBUG;
+("->"|"to")					return TO;
+"dec"						return DEC;
+"hex"						return HEX;
+	/* TODO: "oct"						return OCT;*/
+	/* TODO: "bin"						return BIN;*/
 
 	/* Booleans */
 "true"						return TRUE;
@@ -67,20 +72,34 @@ char* stringBufPtr;
 
 	/* Integer */
 [0-9]+						yylval.iValue = atoi(yytext); return INTEGER;
+"0x"[0-9a-fA-F]+			yylval.iValue = strtol(yytext, NULL, 16); return HEX_INT;
 
 	/* Operators */
-[-()<>=+*/%!{}.;^]			return *yytext;
-">="						return GE;
-"<="						return LE;
-"=="						return EQ;
-"!="						return NE;
+[-()<>=+*/%{}.;^]			return *yytext;
+("!"|"not")					return NOT;
 ("&&"|"and")				return AND;
 ("||"|"or")					return OR;
+("&"|"bitand")				return BAND;
+("|"|"bitor")				return BOR;
+("><"|">-<"|"xor")			return XOR;
+("~"|"compl"|"bitnot")		return BNOT;
+("<<"|"lshift")				return LSHIFT;
+(">>"|"rshift")				return RSHIFT;
+(">="|"geq_")				return GE;
+("<="|"leq_")				return LE;
+("=="|"eq_")				return EQ;
+("!="|"not_eq")				return NE;
+("&="|"and_eq")				return BAND_EQ;
+("|="|"or_eq")				return BOR_EQ;
+("\/="|"><="|"xor_eq")	 	return XOR_EQ;
 
 	/* Comments */
-#!(.|\n)+!#					;	/* Ignore comments */
-#.+$						;	/* Ignore comments */
-	
+#[^\[].*\n						;
+"#["						BEGIN COMMENT;
+<COMMENT>"]#"				BEGIN INITIAL;
+<COMMENT>.|\n				;
+<COMMENT><<EOF>>			yyerror("Unterminated comment");
+
 	/* Whitespace */
 [ \t\n]+					;	/* Ignore whitespace */
 	

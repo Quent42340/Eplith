@@ -27,13 +27,15 @@ using namespace std;
 int Expression::scopes = 0;
 
 Expression::Expression() {
+	m_hexMode = false;
 }
 
 Expression::~Expression() {
 }
 
-IntExpression::IntExpression(int value) {
+IntExpression::IntExpression(int value, bool hexMode) {
 	m_value = value;
+	m_hexMode = hexMode;
 }
 
 IntExpression::~IntExpression() {
@@ -65,12 +67,16 @@ OpExpression::~OpExpression() {
 }
 
 Value* OpExpression::evaluate() {
+	if(m_exp1->hexMode() || ((m_exp2) ? m_exp2->hexMode() : 0)) m_hexMode = true;
 	Value* val = m_exp1->evaluate();
 	if(m_oper == NEG) {
-		return new Value(-val->value<int>());
+		return new Value(-val->value<int>(), m_hexMode);
 	}
 	else if(m_oper == NOT) {
 		return new Value(!val->value<bool>());
+	}
+	else if(m_oper == BNOT) {
+		return new Value(~val->value<int>());
 	} else {
 		Value* val2 = m_exp2->evaluate();
 		if(m_oper == '+') {
@@ -82,9 +88,12 @@ Value* OpExpression::evaluate() {
 					if(val->any()->type() == typeid(bool)) {
 						pb = *boost::any_cast<bool>(val->any());
 						out << ((pb) ? "true" : "false");
-						} else {
+					} else {
+						if(m_hexMode) out << "0x" << hex;
 						out << val->value<int>();
+						if(m_hexMode) out << dec;
 					}
+					out << ends;
 					tmp = out.str();
 				} else {
 					tmp = val->value<string>();
@@ -95,34 +104,44 @@ Value* OpExpression::evaluate() {
 						pb = *boost::any_cast<bool>(val2->any());
 						out2 << ((pb) ? "true" : "false");
 					} else {
+						if(m_hexMode) out2 << "0x" << hex;
 						out2 << val2->value<int>();
+						if(m_hexMode) out2 << dec;
 					}
+					out2 << ends;
 					tmp2 = out2.str();
 				} else {
 					tmp2 = val2->value<string>();
 				}
 				return new Value(typeStr, tmp + tmp2);
 			} else {
-				return new Value(typeInt, val->value<int>() + val2->value<int>());
+				return new Value(typeInt, val->value<int>() + val2->value<int>(), m_hexMode);
 			}
 		} else {
 			if((val->type() != typeInt) || (val2->type() != typeInt)) yyerror("Operation not available with these type");
 			switch(m_oper) {
-				case '-': return new Value(val->value<int>() - val2->value<int>());
-				case '*': return new Value(val->value<int>() * val2->value<int>());
-				case '/': return new Value(val->value<int>() / val2->value<int>());
-				case '^': return new Value((int)pow((double)val->value<int>(), (double)val2->value<int>()));
+				case '-': return new Value(val->value<int>() - val2->value<int>(), m_hexMode);
+				case '*': return new Value(val->value<int>() * val2->value<int>(), m_hexMode);
+				case '/': return new Value(val->value<int>() / val2->value<int>(), m_hexMode);
+				case '^': return new Value((int)pow((double)val->value<int>(), (double)val2->value<int>()), m_hexMode);
 				case '%': return new Value(val->value<int>() % val2->value<int>());
 				case '<': return new Value(val->value<int>() < val2->value<int>());
 				case '>': return new Value(val->value<int>() > val2->value<int>());
 				case GE:  return new Value(val->value<int>() >= val2->value<int>());
 				case LE:  return new Value(val->value<int>() <= val2->value<int>());
-				case EQ:  return new Value(val->value<int>() == val2->value<int>());
-				case NE:  return new Value(val->value<int>() != val2->value<int>());
+				case EQ: return new Value(((val->any()->type() == typeid(int)) ? (bool)val->value<int>() : val->value<bool>())
+										== ((val2->any()->type() == typeid(int)) ? (bool)val2->value<int>() : val2->value<bool>()));
+				case NE: return new Value(((val->any()->type() == typeid(int)) ? (bool)val->value<int>() : val->value<bool>())
+										!= ((val2->any()->type() == typeid(int)) ? (bool)val2->value<int>() : val2->value<bool>()));
 				case AND: return new Value(((val->any()->type() == typeid(int)) ? (bool)val->value<int>() : val->value<bool>())
 										&& ((val2->any()->type() == typeid(int)) ? (bool)val2->value<int>() : val2->value<bool>()));
 				case OR: return new Value(((val->any()->type() == typeid(int)) ? (bool)val->value<int>() : val->value<bool>())
 										|| ((val2->any()->type() == typeid(int)) ? (bool)val2->value<int>() : val2->value<bool>()));
+				case BAND: return new Value(val->value<int>() & val2->value<int>(), m_hexMode);
+				case BOR: return new Value(val->value<int>() | val2->value<int>(), m_hexMode);
+				case XOR: return new Value(val->value<int>() ^ val2->value<int>(), m_hexMode);
+				case LSHIFT: return new Value(val->value<int>() << val2->value<int>(), m_hexMode);
+				case RSHIFT: return new Value(val->value<int>() >> val2->value<int>(), m_hexMode);
 			}
 		}
 	}
@@ -159,14 +178,6 @@ void AssignExpression::doExp() {
 	} else {
 		m_var = new Variable(m_varName, m_valExp->evaluate());
 	}
-}
-
-IfExpression::IfExpression(Expression *ifExp, vector<Expression*> *statements) {
-	m_ifExp = ifExp;
-	m_statements = statements;
-	m_elseStatements = 0;
-	doThings(true);
-	scopes--;
 }
 
 IfExpression::IfExpression(Expression *ifExp, vector<Expression*> *statements, vector<Expression*> *elseStatements) {

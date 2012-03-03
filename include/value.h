@@ -33,19 +33,19 @@ typedef enum {
 class Value {
 	public:
 		Value();
-		Value(int value);			// Int type
-		Value(std::string value);	// String type
-		Value(char *value);			// String type
-		Value(bool value);			// Bool type
-		Value(Type type, boost::any value);
-		Value(boost::any *value);
-		Value(Variable *var);
+		Value(int value, bool hexMode = false);	// Int type
+		Value(std::string value);		// String type
+		Value(char *value);				// String type
+		Value(bool value);				// Bool type
+		Value(Type type, boost::any value, bool hexMode = false);
+		Value(boost::any *value, bool hexMode = false);
+		Value(Variable *var, bool hexMode = false);
 		~Value() {}
 		
 		void print();
 		
 		template <typename T>
-			T value() const { return *boost::any_cast<T>(&m_value); }
+			T value() const { const T *c = boost::any_cast<T>(&m_value); if(c) return *c; }
 		
 		template <typename T>
 			T value(T value) { m_value = value; }
@@ -54,9 +54,13 @@ class Value {
 		
 		Type type() const { return m_type; }
 		
+		bool hexMode() const { return m_hexMode; }
+		void hexMode(bool h) { m_hexMode = h; }
+		
 	protected:
 		Type m_type;
 		boost::any m_value;
+		bool m_hexMode;
 };
 
 #endif // VALUE_H

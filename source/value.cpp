@@ -29,9 +29,10 @@ Value::Value() {
 	m_value = string("(null)");
 }
 
-Value::Value(int value) {
+Value::Value(int value, bool hexMode) {
 	m_type = typeInt;
 	m_value = value;
+	m_hexMode = hexMode;
 }
 
 Value::Value(string value) {
@@ -49,12 +50,13 @@ Value::Value(bool value) {
 	m_value = value;
 }
 
-Value::Value(Type type, boost::any value) {
+Value::Value(Type type, boost::any value, bool hexMode) {
 	m_type = type;
 	m_value = value;
+	m_hexMode = hexMode;
 }
 
-Value::Value(boost::any *value) {
+Value::Value(boost::any *value, bool hexMode) {
 	m_value = *value;
 	
 	if(int *pi = boost::any_cast<int>(&m_value)) {
@@ -68,9 +70,11 @@ Value::Value(boost::any *value) {
 	} else {
 		m_type = typeVoid;
 	}
+	
+	m_hexMode = hexMode;
 }
 
-Value::Value(Variable *var) {
+Value::Value(Variable *var, bool hexMode) {
 	m_value = var->value()->m_value;
 	
 	if(int *pi = boost::any_cast<int>(&m_value)) {
@@ -84,11 +88,15 @@ Value::Value(Variable *var) {
 	} else {
 		m_type = typeVoid;
 	}
+	
+	m_hexMode = hexMode;
 }
 
 void Value::print() {
 	if(int *pi = boost::any_cast<int>(&m_value)) {
+		if(m_hexMode) cout << "0x" << hex;
 		cout << *pi;
+		if(m_hexMode) cout << dec;
 	}
 	else if(string *pstr = boost::any_cast<string>(&m_value)) {
 		cout << *pstr;

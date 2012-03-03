@@ -64,8 +64,12 @@ int main(int argc, char* argv[]) {
 }
 
 %token <iValue> INTEGER
+%token <iValue> HEX_INT
 %token <sValue> NAME
 %token <sValue> STRING
+
+%token DEC HEX
+%token OCT BIN
 
 %token DEBUG
 %token vNULL
@@ -76,21 +80,27 @@ int main(int argc, char* argv[]) {
 %token DO WHILE IF PRINT FOR TO
 %token TRUE FALSE
 %token FUNCTION
-%token END
 %nonassoc IFX
 %nonassoc ELSE
-
-%left GE LE EQ NE '>' '<' AND OR
+	
+	/* See Cp19 for others */
+%left '=' BAND_EQ BOR_EQ XOR_EQ
+%left OR
+%left AND
+%left BOR
+%left XOR
+%left BAND
+%left EQ NE
+%left '<' LE '>' GE
+%left LSHIFT RSHIFT
 %left '+' '-'
 %left '*' '/' '%'
-%left NEG
-%left NOT
-%right '^'
-%right '='
+%left '^'
+%right NOT BNOT NEG
 
 %start program
 
-%type <exp> exp var assign assignExpVal stmt
+%type <exp> exp var assign assignExpVal stmt cast integer
 %type <list> exp_list stmt_list stmts
 
 %%
@@ -140,27 +150,47 @@ exp_list:
 
 exp:
 	  INTEGER { $$ = new IntExpression($1); }
+	| HEX_INT { $$ = new IntExpression($1, true); }
 	| STRING { $$ = new StrExpression($1); }
 	| TRUE { $$ = new BoolExpression(true); }
 	| FALSE { $$ = new BoolExpression(false); }
 	| var { $$ = $1; }
+	| cast { $$ = $1; }
 	| exp '+' exp { $$ = new OpExpression($1, '+', $3); }
 	| exp '-' exp { $$ = new OpExpression($1, '-', $3); }
 	| exp '*' exp { $$ = new OpExpression($1, '*', $3); }
 	| exp '/' exp { $$ = new OpExpression($1, '/', $3); }
 	| '-' exp %prec NEG { $$ = new OpExpression($2, NEG); }
-	| '!' exp %prec NOT { $$ = new OpExpression($2, NOT); }
 	| exp '^' exp { $$ = new OpExpression($1, '^', $3); }
 	| exp '%' exp { $$ = new OpExpression($1, '%', $3); }
-	| '(' exp ')' { $$ = $2; }
 	| exp '<' exp { $$ = new OpExpression($1, '<', $3); }
 	| exp '>' exp { $$ = new OpExpression($1, '>', $3); }
+	| NOT exp { $$ = new OpExpression($2, NOT); }
+	| exp AND exp { $$ = new OpExpression($1, AND, $3); }
+	| exp OR exp { $$ = new OpExpression($1, OR, $3); }
+	| exp BAND exp { $$ = new OpExpression($1, BAND, $3); }
+	| exp BOR exp { $$ = new OpExpression($1, BOR, $3); }
+	| exp XOR exp { $$ = new OpExpression($1, XOR, $3); }
+	| BNOT exp { $$ = new OpExpression($2, BNOT); }
+	| exp LSHIFT exp { $$ = new OpExpression($1, LSHIFT, $3); }
+	| exp RSHIFT exp { $$ = new OpExpression($1, RSHIFT, $3); }
 	| exp GE exp { $$ = new OpExpression($1, GE, $3); }
 	| exp LE exp { $$ = new OpExpression($1, LE, $3); }
 	| exp EQ exp { $$ = new OpExpression($1, EQ, $3); }
 	| exp NE exp { $$ = new OpExpression($1, NE, $3); }
-	| exp AND exp { $$ = new OpExpression($1, AND, $3); }
-	| exp OR exp { $$ = new OpExpression($1, OR, $3); }
+	| '(' exp ')' { $$ = $2; }
+	;
+
+cast:
+	  '(' DEC ')' integer { Expression::setHexMode($4, false); $$ = $4; }
+	| '(' HEX ')' integer { Expression::setHexMode($4, true); $$ = $4; }
+	;
+
+integer:
+	INTEGER { $$ = new IntExpression($1); }
+	| HEX_INT { $$ = new IntExpression($1, true); }
+	| var { VarExpression *v = (VarExpression*)$1;
+			if(v->evaluate()->type() == typeInt) $$ = v; else yyerror("Requires an integer expression here."); }
 	;
 
 assign:

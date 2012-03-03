@@ -1,4 +1,4 @@
-var = 52;
+#[var = 52;
 str = "string";
 var2 = 50;
 var3 = var + var2;
@@ -46,8 +46,18 @@ for(i = 0->2) {
 	print(i + "\n");
 }
 
-a = b = 50;
+b = a = 0x5F;
+print("a = " + (hex)a + " b = " + b + "\n");
+
 c = 5 % 2;
 d = bool && var4;
 e = bool || var4;
+]#
+
+f = ~7; # 8
+g = 5 & 3; # 1
+h = 5 | 3; # 7
+k = 5 >< 3; # 6
+l = 0xF << 4; # 0xF0
+m = 0xF >> 2; # 0x3
 

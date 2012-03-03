@@ -37,14 +37,20 @@ class Expression {
 		void doThings(bool inScope) { if(scopes - 1 == 0) doExp(); }
 		
 		static int scopes;
+		
+		bool hexMode() const { return m_hexMode; }
+		static void setHexMode(Expression *exp, bool h) { exp->m_hexMode = h; }
+		
+	protected:
+		bool m_hexMode;
 };
 
 class IntExpression : public Expression {
 	public:
-		IntExpression(int value);
+		IntExpression(int value, bool hexMode = false);
 		~IntExpression();
 		
-		Value* evaluate() { return new Value(m_value); }
+		Value* evaluate() { return new Value(m_value, m_hexMode); }
 		void doExp() {}
 	
 	private:
@@ -94,7 +100,7 @@ class VarExpression : public Expression {
 		VarExpression(std::string varName);
 		~VarExpression();
 		
-		Value* evaluate() { doExp(); return m_var->value(); };
+		Value* evaluate() { doExp(); return m_var->value(); }
 		void doExp() { m_var = Variable::findByName(m_varName); }
 		
 	private:
@@ -120,8 +126,7 @@ class AssignExpression : public Expression {
 
 class IfExpression : public Expression {
 	public:
-		IfExpression(Expression *ifExp, std::vector<Expression*> *statements);
-		IfExpression(Expression *ifExp, std::vector<Expression*> *statements, std::vector<Expression*> *elseStatements);
+		IfExpression(Expression *ifExp, std::vector<Expression*> *statements, std::vector<Expression*> *elseStatements = 0);
 		~IfExpression();
 		
 		Value* evaluate() { return new Value(); }
