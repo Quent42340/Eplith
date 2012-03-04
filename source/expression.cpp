@@ -243,6 +243,41 @@ void AssignExpression::doExp() {
 	}
 }
 
+CrExpression::CrExpression(Expression *varExp, int op, bool after) {
+	m_varExp = (VarExpression*)varExp;
+	m_op = op;
+	m_after = after;
+	if(m_varExp->getVar()->value()->type() != typeInt) yyerror("Incrementation / decrementation unavailable with these type");
+	doThings();
+}
+
+CrExpression::~CrExpression() {
+	delete m_varExp;
+}
+
+Value* CrExpression::evaluate() {
+	Value *val = new Value(*m_varExp->getVar()->value());
+	switch(m_op) {
+		case INCR: {
+			Value *val2 = m_varExp->getVar()->value()->valIncr();
+			if(m_after) {
+				return val;
+			} else {
+				return val2;
+			}
+		}
+		case DECR: {
+			Value *val2 = m_varExp->getVar()->value()->valIncr();
+			if(m_after) {
+				return val;
+			} else {
+				return val2;
+			}
+		}
+		default:   yyerror("Unexpected operator");
+	}
+}
+
 IfExpression::IfExpression(Expression *ifExp, vector<Expression*> *statements, vector<Expression*> *elseStatements) {
 	m_ifExp = ifExp;
 	m_statements = statements;

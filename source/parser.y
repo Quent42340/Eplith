@@ -84,12 +84,14 @@ int main(int argc, char* argv[]) {
 %token STRA
 %token EQI EQS
 
+%token INCR_A DECR_A INCR_B DECR_B
+
 %token DO WHILE IF PRINT FOR TO
 %token TRUE FALSE
 %token FUNCTION
 %nonassoc IFX
 %nonassoc ELSE
-	
+
 	/* See Cp19 for others */
 %left '=' BAND_EQ BOR_EQ XOR_EQ
 %left OR
@@ -103,7 +105,7 @@ int main(int argc, char* argv[]) {
 %left '+' '-'
 %left '*' '/' '%'
 %left '^'
-%right NOT BNOT NEG POS
+%right NOT BNOT NEG POS INCR DECR
 
 %start program
 
@@ -162,6 +164,10 @@ exp:
 	| TRUE { $$ = new BoolExpression(true); }
 	| FALSE { $$ = new BoolExpression(false); }
 	| var { $$ = $1; }
+	| INCR var { $$ = new CrExpression($2, INCR); }
+	| DECR var { $$ = new CrExpression($2, DECR); }
+	| var INCR { $$ = new CrExpression($1, INCR, true); }
+	| var DECR { $$ = new CrExpression($1, DECR, true); }
 	| cast { $$ = $1; }
 	| exp '+' exp { $$ = new OpExpression($1, '+', $3); }
 	| exp '-' exp { $$ = new OpExpression($1, '-', $3); }

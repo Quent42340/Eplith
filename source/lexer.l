@@ -98,6 +98,8 @@ char* stringBufPtr;
 ("&="|"and_eq")				yylval.op = BAND_EQ; return ASSIGN_OP;
 ("|="|"or_eq")				yylval.op = BOR_EQ; return ASSIGN_OP;
 ("\/="|"><="|"xor_eq")	 	yylval.op = XOR_EQ; return ASSIGN_OP;
+"++"						return INCR;
+"--"						return DECR;
 
 	/* Comments */
 #[^\[].*\n						;

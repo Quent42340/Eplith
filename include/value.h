@@ -57,6 +57,9 @@ class Value {
 		bool hexMode() const { return m_hexMode; }
 		void hexMode(bool h) { m_hexMode = h; }
 		
+		Value *valIncr() { m_value = value<int>() + 1; return this; }
+		Value *valDecr() { m_value = value<int>() - 1; return this; }
+		
 	protected:
 		Type m_type;
 		boost::any m_value;
