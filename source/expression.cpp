@@ -260,21 +260,15 @@ Value* CrExpression::evaluate() {
 	switch(m_op) {
 		case INCR: {
 			Value *val2 = m_varExp->getVar()->value()->valIncr();
-			if(m_after) {
-				return val;
-			} else {
-				return val2;
-			}
+			if(m_after) return val;
+			else return val2;
 		}
 		case DECR: {
-			Value *val2 = m_varExp->getVar()->value()->valIncr();
-			if(m_after) {
-				return val;
-			} else {
-				return val2;
-			}
+			Value *val2 = m_varExp->getVar()->value()->valDecr();
+			if(m_after) return val;
+			else return val2;
 		}
-		default:   yyerror("Unexpected operator");
+		default: yyerror("Unexpected operator");
 	}
 }
 
