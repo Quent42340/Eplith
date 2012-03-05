@@ -103,7 +103,7 @@ class VarExpression : public Expression {
 		Value* evaluate() { doExp(); return m_var->value(); }
 		void doExp() { m_var = Variable::findByName(m_varName); }
 		
-		virtual Variable* getVar() { return m_var; }
+		virtual Variable* getVar() { doExp(); return m_var; }
 		
 	private:
 		std::string m_varName;
@@ -118,7 +118,7 @@ class AssignExpression : public Expression {
 		Value* evaluate();
 		void doExp();
 		
-		virtual Variable* getVar() { return m_var; }
+		virtual Variable* getVar() { doExp(); return m_var; }
 		
 	private:
 		std::string m_varName;

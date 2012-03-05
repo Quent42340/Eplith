@@ -287,7 +287,8 @@ IfExpression::~IfExpression() {
 }
 
 void IfExpression::doExp() {
-	if(((m_ifExp->evaluate()->any()->type() == typeid(int)) ? (bool)m_ifExp->evaluate()->value<int>() : m_ifExp->evaluate()->value<bool>())) {
+	Value *ifExpVal = m_ifExp->evaluate();
+	if(((ifExpVal->any()->type() == typeid(int)) ? (bool)ifExpVal->value<int>() : ifExpVal->value<bool>())) {
 		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
 			(*m_statements)[i]->doExp();
 		}
@@ -337,7 +338,8 @@ WhileExpression::~WhileExpression() {
 }
 
 void WhileExpression::doExp() {
-	while(((m_whileExp->evaluate()->any()->type() == typeid(int)) ? (bool)m_whileExp->evaluate()->value<int>() : m_whileExp->evaluate()->value<bool>())) {
+	Value *whileExpVal = m_whileExp->evaluate();
+	while(((whileExpVal->any()->type() == typeid(int)) ? (bool)whileExpVal->value<int>() : whileExpVal->value<bool>())) {
 		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
 			(*m_statements)[i]->doExp();
 		}
