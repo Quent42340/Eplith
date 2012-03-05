@@ -259,12 +259,19 @@ CrExpression::~CrExpression() {
 
 void CrExpression::doExp() {
 	m_valB = new Value(*m_varExp->getVar()->value());
-	if(m_op == INCR) m_valA = m_varExp->getVar()->value()->valIncr();
-	else if(m_op == DECR) m_valA = m_varExp->getVar()->value()->valDecr();
-	else yyerror("Unexpected operator");
+	if(m_op == INCR) {
+		m_valA = m_varExp->getVar()->value()->valIncr();
+	}
+	else if(m_op == DECR) {
+		m_valA = m_varExp->getVar()->value()->valDecr();
+	} else {
+		yyerror("Unexpected operator");
+	}
+	// Here it doesn't works: Segfault. Why?
 }
 
 Value* CrExpression::evaluate() {
+	// Here it works
 	switch(m_op) {
 		case INCR: {
 			if(m_after) return m_valB;
