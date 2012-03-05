@@ -26,6 +26,7 @@ class Variable;
 
 typedef enum {
 	typeInt,
+	typeFloat,
 	typeStr,
 	typeVoid
 } Type;
@@ -34,9 +35,10 @@ class Value {
 	public:
 		Value();
 		Value(int value, bool hexMode = false);	// Int type
-		Value(std::string value);		// String type
-		Value(char *value);				// String type
-		Value(bool value);				// Bool type
+		Value(double value);					// Float type
+		Value(std::string value);				// String type
+		Value(char *value);						// String type
+		Value(bool value);						// Bool type
 		Value(Type type, boost::any value, bool hexMode = false);
 		Value(boost::any *value, bool hexMode = false);
 		Value(Variable *var, bool hexMode = false);

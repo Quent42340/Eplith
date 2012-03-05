@@ -58,6 +58,7 @@ int main(int argc, char* argv[]) {
 
 %union {
 	int iValue;
+	double fValue;
 	char* sValue;
 	Expression *exp;
 	std::vector<Expression*> *list;
@@ -66,11 +67,13 @@ int main(int argc, char* argv[]) {
 
 %token <iValue> INTEGER
 %token <iValue> HEX_INT
+%token <fValue> FLOAT
 %token <sValue> NAME
 %token <sValue> STRING
 
 %token DEC HEX
 %token OCT BIN
+%token SCI
 
 %token ADD SUB
 %token MUL DIV
@@ -168,6 +171,7 @@ exp_list:
 exp:
 	  INTEGER { $$ = new IntExpression($1); }
 	| HEX_INT { $$ = new IntExpression($1, true); }
+	| FLOAT { $$ = new FloatExpression($1); }
 	| STRING { $$ = new StrExpression($1); }
 	| TRUE { $$ = new BoolExpression(true); }
 	| FALSE { $$ = new BoolExpression(false); }
@@ -206,6 +210,7 @@ exp:
 cast:
 	  '(' DEC ')' integer { Expression::setHexMode($4, false); $$ = $4; }
 	| '(' HEX ')' integer { Expression::setHexMode($4, true); $$ = $4; }
+	/*| '(' SCI ')' integer { Expression::setSciMode($4, true); $$ = $4; }*/
 	;
 
 integer:

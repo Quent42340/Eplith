@@ -64,6 +64,7 @@ char* stringBufPtr;
 "hex"						return HEX;
 	/* TODO: "oct"						return OCT;*/
 	/* TODO: "bin"						return BIN;*/
+"sci"						return SCI;
 
 	/* Booleans */
 "true"						return TRUE;
@@ -73,8 +74,13 @@ char* stringBufPtr;
 [a-zA-Z]([0-9]|[a-zA-Z])*	yylval.sValue = strdup(yytext); return NAME;
 
 	/* Integer */
-[0-9]+						yylval.iValue = atoi(yytext); return INTEGER;
+-?[0-9]+					yylval.iValue = atoi(yytext); return INTEGER;
 "0x"[0-9a-fA-F]+			yylval.iValue = strtol(yytext, NULL, 16); return HEX_INT;
+
+	/* Float */
+-?[0-9]*"."[0-9]+ |
+-?[0-9]*("."[0-9]+)?[eE][-+]?[0-9]+ yylval.fValue = atof(yytext); return FLOAT;
+
 
 	/* Operators */
 [-()<>=+*/%{}.;^]			return *yytext;
