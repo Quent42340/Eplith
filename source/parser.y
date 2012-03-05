@@ -140,10 +140,13 @@ stmt:
 	;
 
 stmts:
-	  stmt { vector<Expression*> *v = new vector<Expression*>;
-			 v->push_back($1);
-			 $$ = v; }
+	stmt { vector<Expression*> *v = new vector<Expression*>;
+		   v->push_back($1);
+		   $$ = v; }
 	| '{' stmt_list '}' { $$ = $2; }
+	| '{' '}' { vector<Expression*> *v = new vector<Expression*>;
+				$$ = v; }
+	;
 
 stmt_list:
 	  stmt { vector<Expression*> *v = new vector<Expression*>;

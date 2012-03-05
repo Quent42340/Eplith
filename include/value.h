@@ -60,6 +60,8 @@ class Value {
 		Value *valIncr() { m_value = value<int>() + 1; return this; }
 		Value *valDecr() { m_value = value<int>() - 1; return this; }
 		
+		Value *intToBool() { return (m_value.type() == typeid(int)) ? new Value((bool)value<int>()) : new Value(value<bool>()); }
+		
 	protected:
 		Type m_type;
 		boost::any m_value;

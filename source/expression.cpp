@@ -248,7 +248,6 @@ CrExpression::CrExpression(Expression *varExp, int op, bool after) {
 	m_op = op;
 	m_after = after;
 	if(m_varExp->getVar()->value()->type() != typeInt) yyerror("Incrementation / decrementation unavailable with these type");
-	doThings();
 }
 
 CrExpression::~CrExpression() {
@@ -267,11 +266,10 @@ void CrExpression::doExp() {
 	} else {
 		yyerror("Unexpected operator");
 	}
-	// Here it doesn't works: Segfault. Why?
 }
 
 Value* CrExpression::evaluate() {
-	// Here it works
+	doExp();
 	switch(m_op) {
 		case INCR: {
 			if(m_after) return m_valB;
@@ -300,8 +298,7 @@ IfExpression::~IfExpression() {
 }
 
 void IfExpression::doExp() {
-	Value *ifExpVal = m_ifExp->evaluate();
-	if(((ifExpVal->any()->type() == typeid(int)) ? (bool)ifExpVal->value<int>() : ifExpVal->value<bool>())) {
+	if(m_ifExp->evaluate()->intToBool()) {
 		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
 			(*m_statements)[i]->doExp();
 		}
@@ -351,11 +348,10 @@ WhileExpression::~WhileExpression() {
 }
 
 void WhileExpression::doExp() {
-	Value *whileExpVal = m_whileExp->evaluate();
-	while(((whileExpVal->any()->type() == typeid(int)) ? (bool)whileExpVal->value<int>() : whileExpVal->value<bool>())) {
+	while(m_whileExp->evaluate()->intToBool()->value<bool>()) {
 		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
-			if((*m_statements)[i] == (Expression*)BREAK) cout << "Oh" << endl; continue;
-			if((*m_statements)[i] == (Expression*)CONTINUE) cout << "OMG" << endl; continue;
+			//if((*m_statements)[i] == (Expression*)BREAK) cout << "Oh" << endl; continue;
+			//if((*m_statements)[i] == (Expression*)CONTINUE) cout << "OMG" << endl; continue;
 			(*m_statements)[i]->doExp();
 		}
 	}
