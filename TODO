@@ -1,7 +1,10 @@
-- See Cp19,26-27,37-38
+- Continue / Break
+- Float
 - Switch
-- Functions
+- Functions ( return )
+- type()
 - Tables
 - Structs
 - Enums
 - Classes
+- Goto

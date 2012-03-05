@@ -253,20 +253,26 @@ CrExpression::CrExpression(Expression *varExp, int op, bool after) {
 
 CrExpression::~CrExpression() {
 	delete m_varExp;
+	delete m_valA;
+	delete m_valB;
+}
+
+void CrExpression::doExp() {
+	m_valB = new Value(*m_varExp->getVar()->value());
+	if(m_op == INCR) m_valA = m_varExp->getVar()->value()->valIncr();
+	else if(m_op == DECR) m_valA = m_varExp->getVar()->value()->valDecr();
+	else yyerror("Unexpected operator");
 }
 
 Value* CrExpression::evaluate() {
-	Value *val = new Value(*m_varExp->getVar()->value());
 	switch(m_op) {
 		case INCR: {
-			Value *val2 = m_varExp->getVar()->value()->valIncr();
-			if(m_after) return val;
-			else return val2;
+			if(m_after) return m_valB;
+			else return m_valA;
 		}
 		case DECR: {
-			Value *val2 = m_varExp->getVar()->value()->valDecr();
-			if(m_after) return val;
-			else return val2;
+			if(m_after) return m_valB;
+			else return m_valA;
 		}
 		default: yyerror("Unexpected operator");
 	}
@@ -287,7 +293,8 @@ IfExpression::~IfExpression() {
 }
 
 void IfExpression::doExp() {
-	if(((m_ifExp->evaluate()->any()->type() == typeid(int)) ? (bool)m_ifExp->evaluate()->value<int>() : m_ifExp->evaluate()->value<bool>())) {
+	Value *ifExpVal = m_ifExp->evaluate();
+	if(((ifExpVal->any()->type() == typeid(int)) ? (bool)ifExpVal->value<int>() : ifExpVal->value<bool>())) {
 		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
 			(*m_statements)[i]->doExp();
 		}
@@ -337,8 +344,11 @@ WhileExpression::~WhileExpression() {
 }
 
 void WhileExpression::doExp() {
-	while(((m_whileExp->evaluate()->any()->type() == typeid(int)) ? (bool)m_whileExp->evaluate()->value<int>() : m_whileExp->evaluate()->value<bool>())) {
+	Value *whileExpVal = m_whileExp->evaluate();
+	while(((whileExpVal->any()->type() == typeid(int)) ? (bool)whileExpVal->value<int>() : whileExpVal->value<bool>())) {
 		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
+			if((*m_statements)[i] == (Expression*)BREAK) cout << "Oh" << endl; continue;
+			if((*m_statements)[i] == (Expression*)CONTINUE) cout << "OMG" << endl; continue;
 			(*m_statements)[i]->doExp();
 		}
 	}

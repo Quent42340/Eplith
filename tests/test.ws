@@ -1,4 +1,4 @@
-#[var = 52;
+var = 52;
 str = "string";
 var2 = 50;
 var3 = var + var2;
@@ -52,18 +52,5 @@ print("a = " + (hex)a + " b = " + b + "\n");
 c = 5 % 2;
 d = bool && var4;
 e = bool || var4;
-]#
 
-f = ~7; # -8 ( ~x = -x - 1; )
-f *= -1; # 8
-print("f = " + f + "\n");
-g = 5 & 3; # 1
-g += 5; # 6
-print("g = " + g + "\n");
-h = 5 | 3; # 7
-h *= 3; # 21
-print("h = " + h + "\n");
-k = 5 >< 3; # 6
-l = 0xF << 4; # 0xF0
-m = 0xF >> 2; # 0x3
 

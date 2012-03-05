@@ -81,6 +81,8 @@ int main(int argc, char* argv[]) {
 %token DEBUG
 %token vNULL
 
+%token BREAK CONTINUE
+
 %token STRA
 %token EQI EQS
 
@@ -124,6 +126,9 @@ instruction: /* empty */
 stmt:
 	  ';' { ; }
 	| assign ';' { ; }
+	| exp ';' { $$ = $1; }
+	| BREAK ';' { ; }
+	| CONTINUE ';' { ; }
 	| PRINT '(' exp ')' ';' { $$ = new PrintExpression($3); }
 	| WHILE '(' exp ')' stmts { $$ = new WhileExpression($3, $5); }
 	| DO stmts WHILE '(' exp ')' ';' { $$ = new WhileExpression($5, $2); }

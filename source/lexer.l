@@ -57,6 +57,8 @@ char* stringBufPtr;
 "print"						return PRINT;
 "function"					return FUNCTION;
 "for"						Expression::scopes++; return FOR;
+"break"						return BREAK;
+"continue"					return CONTINUE;
 ("->"|"to")					return TO;
 "dec"						return DEC;
 "hex"						return HEX;
