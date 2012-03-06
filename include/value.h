@@ -21,6 +21,7 @@
 #define VALUE_H
 
 #include <boost/any.hpp>
+#include <cmath>
 
 class Variable;
 
@@ -30,6 +31,11 @@ typedef enum {
 	typeStr,
 	typeVoid
 } Type;
+
+#define getNumVal(val) ((val->type() == typeInt) ? val->value<int>() : val->value<double>())
+#define setNumVal(val1, val2) { if(val1->type() == typeInt) val1->value<int>(val2); else val1->value<double>(val2); }
+#define valPow(val1, val2) pow((double)getNumVal(val1), (double)getNumVal(val2))
+#define valIntToBool(val) ((val->any()->type() == typeid(int)) ? (bool)val->value<int>() : val->value<bool>())
 
 class Value {
 	public:

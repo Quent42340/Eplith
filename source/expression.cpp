@@ -77,16 +77,16 @@ Value* OpExpression::evaluate() {
 	if(m_exp1->hexMode() || ((m_exp2) ? m_exp2->hexMode() : 0)) m_hexMode = true;
 	Value *val = m_exp1->evaluate();
 	if(m_oper == NEG) {
-		return new Value(-val->value<int>(), m_hexMode);
+		return new Value(-getNumVal(val), m_hexMode);
 	}
 	else if(m_oper == POS) {
-		return new Value(+val->value<int>(), m_hexMode);
+		return new Value(+getNumVal(val), m_hexMode);
 	}
 	else if(m_oper == NOT) {
 		return new Value(!val->value<bool>());
 	}
 	else if(m_oper == BNOT) {
-		return new Value(~val->value<int>());
+		return new Value(~(int)getNumVal(val));
 	} else {
 		Value *val2 = m_exp2->evaluate();
 		if(m_oper == '+') {
@@ -100,7 +100,7 @@ Value* OpExpression::evaluate() {
 						out << ((pb) ? "true" : "false");
 					} else {
 						if(m_hexMode) out << "0x" << hex;
-						out << val->value<int>();
+						out << getNumVal(val);
 						if(m_hexMode) out << dec;
 					}
 					out << ends;
@@ -115,7 +115,7 @@ Value* OpExpression::evaluate() {
 						out2 << ((pb) ? "true" : "false");
 					} else {
 						if(m_hexMode) out2 << "0x" << hex;
-						out2 << val2->value<int>();
+						out2 << getNumVal(val2);
 						if(m_hexMode) out2 << dec;
 					}
 					out2 << ends;
@@ -125,33 +125,29 @@ Value* OpExpression::evaluate() {
 				}
 				return new Value(typeStr, tmp + tmp2);
 			} else {
-				return new Value(typeInt, val->value<int>() + val2->value<int>(), m_hexMode);
+				return new Value(typeInt, getNumVal(val) + getNumVal(val2), m_hexMode);
 			}
 		} else {
 			if((val->type() != typeInt) || (val2->type() != typeInt)) yyerror("Operation not available with these type");
 			switch(m_oper) {
-				case '-':	 return new Value(val->value<int>() - val2->value<int>(), m_hexMode);
-				case '*':	 return new Value(val->value<int>() * val2->value<int>(), m_hexMode);
-				case '/':	 return new Value(val->value<int>() / val2->value<int>(), m_hexMode);
-				case '^':	 return new Value((int)pow((double)val->value<int>(), (double)val2->value<int>()), m_hexMode);
-				case '%':	 return new Value(val->value<int>() % val2->value<int>());
+				case '-':	 return new Value(getNumVal(val) - getNumVal(val2), m_hexMode);
+				case '*':	 return new Value(getNumVal(val) * getNumVal(val2), m_hexMode);
+				case '/':	 return new Value(getNumVal(val) / getNumVal(val2), m_hexMode);
+				case '^':	 return new Value(valPow(val, val2), m_hexMode);
+				case '%':	 return new Value((int)getNumVal(val) % (int)getNumVal(val2), m_hexMode);
 				case '<':	 return new Value(val->value<int>() < val2->value<int>());
 				case '>':	 return new Value(val->value<int>() > val2->value<int>());
 				case GE:	 return new Value(val->value<int>() >= val2->value<int>());
 				case LE:	 return new Value(val->value<int>() <= val2->value<int>());
-				case EQ:	 return new Value(((val->any()->type() == typeid(int)) ? (bool)val->value<int>() : val->value<bool>())
-										   == ((val2->any()->type() == typeid(int)) ? (bool)val2->value<int>() : val2->value<bool>()));
-				case NE:	 return new Value(((val->any()->type() == typeid(int)) ? (bool)val->value<int>() : val->value<bool>())
-										   != ((val2->any()->type() == typeid(int)) ? (bool)val2->value<int>() : val2->value<bool>()));
-				case AND:	 return new Value(((val->any()->type() == typeid(int)) ? (bool)val->value<int>() : val->value<bool>())
-										   && ((val2->any()->type() == typeid(int)) ? (bool)val2->value<int>() : val2->value<bool>()));
-				case OR:	 return new Value(((val->any()->type() == typeid(int)) ? (bool)val->value<int>() : val->value<bool>())
-										   || ((val2->any()->type() == typeid(int)) ? (bool)val2->value<int>() : val2->value<bool>()));
-				case BAND:	 return new Value(val->value<int>() & val2->value<int>(), m_hexMode);
-				case BOR:	 return new Value(val->value<int>() | val2->value<int>(), m_hexMode);
-				case XOR:	 return new Value(val->value<int>() ^ val2->value<int>(), m_hexMode);
-				case LSHIFT: return new Value(val->value<int>() << val2->value<int>(), m_hexMode);
-				case RSHIFT: return new Value(val->value<int>() >> val2->value<int>(), m_hexMode);
+				case EQ:	 return new Value(valIntToBool(val) == valIntToBool(val2));
+				case NE:	 return new Value(valIntToBool(val) != valIntToBool(val2));
+				case AND:	 return new Value(valIntToBool(val) && valIntToBool(val2));
+				case OR:	 return new Value(valIntToBool(val) || valIntToBool(val2));
+				case BAND:	 return new Value((int)getNumVal(val) & (int)getNumVal(val2), m_hexMode);
+				case BOR:	 return new Value((int)getNumVal(val) | (int)getNumVal(val2), m_hexMode);
+				case XOR:	 return new Value((int)getNumVal(val) ^ (int)getNumVal(val2), m_hexMode);
+				case LSHIFT: return new Value((int)getNumVal(val) << (int)getNumVal(val2), m_hexMode);
+				case RSHIFT: return new Value((int)getNumVal(val) >> (int)getNumVal(val2), m_hexMode);
 				default:	 yyerror("Unexpected operator"); break;
 			}
 		}
@@ -202,7 +198,7 @@ void AssignExpression::doExp() {
 							out << ((pb) ? "true" : "false");
 						} else {
 							if(m_hexMode) out << "0x" << hex;
-							out << val->value<int>();
+							out << getNumVal(val);
 							if(m_hexMode) out << dec;
 						}
 						out << ends;
@@ -217,7 +213,7 @@ void AssignExpression::doExp() {
 							out2 << ((pb) ? "true" : "false");
 						} else {
 							if(m_hexMode) out2 << "0x" << hex;
-							out2 << val2->value<int>();
+							out2 << getNumVal(val2);
 							if(m_hexMode) out2 << dec;
 						}
 						out2 << ends;
@@ -227,19 +223,19 @@ void AssignExpression::doExp() {
 					}
 					m_var->value()->value<string>(tmp + tmp2);
 				} else {
-					m_var->value()->value<int>(val->value<int>() + val2->value<int>());
+					setNumVal(m_var->value(), getNumVal(val) + getNumVal(val2));
 					m_var->value()->hexMode(true);
 				}
 			} else { 
 				switch(m_op) {
-					case SUB:	  m_var->value()->value<int>(val->value<int>() - val2->value<int>()); break;
-					case MUL:	  m_var->value()->value<int>(val->value<int>() * val2->value<int>()); break;
-					case DIV:	  m_var->value()->value<int>(val->value<int>() / val2->value<int>()); break;
-					case EXP:	  m_var->value()->value<int>((int)pow((double)val->value<int>(), (double)val->value<int>())); break;
-					case MOD:	  m_var->value()->value<int>(val->value<int>() % val2->value<int>()); break;
-					case BAND_EQ: m_var->value()->value<int>(val->value<int>() & val2->value<int>()); break;
-					case BOR_EQ:  m_var->value()->value<int>(val->value<int>() | val2->value<int>()); break;
-					case XOR_EQ:  m_var->value()->value<int>(val->value<int>() ^ val2->value<int>()); break;
+					case SUB:	  setNumVal(m_var->value(), getNumVal(val) - getNumVal(val2)); break;
+					case MUL:	  setNumVal(m_var->value(), getNumVal(val) * getNumVal(val2)); break;
+					case DIV:	  setNumVal(m_var->value(), getNumVal(val) / getNumVal(val2)); break;
+					case EXP:	  setNumVal(m_var->value(), valPow(val, val2)); break;
+					case MOD:	  setNumVal(m_var->value(), (int)getNumVal(val) % (int)getNumVal(val2)); break;
+					case BAND_EQ: setNumVal(m_var->value(), (int)getNumVal(val) & (int)getNumVal(val2)); break;
+					case BOR_EQ:  setNumVal(m_var->value(), (int)getNumVal(val) | (int)getNumVal(val2)); break;
+					case XOR_EQ:  setNumVal(m_var->value(), (int)getNumVal(val) ^ (int)getNumVal(val2)); break;
 					default:	  yyerror("Unexpected operator"); break;
 				}
 			}
@@ -305,7 +301,7 @@ IfExpression::~IfExpression() {
 }
 
 void IfExpression::doExp() {
-	if(m_ifExp->evaluate()->intToBool()) {
+	if(m_ifExp->evaluate()->intToBool()->value<bool>()) {
 		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
 			(*m_statements)[i]->doExp();
 		}
