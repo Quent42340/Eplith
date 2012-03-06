@@ -41,6 +41,13 @@ IntExpression::IntExpression(int value, bool hexMode) {
 IntExpression::~IntExpression() {
 }
 
+FloatExpression::FloatExpression(double value) {
+	m_value = value;
+}
+
+FloatExpression::~FloatExpression() {
+}
+
 StrExpression::StrExpression(string str) {
 	m_str = str;
 }

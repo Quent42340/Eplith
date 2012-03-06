@@ -35,6 +35,11 @@ Value::Value(int value, bool hexMode) {
 	m_hexMode = hexMode;
 }
 
+Value::Value(double value) {
+	m_type = typeFloat;
+	m_value = value;
+}
+
 Value::Value(string value) {
 	m_type = typeStr;
 	m_value = value;

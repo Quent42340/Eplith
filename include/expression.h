@@ -57,6 +57,18 @@ class IntExpression : public Expression {
 		int m_value;
 };
 
+class FloatExpression : public Expression {
+	public:
+		FloatExpression(double value);
+		~FloatExpression();
+		
+		Value* evaluate() { return new Value(m_value); }
+		void doExp() {}
+	
+	private:
+		double m_value;
+};
+
 class StrExpression : public Expression {
 	public:
 		StrExpression(std::string str);
