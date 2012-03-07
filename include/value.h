@@ -32,6 +32,12 @@ typedef enum {
 	typeVoid
 } Type;
 
+typedef enum {
+	noMode,
+	modeHex,
+	modeSci
+} Mode;
+
 #define getNumVal(val) ((val->type() == typeInt) ? val->value<int>() : val->value<double>())
 #define setNumVal(val1, val2) { if(val1->type() == typeInt) val1->value<int>(val2); else val1->value<double>(val2); }
 #define valPow(val1, val2) pow((double)getNumVal(val1), (double)getNumVal(val2))
@@ -41,14 +47,14 @@ typedef enum {
 class Value {
 	public:
 		Value();
-		Value(int value, bool hexMode = false);	// Int type
-		Value(double value);					// Float type
+		Value(int value, int mode = noMode);			// Int type
+		Value(double value int mode = noMode);	// Float type
 		Value(std::string value);				// String type
 		Value(char *value);						// String type
 		Value(bool value);						// Bool type
-		Value(Type type, boost::any value, bool hexMode = false);
-		Value(boost::any *value, bool hexMode = false);
-		Value(Variable *var, bool hexMode = false);
+		Value(Type type, boost::any value, int mode = 0);
+		Value(boost::any *value, Mode mode = noMode);
+		Value(Variable *var, Mode mode = noMode);
 		~Value() {}
 		
 		void print();
@@ -64,8 +70,11 @@ class Value {
 		
 		Type type() const { return m_type; }
 		
-		bool hexMode() const { return m_hexMode; }
-		void hexMode(bool h) { m_hexMode = h; }
+		bool hexMode() const { return m_mode == modeHex; }
+		void hexMode(bool h) { m_mode = (h) ? modeHex : noMode; }
+		
+		bool sciMode() const { return m_mode == modeSci; }
+		void sciMode(bool h) { m_mode = (h) ? modeSci : noMode; }
 		
 		Value *valIncr() { m_value = value<int>() + 1; return this; }
 		Value *valDecr() { m_value = value<int>() - 1; return this; }
@@ -75,7 +84,7 @@ class Value {
 	protected:
 		Type m_type;
 		boost::any m_value;
-		bool m_hexMode;
+		Mode m_mode;
 };
 
 #endif // VALUE_H

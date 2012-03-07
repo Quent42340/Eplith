@@ -170,7 +170,7 @@ exp_list:
 
 exp:
 	  INTEGER { $$ = new IntExpression($1); }
-	| HEX_INT { $$ = new IntExpression($1, true); }
+	| HEX_INT { $$ = new IntExpression($1); }
 	| FLOAT { $$ = new FloatExpression($1); }
 	| STRING { $$ = new StrExpression($1); }
 	| TRUE { $$ = new BoolExpression(true); }
@@ -208,14 +208,13 @@ exp:
 	;
 
 cast:
-	  '(' DEC ')' integer { Expression::setHexMode($4, false); $$ = $4; }
-	| '(' HEX ')' integer { Expression::setHexMode($4, true); $$ = $4; }
-	/*| '(' SCI ')' integer { Expression::setSciMode($4, true); $$ = $4; }*/
+	  '(' HEX ')' integer { Expression::setHexMode($4, true); $$ = $4; }
+	| '(' SCI ')' integer { Expression::setSciMode($4, true); $$ = $4; }
 	;
 
 integer:
 	INTEGER { $$ = new IntExpression($1); }
-	| HEX_INT { $$ = new IntExpression($1, true); }
+	| HEX_INT { $$ = new IntExpression($1); }
 	| var { VarExpression *v = (VarExpression*)$1;
 			if(v->evaluate()->type() == typeInt) $$ = v; else yyerror("Requires an integer expression here."); }
 	;

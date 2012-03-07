@@ -12,3 +12,6 @@ e = 0xF << 4; # 0xF0 ( 240 )
 f = 0xF >> 2; # 0x3 ( 3 )
 print("e = " + (hex)e + " f = " + (hex)f + "\n");
 
+print((hex)e);
+print("\n");
+

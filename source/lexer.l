@@ -60,7 +60,6 @@ char* stringBufPtr;
 "break"						return BREAK;
 "continue"					return CONTINUE;
 ("->"|"to")					return TO;
-"dec"						return DEC;
 "hex"						return HEX;
 	/* TODO: "oct"						return OCT;*/
 	/* TODO: "bin"						return BIN;*/

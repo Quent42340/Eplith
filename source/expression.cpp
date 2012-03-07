@@ -28,14 +28,14 @@ int Expression::scopes = 0;
 
 Expression::Expression() {
 	m_hexMode = false;
+	m_sciMode = false;
 }
 
 Expression::~Expression() {
 }
 
-IntExpression::IntExpression(int value, bool hexMode) {
+IntExpression::IntExpression(int value) {
 	m_value = value;
-	m_hexMode = hexMode;
 }
 
 IntExpression::~IntExpression() {
@@ -75,6 +75,7 @@ OpExpression::~OpExpression() {
 
 Value* OpExpression::evaluate() {
 	if(m_exp1->hexMode() || ((m_exp2) ? m_exp2->hexMode() : 0)) m_hexMode = true;
+	if(m_exp1->sciMode() || ((m_exp2) ? m_exp2->sciMode() : 0)) m_sciMode = true;
 	Value *val = m_exp1->evaluate();
 	Value *val2 = (m_exp2) ? m_exp2->evaluate() : 0;
 	if(m_oper == '+') {
@@ -88,6 +89,7 @@ Value* OpExpression::evaluate() {
 					out << ((pb) ? "true" : "false");
 				} else {
 					if(m_hexMode) out << "0x" << hex << int(getNumVal(val)) << dec;
+					else if(m_sciMode) out << scientific << getNumVal(val);
 					else out << getNumVal(val);
 				}
 				out << ends;
@@ -102,6 +104,7 @@ Value* OpExpression::evaluate() {
 					out2 << ((pb) ? "true" : "false");
 				} else {
 					if(m_hexMode) out2 << "0x" << hex << int(getNumVal(val2)) << dec;
+					else if(m_sciMode) out2 << scientific << getNumVal(val2);
 					else out2 << getNumVal(val2);
 				}
 				out2 << ends;

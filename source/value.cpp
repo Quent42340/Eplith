@@ -29,10 +29,9 @@ Value::Value() {
 	m_value = string("(null)");
 }
 
-Value::Value(int value, bool hexMode) {
+Value::Value(int value) {
 	m_type = typeInt;
 	m_value = value;
-	m_hexMode = hexMode;
 }
 
 Value::Value(double value) {
@@ -55,13 +54,12 @@ Value::Value(bool value) {
 	m_value = value;
 }
 
-Value::Value(Type type, boost::any value, bool hexMode) {
+Value::Value(Type type, boost::any value) {
 	m_type = type;
 	m_value = value;
-	m_hexMode = hexMode;
 }
 
-Value::Value(boost::any *value, bool hexMode) {
+Value::Value(boost::any *value) {
 	m_value = *value;
 	
 	if(int *pi = valuePtr<int>()) {
@@ -78,11 +76,9 @@ Value::Value(boost::any *value, bool hexMode) {
 	} else {
 		m_type = typeVoid;
 	}
-	
-	m_hexMode = hexMode;
 }
 
-Value::Value(Variable *var, bool hexMode) {
+Value::Value(Variable *var) {
 	m_value = var->value()->m_value;
 	
 	if(int *pi = valuePtr<int>()) {
@@ -99,8 +95,6 @@ Value::Value(Variable *var, bool hexMode) {
 	} else {
 		m_type = typeVoid;
 	}
-	
-	m_hexMode = hexMode;
 }
 
 void Value::print() {

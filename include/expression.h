@@ -41,16 +41,20 @@ class Expression {
 		bool hexMode() const { return m_hexMode; }
 		static void setHexMode(Expression *exp, bool h) { exp->m_hexMode = h; }
 		
+		bool sciMode() const { return m_hexMode; }
+		static void setSciMode(Expression *exp, bool s) { exp->m_sciMode = s; }
+		
 	protected:
 		bool m_hexMode;
+		bool m_sciMode;
 };
 
 class IntExpression : public Expression {
 	public:
-		IntExpression(int value, bool hexMode = false);
+		IntExpression(int value);
 		~IntExpression();
 		
-		Value* evaluate() { return new Value(m_value, m_hexMode); }
+		Value* evaluate() { return new Value(m_value); }
 		void doExp() {}
 	
 	private:
