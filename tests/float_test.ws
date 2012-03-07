@@ -2,6 +2,8 @@ a = 1.5;
 b = 1/2;
 c = 1/3;
 
+print("b + c = " + (b + c) + "\n");
+
 if(b > c) {
 	print("Ok.\n");
 } else {

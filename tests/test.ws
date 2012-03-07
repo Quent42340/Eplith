@@ -49,6 +49,8 @@ for(i = 0->2) {
 b = a = 0x5F;
 print("a = " + (hex)a + " b = " + b + "\n");
 
+f = 0x50;
+h = a + f;
 c = 5 % 2;
 d = bool && var4;
 e = bool || var4;

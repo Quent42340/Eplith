@@ -64,13 +64,16 @@ Value::Value(Type type, boost::any value, bool hexMode) {
 Value::Value(boost::any *value, bool hexMode) {
 	m_value = *value;
 	
-	if(int *pi = boost::any_cast<int>(&m_value)) {
+	if(int *pi = valuePtr<int>()) {
 		m_type = typeInt;
 	}
-	else if(string *pstr = boost::any_cast<string>(&m_value)) {
+	else if(double *pf = valuePtr<double>()) {
+		m_type = typeFloat;
+	}
+	else if(string *pstr = valuePtr<string>()) {
 		m_type = typeStr;
 	}
-	else if(bool *pb = boost::any_cast<bool>(&m_value)) {
+	else if(bool *pb = valuePtr<bool>()) {
 		m_type = typeInt;
 	} else {
 		m_type = typeVoid;
@@ -82,13 +85,16 @@ Value::Value(boost::any *value, bool hexMode) {
 Value::Value(Variable *var, bool hexMode) {
 	m_value = var->value()->m_value;
 	
-	if(int *pi = boost::any_cast<int>(&m_value)) {
+	if(int *pi = valuePtr<int>()) {
 		m_type = typeInt;
 	}
-	else if(string *pstr = boost::any_cast<string>(&m_value)) {
+	else if(double *pf = valuePtr<double>()) {
+		m_type = typeInt;
+	}
+	else if(string *pstr = valuePtr<string>()) {
 		m_type = typeStr;
 	}
-	else if(bool *pb = boost::any_cast<bool>(&m_value)) {
+	else if(bool *pb = valuePtr<bool>()) {
 		m_type = typeInt;
 	} else {
 		m_type = typeVoid;
@@ -98,15 +104,18 @@ Value::Value(Variable *var, bool hexMode) {
 }
 
 void Value::print() {
-	if(int *pi = boost::any_cast<int>(&m_value)) {
+	if(int *pi = valuePtr<int>()) {
 		if(m_hexMode) cout << "0x" << hex;
 		cout << *pi;
 		if(m_hexMode) cout << dec;
 	}
-	else if(string *pstr = boost::any_cast<string>(&m_value)) {
+	else if(double *pf = valuePtr<double>()) {
+		cout << *pf;
+	}
+	else if(string *pstr = valuePtr<string>()) {
 		cout << *pstr;
 	}
-	else if(bool *pb = boost::any_cast<bool>(&m_value)) {
+	else if(bool *pb = valuePtr<bool>()) {
 		cout << ((*pb) ? "true" : "false");
 	}
 	else if(m_type == typeVoid) {

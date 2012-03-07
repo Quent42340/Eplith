@@ -76,80 +76,71 @@ OpExpression::~OpExpression() {
 Value* OpExpression::evaluate() {
 	if(m_exp1->hexMode() || ((m_exp2) ? m_exp2->hexMode() : 0)) m_hexMode = true;
 	Value *val = m_exp1->evaluate();
-	if(m_oper == NEG) {
-		return new Value(-getNumVal(val), m_hexMode);
-	}
-	else if(m_oper == POS) {
-		return new Value(+getNumVal(val), m_hexMode);
-	}
-	else if(m_oper == NOT) {
-		return new Value(!val->value<bool>());
-	}
-	else if(m_oper == BNOT) {
-		return new Value(~(int)getNumVal(val));
-	} else {
-		Value *val2 = m_exp2->evaluate();
-		if(m_oper == '+') {
-			bool pb;
-			if((val->type() != typeInt) || (val2->type() != typeInt)) {
-				string tmp, tmp2;
-				if(val->type() == typeInt) {
-					stringstream out;
-					if(val->any()->type() == typeid(bool)) {
-						pb = *boost::any_cast<bool>(val->any());
-						out << ((pb) ? "true" : "false");
-					} else {
-						if(m_hexMode) out << "0x" << hex;
-						out << getNumVal(val);
-						if(m_hexMode) out << dec;
-					}
-					out << ends;
-					tmp = out.str();
+	Value *val2 = (m_exp2) ? m_exp2->evaluate() : 0;
+	if(m_oper == '+') {
+		bool pb;
+		if(!isNum(val) || !isNum(val2)) {
+			string tmp, tmp2;
+			if(isNum(val)) {
+				stringstream out;
+				if(val->any()->type() == typeid(bool)) {
+					pb = *boost::any_cast<bool>(val->any());
+					out << ((pb) ? "true" : "false");
 				} else {
-					tmp = val->value<string>();
+					if(m_hexMode) out << "0x" << hex << int(getNumVal(val)) << dec;
+					else out << getNumVal(val);
 				}
-				if(val2->type() == typeInt) {
-					stringstream out2;
-					if(val2->any()->type() == typeid(bool)) {
-						pb = *boost::any_cast<bool>(val2->any());
-						out2 << ((pb) ? "true" : "false");
-					} else {
-						if(m_hexMode) out2 << "0x" << hex;
-						out2 << getNumVal(val2);
-						if(m_hexMode) out2 << dec;
-					}
-					out2 << ends;
-					tmp2 = out2.str();
-				} else {
-					tmp2 = val2->value<string>();
-				}
-				return new Value(typeStr, tmp + tmp2);
+				out << ends;
+				tmp = out.str();
 			} else {
-				return new Value(typeInt, getNumVal(val) + getNumVal(val2), m_hexMode);
+				tmp = val->value<string>();
 			}
+			if(isNum(val2)) {
+				stringstream out2;
+				if(val2->any()->type() == typeid(bool)) {
+					pb = *boost::any_cast<bool>(val2->any());
+					out2 << ((pb) ? "true" : "false");
+				} else {
+					if(m_hexMode) out2 << "0x" << hex << int(getNumVal(val2)) << dec;
+					else out2 << getNumVal(val2);
+				}
+				out2 << ends;
+				tmp2 = out2.str();
+			} else {
+				tmp2 = val2->value<string>();
+			}
+			return new Value(tmp + tmp2);
 		} else {
-			if((val->type() != typeInt) || (val2->type() != typeInt)) yyerror("Operation not available with these type");
-			switch(m_oper) {
-				case '-':	 return new Value(getNumVal(val) - getNumVal(val2), m_hexMode);
-				case '*':	 return new Value(getNumVal(val) * getNumVal(val2), m_hexMode);
-				case '/':	 return new Value(getNumVal(val) / getNumVal(val2), m_hexMode);
-				case '^':	 return new Value(valPow(val, val2), m_hexMode);
-				case '%':	 return new Value((int)getNumVal(val) % (int)getNumVal(val2), m_hexMode);
-				case '<':	 return new Value(val->value<int>() < val2->value<int>());
-				case '>':	 return new Value(val->value<int>() > val2->value<int>());
-				case GE:	 return new Value(val->value<int>() >= val2->value<int>());
-				case LE:	 return new Value(val->value<int>() <= val2->value<int>());
-				case EQ:	 return new Value(valIntToBool(val) == valIntToBool(val2));
-				case NE:	 return new Value(valIntToBool(val) != valIntToBool(val2));
-				case AND:	 return new Value(valIntToBool(val) && valIntToBool(val2));
-				case OR:	 return new Value(valIntToBool(val) || valIntToBool(val2));
-				case BAND:	 return new Value((int)getNumVal(val) & (int)getNumVal(val2), m_hexMode);
-				case BOR:	 return new Value((int)getNumVal(val) | (int)getNumVal(val2), m_hexMode);
-				case XOR:	 return new Value((int)getNumVal(val) ^ (int)getNumVal(val2), m_hexMode);
-				case LSHIFT: return new Value((int)getNumVal(val) << (int)getNumVal(val2), m_hexMode);
-				case RSHIFT: return new Value((int)getNumVal(val) >> (int)getNumVal(val2), m_hexMode);
-				default:	 yyerror("Unexpected operator"); break;
-			}
+			return new Value(getNumVal(val) + getNumVal(val2));
+		}
+	} else {
+		switch(m_oper) {
+			case NEG:	 return new Value(-getNumVal(val));
+			case POS:	 return new Value(+getNumVal(val));
+			case NOT:	 return new Value(!val->value<bool>());
+			case BNOT:	 return new Value(~(int)getNumVal(val));
+		}
+		if(!isNum(val) || !isNum(val2)) yyerror("Operation not available with these type");
+		switch(m_oper) {
+			case '-':	 return new Value(getNumVal(val) - getNumVal(val2));
+			case '*':	 return new Value(getNumVal(val) * getNumVal(val2));
+			case '/':	 return new Value(getNumVal(val) / getNumVal(val2));
+			case '^':	 return new Value(valPow(val, val2));
+			case '%':	 return new Value((int)getNumVal(val) % (int)getNumVal(val2));
+			case '<':	 return new Value(getNumVal(val) < getNumVal(val2));
+			case '>':	 return new Value(getNumVal(val) > getNumVal(val2));
+			case GE:	 return new Value(getNumVal(val) >= getNumVal(val2));
+			case LE:	 return new Value(getNumVal(val) <= getNumVal(val2));
+			case EQ:	 return new Value(valNumToBool(val) == valNumToBool(val2));
+			case NE:	 return new Value(valNumToBool(val) != valNumToBool(val2));
+			case AND:	 return new Value(valNumToBool(val) && valNumToBool(val2));
+			case OR:	 return new Value(valNumToBool(val) || valNumToBool(val2));
+			case BAND:	 return new Value((int)getNumVal(val) & (int)getNumVal(val2));
+			case BOR:	 return new Value((int)getNumVal(val) | (int)getNumVal(val2));
+			case XOR:	 return new Value((int)getNumVal(val) ^ (int)getNumVal(val2));
+			case LSHIFT: return new Value((int)getNumVal(val) << (int)getNumVal(val2));
+			case RSHIFT: return new Value((int)getNumVal(val) >> (int)getNumVal(val2));
+			default:	 yyerror("Unexpected operator"); break;
 		}
 	}
 }
@@ -189,32 +180,30 @@ void AssignExpression::doExp() {
 			Value *val2 = m_valExp->evaluate();
 			if(m_op == ADD) {
 				bool pb;
-				if((val->type() != typeInt) || (val2->type() != typeInt)) {
+				if(!isNum(val) || !isNum(val2)) {
 					string tmp, tmp2;
-					if(val->type() == typeInt) {
+					if(isNum(val)) {
 						stringstream out;
 						if(val->any()->type() == typeid(bool)) {
 							pb = *boost::any_cast<bool>(val->any());
 							out << ((pb) ? "true" : "false");
 						} else {
-							if(m_hexMode) out << "0x" << hex;
-							out << getNumVal(val);
-							if(m_hexMode) out << dec;
+							if(m_hexMode) out << "0x" << hex << int(getNumVal(val)) << dec;
+							else out << getNumVal(val);
 						}
 						out << ends;
 						tmp = out.str();
 					} else {
 						tmp = val->value<string>();
 					}
-					if(val2->type() == typeInt) {
+					if(isNum(val2)) {
 						stringstream out2;
 						if(val2->any()->type() == typeid(bool)) {
 							pb = *boost::any_cast<bool>(val2->any());
 							out2 << ((pb) ? "true" : "false");
 						} else {
-							if(m_hexMode) out2 << "0x" << hex;
-							out2 << getNumVal(val2);
-							if(m_hexMode) out2 << dec;
+							if(m_hexMode) out2 << "0x" << hex << int(getNumVal(val2)) << dec;
+							else out2 << getNumVal(val2);
 						}
 						out2 << ends;
 						tmp2 = out2.str();
