@@ -31,6 +31,10 @@ void yyerror(string str) {
 	exit(1);
 }
 
+void yywarn(string str) {
+	cerr << "Warning: " << str << " at symbol \"" << yytext << "\" at line " << yylineno << endl;
+}
+
 extern "C" {
 int yywrap() {
 	return 1;
@@ -140,6 +144,7 @@ stmt:
 	| FOR '(' assign TO exp ';' exp ')' stmts { $$ = new ForExpression($3, $9, $5, $7);  }
 	| FOR '(' assign TO exp ')' stmts { $$ = new ForExpression($3, $7, $5);  }
 	| NAME '(' exp_list ')' ';' { $$ = new CallExpression(string($1), $3); }
+	| FUNCTION NAME '(' exp_list ')' stmts { $$ = new FuncExpression(string($2), $4, $6); }
 	;
 
 stmts:
@@ -161,7 +166,9 @@ stmt_list:
 	;
 
 exp_list:
-	  exp { vector<Expression*> *v = new vector<Expression*>;
+	/* void */ { vector<Expression*> *v = new vector<Expression*>;
+				 $$ = v; }
+	| exp { vector<Expression*> *v = new vector<Expression*>;
 			v->push_back($1);
 			$$ = v; }
 	| exp_list ',' exp { vector<Expression*> *v = $1;
@@ -216,7 +223,7 @@ integer:
 	INTEGER { $$ = new IntExpression($1); }
 	| HEX_INT { $$ = new IntExpression($1); }
 	| var { VarExpression *v = (VarExpression*)$1;
-			if(isNum(v->evaluate())) $$ = v; else yyerror("Requires an integer expression here."); }
+			if(isNum(v->evaluate())) $$ = v; else yyerror("Requires a numeric expression here."); }
 	;
 
 assign:

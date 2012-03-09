@@ -31,10 +31,10 @@ class Variable {
 		void print() { m_value->print(); }
 		
 		Value* value() { return m_value; }
+		void value(Value *value);
+		
 		std::string name() const { return m_name; }
 		std::string address() const { return m_address; }
-		
-		void value(Value *value);
 		
 		static Variable* findByName(std::string name);
 		static bool exists(std::string name);

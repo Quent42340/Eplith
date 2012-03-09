@@ -55,7 +55,7 @@ char* stringBufPtr;
 "if"						Expression::scopes++; return IF;
 "else"						return ELSE;
 "print"						return PRINT;
-"function"					return FUNCTION;
+"function"					Expression::scopes++; return FUNCTION;
 "for"						Expression::scopes++; return FOR;
 "break"						return BREAK;
 "continue"					return CONTINUE;
@@ -70,7 +70,7 @@ char* stringBufPtr;
 "false"						return FALSE;
 
 	/* Variable name */
-[a-zA-Z]([0-9]|[a-zA-Z])*	yylval.sValue = strdup(yytext); return NAME;
+[a-zA-Z][0-9a-zA-Z_]*		yylval.sValue = strdup(yytext); return NAME;
 
 	/* Integer */
 -?[0-9]+					yylval.iValue = atoi(yytext); return INTEGER;

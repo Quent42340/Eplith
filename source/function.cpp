@@ -19,17 +19,51 @@
 ---------------------------------------------------------------------------------*/
 #include "header.h"
 #include "function.h"
+#include "expression.h"
 
 using namespace std;
 
 vector<Function*> Function::funcs;
 
-Function::Function(string name, vector<Expression*> *args, boost::any returnValue) {
-	m_name = name;
+Function::Function(string name, vector<Expression*> *args, vector<Expression*> *stmts, boost::any returnValue) {
 	m_address = getPtrAddr((void*)this);
+	m_name = name;
+	m_args = args;
+	m_stmts = stmts;
+	
+	funcs.push_back(this);
+	
+#ifdef FUNC_DEBUG
+	cout << "Func name: " << m_name << " | Address: " << m_address << endl;
+#endif
 }
 
 Function::~Function() {
 	delete m_args;
+	delete m_stmts;
+}
+
+Function* Function::findByName(std::string name) {
+	for(int i = 0 ; i < funcs.size() ; i++) {
+		if(funcs[i]->name() == name) {
+			return funcs[i];
+		}
+	}
+	return 0;
+}
+
+bool Function::exists(std::string name) {
+	for(int i = 0 ; i < funcs.size() ; i++) {
+		if(funcs[i]->name() == name) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void Function::doFunc() {
+	for(unsigned int i = 0 ; i < m_stmts->size() ; i++) {
+		(*m_stmts)[i]->doExp();
+	}
 }
 

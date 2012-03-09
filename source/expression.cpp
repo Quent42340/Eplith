@@ -307,10 +307,36 @@ void IfExpression::doExp() {
 	}
 }
 
+FuncExpression::FuncExpression(string funcName, vector<Expression*> *args, vector<Expression*> *stmts) {
+	m_funcName = funcName;
+	m_args = args;
+	m_stmts = stmts;
+	doThings(true);
+	scopes--;
+}
+
+FuncExpression::~FuncExpression() {
+	delete m_func;
+	delete m_args;
+	delete m_stmts;
+}
+
+void FuncExpression::doExp() {
+	if(Function::exists(m_funcName)) {
+#ifdef WARNINGS
+		yywarn("The function already exists, this declaration will overwrite it");
+#endif
+	} else {
+		m_func = new Function(m_funcName, m_args, m_stmts);
+	}
+}
+
 CallExpression::CallExpression(string funcName, vector<Expression*> *args) {
 	m_funcName = funcName;
 	m_func = Function::findByName(m_funcName);
+	if(m_func == 0) yyerror("Function undefined");
 	m_args = args;
+	doThings();
 }
 
 CallExpression::~CallExpression() {
@@ -319,7 +345,7 @@ CallExpression::~CallExpression() {
 }
 
 void CallExpression::doExp() {
-	//m_func->doFuncInstr();
+	m_func->doFunc();
 }
 
 PrintExpression::PrintExpression(Expression *exp) {

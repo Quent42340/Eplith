@@ -32,6 +32,9 @@
 #include <cstddef>
 #include <cstdarg>
 
+#define WARNINGS
+
+#define FUNC_DEBUG
 #define VAR_DEBUG
 //#define SETVAR_DEBUG
 
@@ -53,6 +56,7 @@ extern "C" {
 }
 
 void yyerror(std::string str);
+void yywarn(std::string str);
 
 #define DBG(n) { printf("\t%d\n", n); }
 

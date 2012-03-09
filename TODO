@@ -1,9 +1,7 @@
-- Float
-- Sci Cp16
+- Functions ( return )
+- puts() / type()
 - Continue / Break
 - Switch
-- Functions ( return )
-- type()
 - Tables
 - Structs
 - Enums

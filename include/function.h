@@ -27,15 +27,16 @@ class Expression;
 
 class Function {
 	public:
-		Function(std::string name, std::vector<Expression*> *args, boost::any returnValue = -1);
+		Function(std::string name, std::vector<Expression*> *args, std::vector<Expression*> *stmts, boost::any returnValue = -1);
 		~Function();
 		
 		std::string name() const { return m_name; }
 		std::string address() const { return m_address; }
 		
-		static Function* findByName(std::string name) { return 0; }
+		void doFunc();
 		
-		static void initMainFunc() { ; }
+		static Function* findByName(std::string name);
+		static bool exists(std::string name);
 		
 		static std::vector<Function*> funcs;
 		
@@ -43,6 +44,7 @@ class Function {
 		std::string m_name;
 		std::string m_address;
 		std::vector<Expression*> *m_args;
+		std::vector<Expression*> *m_stmts;
 };
 
 #endif // FUNCTION_H
