@@ -29,14 +29,16 @@ Value::Value() {
 	m_value = string("(null)");
 }
 
-Value::Value(int value) {
+Value::Value(int value, Mode mode) {
 	m_type = typeInt;
 	m_value = value;
+	m_mode = mode;
 }
 
-Value::Value(double value) {
+Value::Value(double value, Mode mode) {
 	m_type = typeFloat;
 	m_value = value;
+	m_mode = mode;
 }
 
 Value::Value(string value) {
@@ -54,12 +56,13 @@ Value::Value(bool value) {
 	m_value = value;
 }
 
-Value::Value(Type type, boost::any value) {
+Value::Value(Type type, boost::any value, Mode mode) {
 	m_type = type;
 	m_value = value;
+	m_mode = mode;
 }
 
-Value::Value(boost::any *value) {
+Value::Value(boost::any *value, Mode mode) {
 	m_value = *value;
 	
 	if(int *pi = valuePtr<int>()) {
@@ -76,9 +79,11 @@ Value::Value(boost::any *value) {
 	} else {
 		m_type = typeVoid;
 	}
+	
+	m_mode = mode;
 }
 
-Value::Value(Variable *var) {
+Value::Value(Variable *var, Mode mode) {
 	m_value = var->value()->m_value;
 	
 	if(int *pi = valuePtr<int>()) {
@@ -95,13 +100,15 @@ Value::Value(Variable *var) {
 	} else {
 		m_type = typeVoid;
 	}
+	
+	m_mode = mode;
 }
 
 void Value::print() {
 	if(int *pi = valuePtr<int>()) {
-		if(m_hexMode) cout << "0x" << hex;
+		if(m_mode == modeHex) cout << "0x" << hex;
 		cout << *pi;
-		if(m_hexMode) cout << dec;
+		if(m_mode == modeHex) cout << dec;
 	}
 	else if(double *pf = valuePtr<double>()) {
 		cout << *pf;

@@ -27,8 +27,7 @@ using namespace std;
 int Expression::scopes = 0;
 
 Expression::Expression() {
-	m_hexMode = false;
-	m_sciMode = false;
+	m_mode = noMode;
 }
 
 Expression::~Expression() {
@@ -74,8 +73,8 @@ OpExpression::~OpExpression() {
 }
 
 Value* OpExpression::evaluate() {
-	if(m_exp1->hexMode() || ((m_exp2) ? m_exp2->hexMode() : 0)) m_hexMode = true;
-	if(m_exp1->sciMode() || ((m_exp2) ? m_exp2->sciMode() : 0)) m_sciMode = true;
+	if(m_exp1->hexMode() || ((m_exp2) ? m_exp2->hexMode() : 0)) m_mode = modeHex;
+	if(m_exp1->sciMode() || ((m_exp2) ? m_exp2->sciMode() : 0)) m_mode = modeSci;
 	Value *val = m_exp1->evaluate();
 	Value *val2 = (m_exp2) ? m_exp2->evaluate() : 0;
 	if(m_oper == '+') {
@@ -88,8 +87,8 @@ Value* OpExpression::evaluate() {
 					pb = *boost::any_cast<bool>(val->any());
 					out << ((pb) ? "true" : "false");
 				} else {
-					if(m_hexMode) out << "0x" << hex << int(getNumVal(val)) << dec;
-					else if(m_sciMode) out << scientific << getNumVal(val);
+					if(m_mode == modeHex) out << "0x" << hex << int(getNumVal(val)) << dec;
+					else if(m_mode == modeSci) out << scientific << getNumVal(val);
 					else out << getNumVal(val);
 				}
 				out << ends;
@@ -103,8 +102,8 @@ Value* OpExpression::evaluate() {
 					pb = *boost::any_cast<bool>(val2->any());
 					out2 << ((pb) ? "true" : "false");
 				} else {
-					if(m_hexMode) out2 << "0x" << hex << int(getNumVal(val2)) << dec;
-					else if(m_sciMode) out2 << scientific << getNumVal(val2);
+					if(m_mode == modeHex) out2 << "0x" << hex << int(getNumVal(val2)) << dec;
+					else if(m_mode == modeSci) out2 << scientific << getNumVal(val2);
 					else out2 << getNumVal(val2);
 				}
 				out2 << ends;
@@ -114,7 +113,7 @@ Value* OpExpression::evaluate() {
 			}
 			return new Value(tmp + tmp2);
 		} else {
-			return new Value(getNumVal(val) + getNumVal(val2));
+			return new Value(getNumVal(val) + getNumVal(val2), m_mode);
 		}
 	} else {
 		switch(m_oper) {
@@ -191,7 +190,8 @@ void AssignExpression::doExp() {
 							pb = *boost::any_cast<bool>(val->any());
 							out << ((pb) ? "true" : "false");
 						} else {
-							if(m_hexMode) out << "0x" << hex << int(getNumVal(val)) << dec;
+							if(m_mode == modeHex) out << "0x" << hex << int(getNumVal(val)) << dec;
+							else if(m_mode == modeSci) out << scientific << getNumVal(val);
 							else out << getNumVal(val);
 						}
 						out << ends;
@@ -205,7 +205,8 @@ void AssignExpression::doExp() {
 							pb = *boost::any_cast<bool>(val2->any());
 							out2 << ((pb) ? "true" : "false");
 						} else {
-							if(m_hexMode) out2 << "0x" << hex << int(getNumVal(val2)) << dec;
+							if(m_mode == modeHex) out2 << "0x" << hex << int(getNumVal(val2)) << dec;
+							else if(m_mode == modeSci) out2 << scientific << getNumVal(val2);
 							else out2 << getNumVal(val2);
 						}
 						out2 << ends;
@@ -323,6 +324,7 @@ void CallExpression::doExp() {
 
 PrintExpression::PrintExpression(Expression *exp) {
 	m_exp = exp;
+	m_exp->evaluate()->mode(m_exp->mode());
 	doThings();
 }
 

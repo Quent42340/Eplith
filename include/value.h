@@ -47,12 +47,12 @@ typedef enum {
 class Value {
 	public:
 		Value();
-		Value(int value, int mode = noMode);			// Int type
-		Value(double value int mode = noMode);	// Float type
+		Value(int value, Mode mode = noMode);			// Int type
+		Value(double value, Mode mode = noMode);	// Float type
 		Value(std::string value);				// String type
 		Value(char *value);						// String type
 		Value(bool value);						// Bool type
-		Value(Type type, boost::any value, int mode = 0);
+		Value(Type type, boost::any value, Mode mode = noMode);
 		Value(boost::any *value, Mode mode = noMode);
 		Value(Variable *var, Mode mode = noMode);
 		~Value() {}
@@ -70,11 +70,14 @@ class Value {
 		
 		Type type() const { return m_type; }
 		
+		Mode mode() const { return m_mode; }
+		void mode(Mode m) { m_mode = m; }
+		
 		bool hexMode() const { return m_mode == modeHex; }
 		void hexMode(bool h) { m_mode = (h) ? modeHex : noMode; }
 		
 		bool sciMode() const { return m_mode == modeSci; }
-		void sciMode(bool h) { m_mode = (h) ? modeSci : noMode; }
+		void sciMode(bool s) { m_mode = (s) ? modeSci : noMode; }
 		
 		Value *valIncr() { m_value = value<int>() + 1; return this; }
 		Value *valDecr() { m_value = value<int>() - 1; return this; }

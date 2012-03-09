@@ -216,7 +216,7 @@ integer:
 	INTEGER { $$ = new IntExpression($1); }
 	| HEX_INT { $$ = new IntExpression($1); }
 	| var { VarExpression *v = (VarExpression*)$1;
-			if(v->evaluate()->type() == typeInt) $$ = v; else yyerror("Requires an integer expression here."); }
+			if(isNum(v->evaluate())) $$ = v; else yyerror("Requires an integer expression here."); }
 	;
 
 assign:

@@ -38,15 +38,17 @@ class Expression {
 		
 		static int scopes;
 		
-		bool hexMode() const { return m_hexMode; }
-		static void setHexMode(Expression *exp, bool h) { exp->m_hexMode = h; }
+		Mode mode() const { return m_mode; }
+		void mode(Mode m) { m_mode = m; }
 		
-		bool sciMode() const { return m_hexMode; }
-		static void setSciMode(Expression *exp, bool s) { exp->m_sciMode = s; }
+		bool hexMode() const { return m_mode == modeHex; }
+		static void setHexMode(Expression *exp, bool h) { exp->m_mode = (h) ? modeHex : noMode; }
+		
+		bool sciMode() const { return m_mode == modeSci; }
+		static void setSciMode(Expression *exp, bool s) { exp->m_mode = (s) ? modeSci : noMode; }
 		
 	protected:
-		bool m_hexMode;
-		bool m_sciMode;
+		Mode m_mode;
 };
 
 class IntExpression : public Expression {
