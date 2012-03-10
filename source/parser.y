@@ -66,6 +66,7 @@ int main(int argc, char* argv[]) {
 	char* sValue;
 	Expression *exp;
 	std::vector<Expression*> *list;
+	std::vector<VarExpression*> *varList;
 	int op;
 }
 
@@ -120,6 +121,7 @@ int main(int argc, char* argv[]) {
 
 %type <exp> exp var assign assignExpVal stmt cast integer
 %type <list> exp_list stmt_list stmts
+%type <varList> var_list
 
 %%
 program:
@@ -144,7 +146,7 @@ stmt:
 	| FOR '(' assign TO exp ';' exp ')' stmts { $$ = new ForExpression($3, $9, $5, $7);  }
 	| FOR '(' assign TO exp ')' stmts { $$ = new ForExpression($3, $7, $5);  }
 	| NAME '(' exp_list ')' ';' { $$ = new CallExpression(string($1), $3); }
-	| FUNCTION NAME '(' exp_list ')' stmts { $$ = new FuncExpression(string($2), $4, $6); }
+	| FUNCTION NAME '(' var_list ')' stmts { $$ = new FuncExpression(string($2), $4, $6); }
 	;
 
 stmts:
@@ -164,6 +166,16 @@ stmt_list:
 						   v->push_back($2);
 						   $$ = v; }
 	;
+
+var_list:
+	/* void */ { vector<VarExpression*> *v = new vector<VarExpression*>;
+				 $$ = v; }
+	| var { vector<VarExpression*> *v = new vector<VarExpression*>;
+			v->push_back((VarExpression*)$1);
+			$$ = v; }
+	| var_list ',' var { vector<VarExpression*> *v = $1;
+						 v->push_back((VarExpression*)$3);
+						 $$ = v; }
 
 exp_list:
 	/* void */ { vector<Expression*> *v = new vector<Expression*>;

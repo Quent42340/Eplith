@@ -307,7 +307,7 @@ void IfExpression::doExp() {
 	}
 }
 
-FuncExpression::FuncExpression(string funcName, vector<Expression*> *args, vector<Expression*> *stmts) {
+FuncExpression::FuncExpression(string funcName, vector<VarExpression*> *args, vector<Expression*> *stmts) {
 	m_funcName = funcName;
 	m_args = args;
 	m_stmts = stmts;
@@ -345,7 +345,7 @@ CallExpression::~CallExpression() {
 }
 
 void CallExpression::doExp() {
-	m_func->doFunc();
+	m_func->doFunc(m_args);
 }
 
 PrintExpression::PrintExpression(Expression *exp) {

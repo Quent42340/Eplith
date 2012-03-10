@@ -28,6 +28,7 @@ Variable::Variable(string name, Value *value) {
 	m_address = getPtrAddr((void*)this);
 	m_name = name;
 	m_value = value;
+	m_id = vars.size();
 	
 	vars.push_back(this);
 	
@@ -37,6 +38,7 @@ Variable::Variable(string name, Value *value) {
 }
 
 Variable::~Variable() {
+	vars.erase(vars.begin() + m_id);
 	delete m_value;
 }
 
@@ -48,7 +50,7 @@ void Variable::value(Value *value) {
 }
 
 Variable* Variable::findByName(std::string name) {
-	for(int i = 1 ; i < vars.size() ; i++) {
+	for(int i = vars.size() - 1 ; i > 0 ; i--) {
 		if(vars[i]->name() == name) {
 			return vars[i];
 		}

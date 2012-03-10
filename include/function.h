@@ -24,16 +24,18 @@
 #include <boost/any.hpp>
 
 class Expression;
+class VarExpression;
+class Variable;
 
 class Function {
 	public:
-		Function(std::string name, std::vector<Expression*> *args, std::vector<Expression*> *stmts, boost::any returnValue = -1);
+		Function(std::string name, std::vector<VarExpression*> *args, std::vector<Expression*> *stmts, boost::any returnValue = -1);
 		~Function();
 		
 		std::string name() const { return m_name; }
 		std::string address() const { return m_address; }
 		
-		void doFunc();
+		void doFunc(std::vector<Expression*> *args);
 		
 		static Function* findByName(std::string name);
 		static bool exists(std::string name);
@@ -43,7 +45,8 @@ class Function {
 	private:
 		std::string m_name;
 		std::string m_address;
-		std::vector<Expression*> *m_args;
+		std::vector<VarExpression*> *m_args;
+		std::vector<Variable*> m_vars;
 		std::vector<Expression*> *m_stmts;
 };
 

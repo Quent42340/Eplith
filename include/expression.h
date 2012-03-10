@@ -121,6 +121,8 @@ class VarExpression : public Expression {
 		Value* evaluate() { doExp(); return m_var->value(); }
 		void doExp() { m_var = Variable::findByName(m_varName); }
 		
+		std::string varName() { return m_varName; }
+		
 		virtual Variable* getVar() { doExp(); return m_var; }
 		
 	private:
@@ -176,7 +178,7 @@ class IfExpression : public Expression {
 
 class FuncExpression : public Expression {
 	public:
-		FuncExpression(std::string funcName, std::vector<Expression*> *args, std::vector<Expression*> *stmts);
+		FuncExpression(std::string funcName, std::vector<VarExpression*> *args, std::vector<Expression*> *stmts);
 		~FuncExpression();
 		
 		Value* evaluate() { return new Value(); }
@@ -185,7 +187,7 @@ class FuncExpression : public Expression {
 	private:
 		std::string m_funcName;
 		Function *m_func;
-		std::vector<Expression*> *m_args;
+		std::vector<VarExpression*> *m_args;
 		std::vector<Expression*> *m_stmts;
 };
 

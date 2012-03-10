@@ -47,6 +47,7 @@ class Variable {
 		std::string m_name;
 		std::string m_address;
 		Value* m_value;
+		unsigned int m_id;
 };
 
 #endif // VARIABLE_H

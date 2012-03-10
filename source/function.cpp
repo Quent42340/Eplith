@@ -25,7 +25,7 @@ using namespace std;
 
 vector<Function*> Function::funcs;
 
-Function::Function(string name, vector<Expression*> *args, vector<Expression*> *stmts, boost::any returnValue) {
+Function::Function(string name, vector<VarExpression*> *args, vector<Expression*> *stmts, boost::any returnValue) {
 	m_address = getPtrAddr((void*)this);
 	m_name = name;
 	m_args = args;
@@ -44,7 +44,7 @@ Function::~Function() {
 }
 
 Function* Function::findByName(std::string name) {
-	for(int i = 0 ; i < funcs.size() ; i++) {
+	for(unsigned int i = funcs.size() - 1 ; i >= 0 ; i--) {
 		if(funcs[i]->name() == name) {
 			return funcs[i];
 		}
@@ -53,7 +53,7 @@ Function* Function::findByName(std::string name) {
 }
 
 bool Function::exists(std::string name) {
-	for(int i = 0 ; i < funcs.size() ; i++) {
+	for(unsigned int i = 0 ; i < funcs.size() ; i++) {
 		if(funcs[i]->name() == name) {
 			return true;
 		}
@@ -61,9 +61,17 @@ bool Function::exists(std::string name) {
 	return false;
 }
 
-void Function::doFunc() {
+void Function::doFunc(vector<Expression*> *args) {
+	if(m_args->size() != args->size()) yyerror("Unexpected number of arguments given");
+	for(unsigned int i = 0 ; i < m_args->size() ; i++) {
+		m_vars.push_back(new Variable((*m_args)[i]->varName(), (*args)[i]->evaluate()));
+	}
 	for(unsigned int i = 0 ; i < m_stmts->size() ; i++) {
 		(*m_stmts)[i]->doExp();
+	}
+	for(unsigned int i = 0 ; i < m_vars.size() ; i++) {
+		cout << "Test: " << i << endl;
+		delete m_vars[i];
 	}
 }
 

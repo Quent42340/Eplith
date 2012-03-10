@@ -4,6 +4,9 @@ function try() {
 
 try();
 
+str = "Ohohoh";
+print(str + "\n");
+
 function puts(str) {
 	print(str + "\n");
 }
