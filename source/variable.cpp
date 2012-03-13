@@ -33,24 +33,29 @@ Variable::Variable(string name, Value *value) {
 	vars.push_back(this);
 	
 #ifdef VAR_DEBUG
-	cout << "Var name: " << m_name << " | Value: "; m_value->print(); cout << " | Nb of vars: " << vars.size() - 1 << endl;
+	cout << "Var name: " << m_name << " | Value: "; m_value->print(); cout << " | ID: " << m_id << endl;
 #endif
 }
 
 Variable::~Variable() {
 	vars.erase(vars.begin() + m_id);
 	delete m_value;
+	
+#ifdef DELVAR_DEBUG
+	cout << "Variable \"" << m_name << "\" deleted. | vars.size: " << vars.size() << endl;
+#endif
 }
 
 void Variable::value(Value *value) {
 	m_value = value;
+	
 #ifdef SETVAR_DEBUG
 	cout << "Variable \"" << m_name << "\" has a new value: "; m_value->print(); cout << std::endl;
 #endif
 }
 
 Variable* Variable::findByName(std::string name) {
-	for(int i = vars.size() - 1 ; i > 0 ; i--) {
+	for(unsigned int i = vars.size() - 1 ; i > 0 ; i--) {
 		if(vars[i]->name() == name) {
 			return vars[i];
 		}
@@ -59,7 +64,7 @@ Variable* Variable::findByName(std::string name) {
 }
 
 bool Variable::exists(std::string name) {
-	for(int i = 1 ; i < vars.size() ; i++) {
+	for(unsigned int i = 1 ; i < vars.size() ; i++) {
 		if(vars[i]->name() == name) {
 			return true;
 		}

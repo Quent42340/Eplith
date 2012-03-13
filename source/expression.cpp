@@ -25,6 +25,7 @@
 using namespace std;
 
 int Expression::scopes = 0;
+Signal Expression::signal = sNONE;
 
 Expression::Expression() {
 	m_mode = noMode;
@@ -293,16 +294,29 @@ IfExpression::~IfExpression() {
 	delete m_elseStatements;
 }
 
-void IfExpression::doExp() {
+unsigned int n = 0;
+Value* IfExpression::evaluate() {
 	if(m_ifExp->evaluate()->intToBool()->value<bool>()) {
-		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
-			(*m_statements)[i]->doExp();
-		}
+		return (*m_statements)[n]->evaluate();
 	} else {
 		if(m_elseStatements != 0) {
-			for(unsigned int i = 0 ; i < m_elseStatements->size() ; i++) {
-				(*m_elseStatements)[i]->doExp();
-			}
+			return (*m_elseStatements)[n]->evaluate();
+		} else {
+			return new Value();
+		}
+	}
+}
+
+void IfExpression::doExp() {
+	if(m_ifExp->evaluate()->intToBool()->value<bool>()) {
+		for(n = 0 ; n < m_statements->size() ; n++) {
+			(*m_statements)[n]->doExp();
+		} n--;
+	} else {
+		if(m_elseStatements != 0) {
+			for(n = 0 ; n < m_elseStatements->size() ; n++) {
+				(*m_elseStatements)[n]->doExp();
+			} n--;
 		}
 	}
 }
@@ -333,9 +347,8 @@ void FuncExpression::doExp() {
 
 CallExpression::CallExpression(string funcName, vector<Expression*> *args) {
 	m_funcName = funcName;
-	m_func = Function::findByName(m_funcName);
-	if(m_func == 0) yyerror("Function undefined");
 	m_args = args;
+	m_init = false;
 	doThings();
 }
 
@@ -344,8 +357,31 @@ CallExpression::~CallExpression() {
 	delete m_args;
 }
 
+void CallExpression::initVar() {
+	if(!m_init) {
+		m_func = Function::findByName(m_funcName);
+		if(m_func == 0) yyerror("Function undefined");
+		m_init = true;
+	}
+}
+
+Value* CallExpression::evaluate() {
+	cout << "Truc " << m_init << endl;
+	doExp();
+	return m_func->ret();
+}
+
 void CallExpression::doExp() {
+	initVar();
 	m_func->doFunc(m_args);
+}
+
+ReturnExpression::ReturnExpression(Expression *exp) {
+	m_exp = exp;
+}
+
+ReturnExpression::~ReturnExpression() {
+	delete m_exp;
 }
 
 PrintExpression::PrintExpression(Expression *exp) {

@@ -59,6 +59,7 @@ char* stringBufPtr;
 "for"						Expression::scopes++; return FOR;
 "break"						return BREAK;
 "continue"					return CONTINUE;
+"return"					return RETURN;
 ("->"|"to")					return TO;
 "hex"						return HEX;
 	/* TODO: "oct"						return OCT;*/
@@ -82,7 +83,7 @@ char* stringBufPtr;
 
 
 	/* Operators */
-[-()<>=+*/%{}.;^]			return *yytext;
+[-()<>=+*/%{}.,;^]			return *yytext;
 ("!"|"not")					return NOT;
 ("&&"|"and")				return AND;
 ("||"|"or")					return OR;

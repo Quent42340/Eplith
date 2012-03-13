@@ -25,6 +25,13 @@
 
 class Function;
 
+typedef enum {
+	sNONE,
+	sRETURN,
+	sBREAK,
+	sCONTINUE
+} Signal;
+
 class Expression {
 	public:
 		Expression();
@@ -37,6 +44,7 @@ class Expression {
 		void doThings(bool inScope) { if(scopes - 1 == 0) doExp(); }
 		
 		static int scopes;
+		static Signal signal;
 		
 		Mode mode() const { return m_mode; }
 		void mode(Mode m) { m_mode = m; }
@@ -167,7 +175,7 @@ class IfExpression : public Expression {
 		IfExpression(Expression *ifExp, std::vector<Expression*> *statements, std::vector<Expression*> *elseStatements = 0);
 		~IfExpression();
 		
-		Value* evaluate() { return new Value(); }
+		Value* evaluate();
 		void doExp();
 		
 	private:
@@ -196,13 +204,27 @@ class CallExpression : public Expression {
 		CallExpression(std::string funcName, std::vector<Expression*> *args);
 		~CallExpression();
 		
-		Value* evaluate() { return new Value(); }
+		void initVar();
+		Value* evaluate();
 		void doExp();
 		
 	private:
 		std::string m_funcName;
 		Function *m_func;
 		std::vector<Expression*> *m_args;
+		bool m_init;
+};
+
+class ReturnExpression : public Expression {
+	public:
+		ReturnExpression(Expression *exp);
+		~ReturnExpression();
+		
+		Value* evaluate() { return m_exp->evaluate(); }
+		void doExp() { signal = sRETURN; };
+		
+	private:
+		Expression *m_exp;
 };
 
 class PrintExpression : public Expression {

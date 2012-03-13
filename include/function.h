@@ -22,10 +22,10 @@
 
 #include <vector>
 #include <boost/any.hpp>
+#include "variable.h"
 
 class Expression;
 class VarExpression;
-class Variable;
 
 class Function {
 	public:
@@ -34,6 +34,8 @@ class Function {
 		
 		std::string name() const { return m_name; }
 		std::string address() const { return m_address; }
+		
+		Value *ret() { return m_ret; }
 		
 		void doFunc(std::vector<Expression*> *args);
 		
@@ -48,6 +50,7 @@ class Function {
 		std::vector<VarExpression*> *m_args;
 		std::vector<Variable*> m_vars;
 		std::vector<Expression*> *m_stmts;
+		Value *m_ret;
 };
 
 #endif // FUNCTION_H

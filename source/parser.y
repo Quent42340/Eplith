@@ -90,6 +90,7 @@ int main(int argc, char* argv[]) {
 %token vNULL
 
 %token BREAK CONTINUE
+%token RETURN
 
 %token STRA
 %token EQI EQS
@@ -138,6 +139,7 @@ stmt:
 	| exp ';' { $$ = $1; }
 	| BREAK ';' { ; }
 	| CONTINUE ';' { ; }
+	| RETURN exp ';' { $$ = new ReturnExpression($2); }
 	| PRINT '(' exp ')' ';' { $$ = new PrintExpression($3); }
 	| WHILE '(' exp ')' stmts { $$ = new WhileExpression($3, $5); }
 	| DO stmts WHILE '(' exp ')' ';' { $$ = new WhileExpression($5, $2); }
@@ -145,7 +147,6 @@ stmt:
 	| IF '(' exp ')' stmts ELSE stmts { $$ = new IfExpression($3, $5, $7); }
 	| FOR '(' assign TO exp ';' exp ')' stmts { $$ = new ForExpression($3, $9, $5, $7);  }
 	| FOR '(' assign TO exp ')' stmts { $$ = new ForExpression($3, $7, $5);  }
-	| NAME '(' exp_list ')' ';' { $$ = new CallExpression(string($1), $3); }
 	| FUNCTION NAME '(' var_list ')' stmts { $$ = new FuncExpression(string($2), $4, $6); }
 	;
 
@@ -224,6 +225,7 @@ exp:
 	| exp EQ exp { $$ = new OpExpression($1, EQ, $3); }
 	| exp NE exp { $$ = new OpExpression($1, NE, $3); }
 	| '(' exp ')' { $$ = $2; }
+	| NAME '(' exp_list ')' { $$ = new CallExpression(string($1), $3); }
 	;
 
 cast:
