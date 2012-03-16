@@ -32,11 +32,11 @@ Function::Function(string name, vector<VarExpression*> *args, vector<Expression*
 	m_stmts = stmts;
 	m_ret = Variable::vars[0]->value();
 	
-	funcs.push_back(this);
-	
 #ifdef FUNC_DEBUG
 	cout << "Func name: " << m_name << " | Address: " << m_address << endl;
 #endif
+	
+	funcs.push_back(this);
 }
 
 Function::~Function() {
@@ -70,7 +70,11 @@ void Function::doFunc(vector<Expression*> *args) {
 	}
 	for(unsigned int i = 0 ; i < m_stmts->size() ; i++) {
 		(*m_stmts)[i]->doExp();
-		if(Expression::signal == sRETURN) m_ret = (*m_stmts)[i]->evaluate(); Expression::signal = sNONE; break;
+		if(Expression::signal == sRETURN) {
+			m_ret = (*m_stmts)[i]->evaluate();
+			Expression::signal = sNONE;
+			break;
+		}
 	}
 	for(unsigned int i = m_vars.size() - 1 ; m_vars.size() != 0 ; i--) {
 		delete m_vars[i];

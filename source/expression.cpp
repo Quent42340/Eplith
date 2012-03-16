@@ -78,6 +78,8 @@ Value* OpExpression::evaluate() {
 	if(m_exp1->sciMode() || ((m_exp2) ? m_exp2->sciMode() : 0)) m_mode = modeSci;
 	Value *val = m_exp1->evaluate();
 	Value *val2 = (m_exp2) ? m_exp2->evaluate() : 0;
+	cout << "Type: " << m_exp2->evaluate()->type() << " - " << val2->type() << " => ";
+	cout << "oper = " << "(" << m_oper << ") " << (char)m_oper << endl;
 	if(m_oper == '+') {
 		bool pb;
 		if(!isNum(val) || !isNum(val2)) {
@@ -244,7 +246,6 @@ CrExpression::CrExpression(Expression *varExp, int op, bool after) {
 	m_varExp = (VarExpression*)varExp;
 	m_op = op;
 	m_after = after;
-	if(m_varExp->getVar()->value()->type() != typeInt) yyerror("Incrementation / decrementation unavailable with these type");
 }
 
 CrExpression::~CrExpression() {
@@ -254,6 +255,7 @@ CrExpression::~CrExpression() {
 }
 
 void CrExpression::doExp() {
+	if(m_varExp->getVar()->value()->type() != typeInt) yyerror("Incrementation / decrementation unavailable with these type");
 	m_valB = new Value(*m_varExp->getVar()->value());
 	if(m_op == INCR) {
 		m_valA = m_varExp->getVar()->value()->valIncr();
@@ -357,7 +359,7 @@ CallExpression::~CallExpression() {
 	delete m_args;
 }
 
-void CallExpression::initVar() {
+void CallExpression::initFunc() {
 	if(!m_init) {
 		m_func = Function::findByName(m_funcName);
 		if(m_func == 0) yyerror("Function undefined");
@@ -366,13 +368,13 @@ void CallExpression::initVar() {
 }
 
 Value* CallExpression::evaluate() {
-	cout << "Truc " << m_init << endl;
+	//cout << "Truc " << m_init << endl;
 	doExp();
 	return m_func->ret();
 }
 
 void CallExpression::doExp() {
-	initVar();
+	initFunc();
 	m_func->doFunc(m_args);
 }
 
@@ -386,7 +388,6 @@ ReturnExpression::~ReturnExpression() {
 
 PrintExpression::PrintExpression(Expression *exp) {
 	m_exp = exp;
-	m_exp->evaluate()->mode(m_exp->mode());
 	doThings();
 }
 

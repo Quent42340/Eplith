@@ -204,7 +204,7 @@ class CallExpression : public Expression {
 		CallExpression(std::string funcName, std::vector<Expression*> *args);
 		~CallExpression();
 		
-		void initVar();
+		void initFunc();
 		Value* evaluate();
 		void doExp();
 		
@@ -232,7 +232,7 @@ class PrintExpression : public Expression {
 		PrintExpression(Expression *exp);
 		~PrintExpression();
 
-		Value* evaluate() { return m_exp->evaluate(); }
+		Value* evaluate() { m_exp->evaluate()->mode(m_exp->mode()); return m_exp->evaluate(); }
 		void doExp() { this->evaluate()->print(); }
 
 	private:
