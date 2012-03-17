@@ -30,11 +30,11 @@ Variable::Variable(string name, Value *value) {
 	m_value = value;
 	m_id = vars.size();
 	
+	vars.push_back(this);
+	
 #ifdef VAR_DEBUG
 	cout << "Var name: " << m_name << " | Value: "; m_value->print(); cout << " | ID: " << m_id << endl;
 #endif
-	
-	vars.push_back(this);
 }
 
 Variable::~Variable() {
@@ -42,7 +42,7 @@ Variable::~Variable() {
 	delete m_value;
 	
 #ifdef DELVAR_DEBUG
-	cout << "Variable \"" << m_name << "\" deleted. | vars.size: " << vars.size() << endl;
+	cout << "Variable \"" << m_name << "\" with ID: " << m_id << " deleted. | vars.size: " << vars.size() << endl;
 #endif
 }
 

@@ -42,7 +42,7 @@ typedef enum {
 #define setNumVal(val1, val2) { if(val1->type() == typeInt) val1->value<int>(val2); else val1->value<double>(val2); }
 #define valPow(val1, val2) pow((double)getNumVal(val1), (double)getNumVal(val2))
 #define valNumToBool(val) ((val->any()->type() != typeid(bool)) ? (bool)getNumVal(val) : val->value<bool>())
-#define isNum(val) ((val->type() == typeInt) ? true : ((val->type() == typeFloat) ? true : false))
+#define isNum(val) ((val->type() == typeInt || val->type() == typeFloat) ? true : false)
 
 class Value {
 	public:
@@ -60,7 +60,7 @@ class Value {
 		void print();
 		
 		template <typename T>
-			T* valuePtr() { T *c = boost::any_cast<T>(&m_value); if(c) return c; }
+			T* valuePtr() { T *c = boost::any_cast<T>(&m_value); return (c) ? c : 0; }
 		template <typename T>
 			T value() { return *valuePtr<T>(); }
 		template <typename T>

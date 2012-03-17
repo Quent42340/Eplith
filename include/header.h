@@ -33,10 +33,11 @@
 #include <cstdarg>
 
 #define WARNINGS
-
+#define YYTEXT_DEBUG 0
 #define FUNC_DEBUG
 #define VAR_DEBUG
-//#define DELVAR_DEBUG
+#define TYPES_DEBUG
+#define DELVAR_DEBUG
 //#define SETVAR_DEBUG
 
 extern int yylineno;

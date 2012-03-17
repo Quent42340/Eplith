@@ -66,16 +66,19 @@ bool Function::exists(std::string name) {
 void Function::doFunc(vector<Expression*> *args) {
 	if(m_args->size() != args->size()) yyerror("Unexpected number of arguments given");
 	for(unsigned int i = 0 ; i < m_args->size() ; i++) {
-		m_vars.push_back(new Variable((*m_args)[i]->varName(), (*args)[i]->evaluate()));
+		m_vars.push_back(new Variable((*m_args)[i]->varName(), new Value(*(*args)[i]->evaluate())));
 	}
+	int oldlineno = yylineno;
 	for(unsigned int i = 0 ; i < m_stmts->size() ; i++) {
+		yylineno = (*m_stmts)[i]->line();
 		(*m_stmts)[i]->doExp();
 		if(Expression::signal == sRETURN) {
-			m_ret = (*m_stmts)[i]->evaluate();
 			Expression::signal = sNONE;
+			m_ret = (*m_stmts)[i]->evaluate();
 			break;
 		}
 	}
+	yylineno = oldlineno;
 	for(unsigned int i = m_vars.size() - 1 ; m_vars.size() != 0 ; i--) {
 		delete m_vars[i];
 		m_vars.pop_back();

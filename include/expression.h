@@ -49,6 +49,12 @@ class Expression {
 		Mode mode() const { return m_mode; }
 		void mode(Mode m) { m_mode = m; }
 		
+		std::string type() const { return m_type; }
+		void type(std::string t) { m_type = t; }
+		
+		int line() const { return m_line; }
+		void line(int l) { m_line = l; }
+		
 		bool hexMode() const { return m_mode == modeHex; }
 		static void setHexMode(Expression *exp, bool h) { exp->m_mode = (h) ? modeHex : noMode; }
 		
@@ -57,6 +63,8 @@ class Expression {
 		
 	protected:
 		Mode m_mode;
+		int m_line;
+		std::string m_type;
 };
 
 class IntExpression : public Expression {

@@ -27,7 +27,7 @@ using namespace std;
 extern FILE* yyin;
 
 void yyerror(string str) {
-	cerr << "Error: " << str << " at symbol \"" << yytext << "\" at line " << yylineno << endl;
+	cerr << "Error: " << str << " at symbol \"" << yytext-YYTEXT_DEBUG << "\" at line " << yylineno << endl;
 	exit(1);
 }
 
@@ -42,6 +42,10 @@ int yywrap() {
 }
 
 int main(int argc, char* argv[]) {
+#ifdef TYPES_DEBUG
+	cout << "Types: Int: " << typeInt << " | Float: " << typeFloat << " | String: " << typeStr << " | Void: " << typeVoid << endl;
+#endif
+	
 	Variable::initNullVar();
 	
 	yyin = fopen(argv[1], "r");
