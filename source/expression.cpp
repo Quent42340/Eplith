@@ -85,11 +85,12 @@ Value* OpExpression::evaluate() {
 	Value *val = m_exp1->evaluate();
 	Value *val2 = (m_exp2) ? m_exp2->evaluate() : 0;
 	//if(val->type() > 3 || val2->type() > 3)
-	cout << "At line " << yylineno << " Type: exp(" << m_exp1->type() << ") " << m_exp1->evaluate()->type() << " - " << val->type() << " / exp2(" << m_exp2->type() << ") " << m_exp2->evaluate()->type() << " - " << val2->type() << " => ";
-	cout << "oper = " << "(" << m_oper << ") " << (char)m_oper << endl;
-	//cout << "val: " << val->value<string>() << " + ";
+	//cout << "At line " << yylineno << " Type: exp(" << m_exp1->type() << ") " << val->type() << " / exp2(" << m_exp2->type() << ") " << val2->type() << " => ";
+	//cout << "oper = " << "(" << m_oper << ") " << (char)m_oper << endl;
+	//cout << "val: " << val->value<int>() << " + " << val2->value<string>() << endl;
 	//if(val2->type() == typeInt) cout << val2->value<int>() << endl;
 	//else cout << val2->value<string>() << endl;
+	//if(isNum(val) && isNum(val2) && m_oper == '*') cout << getNumVal(val) << " * " << getNumVal(val2) << endl;
 	if(m_oper == '+') {
 		bool pb;
 		if(!isNum(val) || !isNum(val2)) {
@@ -371,30 +372,34 @@ CallExpression::CallExpression(string funcName, vector<Expression*> *args) {
 	m_funcName = funcName;
 	m_args = args;
 	m_init = false;
-	doThings();
 }
 
 CallExpression::~CallExpression() {
-	delete m_func;
+	m_funcs.clear();
 	delete m_args;
 }
 
 void CallExpression::initFunc() {
-	if(!m_init) {
-		m_func = new Function(*Function::findByName(m_funcName));
-		if(m_func == 0) yyerror("Function undefined");
-		m_init = true;
-	}
+	m_funcs.push_back(new Function(*Function::findByName(m_funcName)));
+	//cout << "---> new Function: " << (void*)m_funcs.back() << endl;
+	if(m_funcs.back() == 0) yyerror("Function undefined");
+	m_init = true;
 }
 
 Value* CallExpression::evaluate() {
-	if(!m_init) doExp();
-	return m_func->ret();
+	//cout << "---> (" << (void*)this << ")CallExpression::evaluate() (m_init=" << m_init << ")" << endl;
+	if(m_init) initFunc();
+	doExp();
+	//if(isNum(m_funcs.back()->ret())) cout << "---> In CallExpression(" << (void*)this << "): Function(" << (void*)m_funcs.back() << "): Ret(" << (void*)m_funcs.back()->ret() << "): " << getNumVal(m_funcs.back()->ret()) << endl;
+	Value* ret = new Value(*m_funcs.back()->ret());
+	m_funcs.pop_back();
+	return ret;
 }
 
 void CallExpression::doExp() {
-	initFunc();
-	m_func->doFunc(m_args);
+	//cout << "---> (" << (void*)this << ")CallExpression::doExp() (m_init=" << m_init << ")" << endl;
+	if(!m_init) initFunc();
+	m_funcs.back()->doFunc(m_args);
 }
 
 ReturnExpression::ReturnExpression(Expression *exp) {

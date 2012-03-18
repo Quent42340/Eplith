@@ -6,5 +6,5 @@ function factorial(n) {
 	}
 }
 
-print(factorial(1) + "\n");
+print(factorial(13) + "\n");
 

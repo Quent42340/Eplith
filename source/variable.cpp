@@ -39,11 +39,14 @@ Variable::Variable(string name, Value *value) {
 
 Variable::~Variable() {
 	vars.erase(vars.begin() + m_id);
-	delete m_value;
 	
 #ifdef DELVAR_DEBUG
-	cout << "Variable \"" << m_name << "\" with ID: " << m_id << " deleted. | vars.size: " << vars.size() << endl;
+	cout << "Variable \"" << m_name << "\" with ID: " << m_id;
+	if(isNum(m_value)) cout << " and value: " << getNumVal(m_value);
+	cout << " deleted. | vars.size: " << vars.size() << endl;
 #endif
+	
+	delete m_value;
 }
 
 void Variable::value(Value *value) {

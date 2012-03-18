@@ -140,7 +140,7 @@ instruction: /* empty */
 stmt:
 	  ';' { ; }
 	| assign ';' { ; }
-	| exp ';' { $$ = $1; }
+	| exp ';' { $$ = $1; if($$->type() == "CallExpression") $1->doThings(); }
 	| BREAK ';' { ; }
 	| CONTINUE ';' { ; }
 	| RETURN exp ';' { $$ = new ReturnExpression($2); }

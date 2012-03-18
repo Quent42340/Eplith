@@ -1,8 +1,9 @@
 - Functions ( return )
-- puts() / type()
+- Arrays
 - Continue / Break
+- Include
+- puts() / type()
 - Switch
-- Tables
 - Structs
 - Enums
 - Classes

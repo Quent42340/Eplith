@@ -33,7 +33,7 @@ typedef enum {
 } Signal;
 
 class Expression {
-	public:
+	public:	
 		Expression();
 		~Expression();
 		
@@ -46,6 +46,12 @@ class Expression {
 		static int scopes;
 		static Signal signal;
 		
+		bool hexMode() const { return m_mode == modeHex; }
+		static void setHexMode(Expression *exp, bool h) { exp->m_mode = (h) ? modeHex : noMode; }
+		
+		bool sciMode() const { return m_mode == modeSci; }
+		static void setSciMode(Expression *exp, bool s) { exp->m_mode = (s) ? modeSci : noMode; }
+		
 		Mode mode() const { return m_mode; }
 		void mode(Mode m) { m_mode = m; }
 		
@@ -54,12 +60,6 @@ class Expression {
 		
 		int line() const { return m_line; }
 		void line(int l) { m_line = l; }
-		
-		bool hexMode() const { return m_mode == modeHex; }
-		static void setHexMode(Expression *exp, bool h) { exp->m_mode = (h) ? modeHex : noMode; }
-		
-		bool sciMode() const { return m_mode == modeSci; }
-		static void setSciMode(Expression *exp, bool s) { exp->m_mode = (s) ? modeSci : noMode; }
 		
 	protected:
 		Mode m_mode;
@@ -218,7 +218,7 @@ class CallExpression : public Expression {
 		
 	private:
 		std::string m_funcName;
-		Function *m_func;
+		std::vector<Function*> m_funcs;
 		std::vector<Expression*> *m_args;
 		bool m_init;
 };
@@ -240,7 +240,7 @@ class PrintExpression : public Expression {
 		PrintExpression(Expression *exp);
 		~PrintExpression();
 
-		Value* evaluate() { m_exp->evaluate()->mode(m_exp->mode()); return m_exp->evaluate(); }
+		Value* evaluate() { Value *v = m_exp->evaluate(); v->mode(m_exp->mode()); return v; }
 		void doExp() { this->evaluate()->print(); }
 
 	private:

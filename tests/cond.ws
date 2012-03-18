@@ -8,5 +8,5 @@ function test(n) {
 	}
 }
 
-print(test(2) + "\n");
+print(test(3) + "\n");
 
