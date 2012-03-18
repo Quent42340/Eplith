@@ -112,7 +112,7 @@ void Value::print() {
 	}
 	else if(double *pf = valuePtr<double>()) {
 		if(m_mode == modeSci) cout << scientific;
-		cout << setprecision(20) << *pf;
+		cout << *pf;
 	}
 	else if(string *pstr = valuePtr<string>()) {
 		cout << *pstr;
