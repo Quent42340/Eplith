@@ -84,26 +84,19 @@ Value* OpExpression::evaluate() {
 	if(m_exp1->sciMode() || ((m_exp2) ? m_exp2->sciMode() : 0)) m_mode = modeSci;
 	Value *val = m_exp1->evaluate();
 	Value *val2 = (m_exp2) ? m_exp2->evaluate() : 0;
-	cout << "At line " << yylineno << " Type: exp(" << m_exp1->type() << ") " << val->type() << " / exp2(" << m_exp2->type() << ") " << val2->type() << " => ";
+	//cout << "At line " << yylineno << " Type: exp(" << m_exp1->type() << ") " << val->type() << " / exp2(" << m_exp2->type() << ") " << val2->type() << " => ";
 	//cout << "oper = " << "(" << m_oper << ") " << (char)m_oper << endl;
 	//cout << "val: " << val->value<int>() << " + " << val2->value<string>() << endl;
 	//if(val2->type() == typeInt) cout << val2->value<int>() << endl;
 	//else cout << val2->value<string>() << endl;
-	if(isNum(val) && isNum(val2)) cout << getNumVal(val) << " " << (char)m_oper << " " << getNumVal(val2) << endl;
+	//if(isNum(val) && isNum(val2)) cout << getNumVal(val) << " " << (char)m_oper << " " << getNumVal(val2) << endl;
 	if(m_oper == '+') {
 		bool pb;
 		if(!isNum(val) || !isNum(val2)) {
 			string tmp, tmp2;
 			if(isNum(val)) {
 				stringstream out;
-				if(val->any()->type() == typeid(bool)) {
-					pb = *boost::any_cast<bool>(val->any());
-					out << ((pb) ? "true" : "false");
-				} else {
-					if(m_mode == modeHex) out << "0x" << hex << int(getNumVal(val)) << dec;
-					else if(m_mode == modeSci) out << scientific << getNumVal(val);
-					else out << getNumVal(val);
-				}
+				val->print(out, m_mode);
 				out << ends;
 				tmp = out.str();
 			} else {
@@ -111,14 +104,7 @@ Value* OpExpression::evaluate() {
 			}
 			if(isNum(val2)) {
 				stringstream out2;
-				if(val2->any()->type() == typeid(bool)) {
-					pb = *boost::any_cast<bool>(val2->any());
-					out2 << ((pb) ? "true" : "false");
-				} else {
-					if(m_mode == modeHex) out2 << "0x" << hex << int(getNumVal(val2)) << dec;
-					else if(m_mode == modeSci) out2 << scientific << getNumVal(val2);
-					else out2 << getNumVal(val2);
-				}
+				val2->print(out2, m_mode);
 				out2 << ends;
 				tmp2 = out2.str();
 			} else {
@@ -201,14 +187,7 @@ void AssignExpression::doExp() {
 					string tmp, tmp2;
 					if(isNum(val)) {
 						stringstream out;
-						if(val->any()->type() == typeid(bool)) {
-							pb = *boost::any_cast<bool>(val->any());
-							out << ((pb) ? "true" : "false");
-						} else {
-							if(m_mode == modeHex) out << "0x" << hex << int(getNumVal(val)) << dec;
-							else if(m_mode == modeSci) out << scientific << getNumVal(val);
-							else out << getNumVal(val);
-						}
+						val->print(out, m_mode);
 						out << ends;
 						tmp = out.str();
 					} else {
@@ -216,14 +195,7 @@ void AssignExpression::doExp() {
 					}
 					if(isNum(val2)) {
 						stringstream out2;
-						if(val2->any()->type() == typeid(bool)) {
-							pb = *boost::any_cast<bool>(val2->any());
-							out2 << ((pb) ? "true" : "false");
-						} else {
-							if(m_mode == modeHex) out2 << "0x" << hex << int(getNumVal(val2)) << dec;
-							else if(m_mode == modeSci) out2 << scientific << getNumVal(val2);
-							else out2 << getNumVal(val2);
-						}
+						val2->print(out2, m_mode);
 						out2 << ends;
 						tmp2 = out2.str();
 					} else {

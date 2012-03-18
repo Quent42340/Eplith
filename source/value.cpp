@@ -56,6 +56,11 @@ Value::Value(bool value) {
 	m_value = value;
 }
 
+Value::Value(vector<Value*> array) {
+	m_type = typeArray;
+	m_value = array;
+}
+
 Value::Value(Type type, boost::any value, Mode mode) {
 	m_type = type;
 	m_value = value;
@@ -76,6 +81,9 @@ Value::Value(boost::any *value, Mode mode) {
 	}
 	else if(bool *pb = valuePtr<bool>()) {
 		m_type = typeInt;
+	}
+	else if(vector<Value*> *pa = valuePtr< vector<Value*> >()) {
+		m_type = typeArray;
 	} else {
 		m_type = typeVoid;
 	}
@@ -97,6 +105,9 @@ Value::Value(Variable *var, Mode mode) {
 	}
 	else if(bool *pb = valuePtr<bool>()) {
 		m_type = typeInt;
+	}
+	else if(vector<Value*> *pa = valuePtr< vector<Value*> >()) {
+		m_type = typeArray;
 	} else {
 		m_type = typeVoid;
 	}
@@ -104,24 +115,27 @@ Value::Value(Variable *var, Mode mode) {
 	m_mode = mode;
 }
 
-void Value::print() {
+void Value::print(ostream &out, Mode mode) {
+	if(mode == noMode) mode = m_mode;
 	if(int *pi = valuePtr<int>()) {
-		if(m_mode == modeHex) cout << "0x" << hex;
-		cout << *pi;
-		if(m_mode == modeHex) cout << dec;
+		if(mode == modeHex) out << "0x" << hex;
+		out << *pi;
+		if(mode == modeHex) out << dec;
 	}
 	else if(double *pf = valuePtr<double>()) {
-		if(m_mode == modeSci) cout << scientific;
-		cout << *pf;
+		if(mode == modeSci) out << scientific;
+		out << *pf;
 	}
 	else if(string *pstr = valuePtr<string>()) {
-		cout << *pstr;
+		out << *pstr;
 	}
 	else if(bool *pb = valuePtr<bool>()) {
-		cout << ((*pb) ? "true" : "false");
+		out << ((*pb) ? "true" : "false");
+	}
+	else if(vector<Value*> *pa = valuePtr< vector<Value*> >()) {
 	}
 	else if(m_type == typeVoid) {
-		cout << "(null)";
+		out << "(null)";
 	}
 }
 

@@ -29,6 +29,7 @@ typedef enum {
 	typeInt,
 	typeFloat,
 	typeStr,
+	typeArray,
 	typeVoid
 } Type;
 
@@ -47,17 +48,18 @@ typedef enum {
 class Value {
 	public:
 		Value();
-		Value(int value, Mode mode = noMode);			// Int type
-		Value(double value, Mode mode = noMode);	// Float type
+		Value(int value, Mode mode = noMode);	// Int type
+		Value(double value, Mode mode = noMode);// Float type
 		Value(std::string value);				// String type
 		Value(char *value);						// String type
 		Value(bool value);						// Bool type
+		Value(std::vector<Value*> array);		// Array
 		Value(Type type, boost::any value, Mode mode = noMode);
 		Value(boost::any *value, Mode mode = noMode);
 		Value(Variable *var, Mode mode = noMode);
 		~Value() {}
 		
-		void print();
+		void print(std::ostream &out = std::cout, Mode mode = noMode);
 		
 		template <typename T>
 			T* valuePtr() { T *c = boost::any_cast<T>(&m_value); return (c) ? c : 0; }
