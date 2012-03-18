@@ -67,6 +67,34 @@ BoolExpression::BoolExpression(bool value) {
 BoolExpression::~BoolExpression() {
 }
 
+ArrayExpression::ArrayExpression(vector<Expression*> *elements) {
+	m_elements = elements;
+}
+
+ArrayExpression::~ArrayExpression() {
+	delete m_elements;
+}
+
+Value* ArrayExpression::evaluate() {
+	vector<Value*> *vElements = new vector<Value*>;
+	for(unsigned int i = 0 ; i < m_elements->size() ; i++) {
+		vElements->push_back((*m_elements)[i]->evaluate());
+	}
+	return new Value(*vElements);
+}
+
+ElementExpression::ElementExpression(string arrayName, int index) {
+	m_arrayName = arrayName;
+	m_index = index;
+}
+
+Value* ElementExpression::evaluate() {
+	Variable *array = Variable::findByName(m_arrayName);
+	if(array == 0) yyerror("Variable undefined");
+	if(array->value()->type() != typeArray) yyerror("Trying to access to an element of non-array variable");
+	return array->value()->value< vector<Value*> >()[m_index];
+}
+
 OpExpression::OpExpression(Expression *exp1, int oper, Expression *exp2) {
 	m_type = "OpExpression";
 	m_exp1 = exp1;

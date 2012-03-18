@@ -230,6 +230,8 @@ exp:
 	| exp NE exp { $$ = new OpExpression($1, NE, $3); }
 	| '(' exp ')' { $$ = $2; }
 	| NAME '(' exp_list ')' { $$ = new CallExpression(string($1), $3); }
+	| '{' exp_list '}' { $$ = new ArrayExpression($2); }
+	| NAME '[' INTEGER ']' { $$ = new ElementExpression(string($1), $3); }
 	;
 
 cast:

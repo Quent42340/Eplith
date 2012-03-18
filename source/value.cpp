@@ -133,9 +133,14 @@ void Value::print(ostream &out, Mode mode) {
 		out << ((*pb) ? "true" : "false");
 	}
 	else if(vector<Value*> *pa = valuePtr< vector<Value*> >()) {
+		out << "{";
 		for(unsigned int i = 0 ; i < pa->size() ; i++) {
+			if((*pa)[i]->type() == typeStr) out << "\"";
 			(*pa)[i]->print(out);
+			if((*pa)[i]->type() == typeStr) out << "\"";
+			if(i != pa->size() - 1) out << ", ";
 		}
+		out << "}";
 	}
 	else if(m_type == typeVoid) {
 		out << "(null)";

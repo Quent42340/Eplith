@@ -115,6 +115,31 @@ class BoolExpression : public Expression {
 		bool m_value;
 };
 
+class ArrayExpression : public Expression {
+	public:
+		ArrayExpression(std::vector<Expression*> *elements);
+		~ArrayExpression();
+
+		Value *evaluate();
+		void doExp() {}
+		
+	private:
+		std::vector<Expression*> *m_elements;
+};
+
+class ElementExpression : public Expression {
+	public:
+		ElementExpression(std::string arrayName, int index);
+		~ElementExpression() {}
+
+		Value *evaluate();
+		void doExp() {}
+
+	private:
+		std::string m_arrayName;
+		int m_index;
+};
+
 class OpExpression : public Expression {
 	public:
 		OpExpression(Expression *exp1, int oper, Expression *exp2 = 0);

@@ -71,7 +71,7 @@ char* stringBufPtr;
 "false"						return FALSE;
 
 	/* Variable name */
-[a-zA-Z][0-9a-zA-Z_]*		yylval.sValue = strdup(yytext); return NAME;
+[a-zA-Z_][0-9a-zA-Z_]*		yylval.sValue = strdup(yytext); return NAME;
 
 	/* Integer */
 -?[0-9]+					yylval.iValue = atoi(yytext); return INTEGER;
@@ -83,7 +83,7 @@ char* stringBufPtr;
 
 
 	/* Operators */
-[-()<>=+*/%{}.,;^]			return *yytext;
+[-()<>=+*/%{}.,;^]|"["|"]"	return *yytext;
 ("!"|"not")					return NOT;
 ("&&"|"and")				return AND;
 ("||"|"or")					return OR;

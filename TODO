@@ -1,4 +1,7 @@
 - Arrays
+	* Basic: OK.
+	* Multidimensional: Not OK.
+	* String index: Not OK.
 - Continue / Break
 - Include
 - puts() / type()
