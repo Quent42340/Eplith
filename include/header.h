@@ -32,8 +32,6 @@
 #include <cstddef>
 #include <cstdarg>
 
-#define PRECISION 80
-
 #define WARNINGS
 
 #define YYTEXT_DEBUG 0
