@@ -1,11 +1,12 @@
-WordSphere=/home/quentin/Bureau/FlexBison/WordSphere CD=. filter=".gitignore *.c *.h *.l *.y *.diff AUTHORS ChangeLog COPYING Makefile TODO *.md *.ws *.cpp" {
+WordSphere=/home/quentin/Bureau/FlexBison/WordSphere CD=. filter=".gitignore *.c *.h *.l *.y *.diff AUTHORS ChangeLog COPYING Makefile TODO *.textile *.ws *.cpp" {
+ .gitignore
  WordSphere.diff
  AUTHORS
  ChangeLog
  COPYING
  Makefile
  TODO
- README.md
+ README.textile
  include=include {
   expression.h
   function.h
@@ -24,11 +25,20 @@ WordSphere=/home/quentin/Bureau/FlexBison/WordSphere CD=. filter=".gitignore *.c
   variable.cpp
  }
  tests=tests {
+  bit_test.ws
+  cond_test.ws
+  cr_test.ws
+  factorial.ws
+  float_issue.ws
+  float_test.ws
+  functions_test.ws
   test.ws
+  type_test.ws
  }
  wiki=wiki {
-  Code-samples.md
-  Home.md
-  WordSphere Documentation.md
+  .gitignore
+  Code-samples.textile
+  Home.textile
+  WordSphere-Documentation.textile
  }
 }
