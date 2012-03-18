@@ -111,7 +111,8 @@ void Value::print() {
 		if(m_mode == modeHex) cout << dec;
 	}
 	else if(double *pf = valuePtr<double>()) {
-		cout << *pf;
+		if(m_mode == modeSci) cout << scientific;
+		cout << setprecision(20) << *pf;
 	}
 	else if(string *pstr = valuePtr<string>()) {
 		cout << *pstr;

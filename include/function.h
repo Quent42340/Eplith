@@ -29,7 +29,6 @@ class VarExpression;
 
 class Function {
 	public:
-		//Function(const Function &f);
 		Function(std::string name, std::vector<VarExpression*> *args, std::vector<Expression*> *stmts, boost::any returnValue = -1);
 		~Function();
 		

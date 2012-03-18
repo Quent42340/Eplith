@@ -46,6 +46,8 @@ int main(int argc, char* argv[]) {
 	cout << "Types: Int: " << typeInt << " | Float: " << typeFloat << " | String: " << typeStr << " | Void: " << typeVoid << endl;
 #endif
 	
+	cout.precision(PRECISION);
+	
 	Variable::initNullVar();
 	
 	yyin = fopen(argv[1], "r");

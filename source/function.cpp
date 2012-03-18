@@ -25,19 +25,6 @@ using namespace std;
 
 vector<Function*> Function::funcs;
 
-/*Function::Function(const Function &f) {
-	cout << "------- COPY --------" << endl;
-	m_name = f.m_name;
-	m_address = f.m_address;
-	m_args = new vector<VarExpression*>(*f.m_args);
-	m_vars = f.m_vars;
-	m_stmts = new vector<Expression*>;
-//	for(unsigned int i = 0 ; i < f.m_stmts->size() ; i++) {
-//		m_stmts->push_back(new Expression(*(*f.m_stmts)[i]));
-//	}
-	m_ret = new Value(*f.m_ret);
-}*/
-
 Function::Function(string name, vector<VarExpression*> *args, vector<Expression*> *stmts, boost::any returnValue) {
 	m_address = getPtrAddr((void*)this);
 	m_name = name;
@@ -91,7 +78,6 @@ void Function::doFunc(vector<Expression*> *args) {
 		if(Expression::signal == sRETURN) {
 			Expression::signal = sNONE;
 			m_ret = (*m_stmts)[i]->evaluate();
-			//if(isNum(m_ret)) cout << "In function " << (void*)this << " return(" << (void*)m_ret << ") " << getNumVal(m_ret) << endl;
 			break;
 		}
 	}
