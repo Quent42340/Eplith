@@ -133,6 +133,9 @@ void Value::print(ostream &out, Mode mode) {
 		out << ((*pb) ? "true" : "false");
 	}
 	else if(vector<Value*> *pa = valuePtr< vector<Value*> >()) {
+		for(unsigned int i = 0 ; i < pa->size() ; i++) {
+			(*pa)[i]->print(out);
+		}
 	}
 	else if(m_type == typeVoid) {
 		out << "(null)";
