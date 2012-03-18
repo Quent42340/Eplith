@@ -1,6 +1,6 @@
-# WordSphere Interpreter
-## By Quent42340
+h1. WordSphere Interpreter
+h2. By Quent42340
 
 * WordSphere is a new language fast and simple, easy to use and to understand.
-* Please see the [wiki](https://github.com/Quent42340/WordSphere/wiki) for documentation.
+* Please see the "wiki":http://github.com/Quent42340/WordSphere/wiki for documentation.
 * WordSphere is written in C++, flex, bison, and uses boost::any library.
