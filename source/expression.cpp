@@ -92,26 +92,29 @@ ElementExpression::~ElementExpression() {
 	delete m_index;
 }
 
+unsigned int a = 0;
+bool aa = false;
 Value* ElementExpression::evaluate() {
 	Variable *array = Variable::findByName(m_arrayName);
 	if(array == 0) yyerror("Variable undefined");
 	if(array->value()->type() != typeArray) yyerror("Trying to access to an element of non-array variable");
 	//return array->value()->value< vector<Value*> >()[m_index];
 	vector<Value*> vArray = array->value()->value< vector<Value*> >();
-	unsigned int a = 0;
+	if(aa == true) {
+		vArray = vArray[(*m_index)[a]]->value< vector<Value*> >();
+		aa = false;
+	}
 forlbl:
-	for(unsigned int i = 0 ; i < vArray.size() ; i++) {
-		cout << " a: " << a << " - i: " << i << " - " << vArray[i]->type() << endl;
-		if(vArray[i]->type() == typeArray) {
-			cout << (void*)&vArray << " - ";
-			vArray = vArray[i]->value< vector<Value*> >();
-			cout << (void*)&vArray << endl;
-			a++;
-			goto forlbl;
-		} else {
-			cout << "m_index[" << a << "] = " << (*m_index)[a] << endl;
-			return vArray[(*m_index)[a]];
-		}
+	if(vArray[(*m_index)[a]]->type() == typeArray) {
+		cout << (void*)&vArray << " - ";
+		vArray = vArray[(*m_index)[a]]->value< vector<Value*> >();
+		cout << (void*)&vArray << endl;
+		a++;
+		aa = true;
+		goto forlbl;
+	} else {
+		cout << "m_index[" << a << "] = " << (*m_index)[a] << endl;
+		return vArray[(*m_index)[a]];
 	}
 }
 
