@@ -128,7 +128,7 @@ int main(int argc, char* argv[]) {
 %type <exp> exp var assign assignExpVal stmt cast integer
 %type <list> exp_list stmt_list stmts
 %type <varList> var_list
-%type <elementIndex> element_indew
+%type <elementIndex> element_index
 
 %%
 program:
@@ -233,12 +233,14 @@ exp:
 	| '(' exp ')' { $$ = $2; }
 	| NAME '(' exp_list ')' { $$ = new CallExpression(string($1), $3); }
 	| '{' exp_list '}' { $$ = new ArrayExpression($2); }
-	| NAME element_list { $$ = new ElementExpression(string($1), $3); }
+	| NAME element_index { $$ = new ElementExpression(string($1), $2); }
 	;
 
-element_list:
-	element_list '[' INTEGER ']' { $1->push_back($3); $$ = $1; }
-	| '[' INTEGER ']' { $1->push_back($3); $$ = $1; }
+element_index:
+	element_index '[' INTEGER ']' { $1->insert($1->begin(), $3); $$ = $1; }
+	| '[' INTEGER ']' { vector<int> *v = new vector<int>;
+						v->insert(v->begin(), $2);
+						$$ = v; }
 	;
 
 cast:

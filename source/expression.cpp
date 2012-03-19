@@ -83,9 +83,13 @@ Value* ArrayExpression::evaluate() {
 	return new Value(*vElements);
 }
 
-ElementExpression::ElementExpression(string arrayName, int index) {
+ElementExpression::ElementExpression(string arrayName, vector<int> *index) {
 	m_arrayName = arrayName;
 	m_index = index;
+}
+
+ElementExpression::~ElementExpression() {
+	delete m_index;
 }
 
 Value* ElementExpression::evaluate() {
@@ -97,12 +101,16 @@ Value* ElementExpression::evaluate() {
 	unsigned int a = 0;
 forlbl:
 	for(unsigned int i = 0 ; i < vArray.size() ; i++) {
+		cout << " a: " << a << " - i: " << i << " - " << vArray[i]->type() << endl;
 		if(vArray[i]->type() == typeArray) {
-			vArray = vArray[i];
+			cout << (void*)&vArray << " - ";
+			vArray = vArray[i]->value< vector<Value*> >();
+			cout << (void*)&vArray << endl;
 			a++;
 			goto forlbl;
 		} else {
-			return /* here */
+			cout << "m_index[" << a << "] = " << (*m_index)[a] << endl;
+			return vArray[(*m_index)[a]];
 		}
 	}
 }

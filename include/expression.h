@@ -129,15 +129,15 @@ class ArrayExpression : public Expression {
 
 class ElementExpression : public Expression {
 	public:
-		ElementExpression(std::string arrayName, int index);
-		~ElementExpression() {}
+		ElementExpression(std::string arrayName, std::vector<int> *index);
+		~ElementExpression();
 
 		Value *evaluate();
 		void doExp() {}
 
 	private:
 		std::string m_arrayName;
-		int m_index;
+		std::vector<int> *m_index;
 };
 
 class OpExpression : public Expression {
