@@ -237,9 +237,9 @@ exp:
 	;
 
 element_index:
-	element_index '[' INTEGER ']' { $1->insert($1->begin(), $3); $$ = $1; }
+	element_index '[' INTEGER ']' { $1->push_back($3); $$ = $1; }
 	| '[' INTEGER ']' { vector<int> *v = new vector<int>;
-						v->insert(v->begin(), $2);
+						v->push_back($2);
 						$$ = v; }
 	;
 

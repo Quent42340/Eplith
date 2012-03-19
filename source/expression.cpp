@@ -98,22 +98,19 @@ Value* ElementExpression::evaluate() {
 	Variable *array = Variable::findByName(m_arrayName);
 	if(array == 0) yyerror("Variable undefined");
 	if(array->value()->type() != typeArray) yyerror("Trying to access to an element of non-array variable");
-	//return array->value()->value< vector<Value*> >()[m_index];
 	vector<Value*> vArray = array->value()->value< vector<Value*> >();
-	if(aa == true) {
+	if(aa) {
 		vArray = vArray[(*m_index)[a]]->value< vector<Value*> >();
 		aa = false;
 	}
 forlbl:
 	if(vArray[(*m_index)[a]]->type() == typeArray) {
-		cout << (void*)&vArray << " - ";
 		vArray = vArray[(*m_index)[a]]->value< vector<Value*> >();
-		cout << (void*)&vArray << endl;
 		a++;
+		if(m_index->size() - 1 > a) yyerror("Bad array element access");
 		aa = true;
 		goto forlbl;
 	} else {
-		cout << "m_index[" << a << "] = " << (*m_index)[a] << endl;
 		return vArray[(*m_index)[a]];
 	}
 }
