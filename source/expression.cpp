@@ -92,7 +92,19 @@ Value* ElementExpression::evaluate() {
 	Variable *array = Variable::findByName(m_arrayName);
 	if(array == 0) yyerror("Variable undefined");
 	if(array->value()->type() != typeArray) yyerror("Trying to access to an element of non-array variable");
-	return array->value()->value< vector<Value*> >()[m_index];
+	//return array->value()->value< vector<Value*> >()[m_index];
+	vector<Value*> vArray = array->value()->value< vector<Value*> >();
+	unsigned int a = 0;
+forlbl:
+	for(unsigned int i = 0 ; i < vArray.size() ; i++) {
+		if(vArray[i]->type() == typeArray) {
+			vArray = vArray[i];
+			a++;
+			goto forlbl;
+		} else {
+			return /* here */
+		}
+	}
 }
 
 OpExpression::OpExpression(Expression *exp1, int oper, Expression *exp2) {

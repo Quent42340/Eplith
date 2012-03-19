@@ -71,6 +71,7 @@ int main(int argc, char* argv[]) {
 	Expression *exp;
 	std::vector<Expression*> *list;
 	std::vector<VarExpression*> *varList;
+	std::vector<int> *elementIndex;
 	int op;
 }
 
@@ -127,6 +128,7 @@ int main(int argc, char* argv[]) {
 %type <exp> exp var assign assignExpVal stmt cast integer
 %type <list> exp_list stmt_list stmts
 %type <varList> var_list
+%type <elementIndex> element_indew
 
 %%
 program:
@@ -231,7 +233,12 @@ exp:
 	| '(' exp ')' { $$ = $2; }
 	| NAME '(' exp_list ')' { $$ = new CallExpression(string($1), $3); }
 	| '{' exp_list '}' { $$ = new ArrayExpression($2); }
-	| NAME '[' INTEGER ']' { $$ = new ElementExpression(string($1), $3); }
+	| NAME element_list { $$ = new ElementExpression(string($1), $3); }
+	;
+
+element_list:
+	element_list '[' INTEGER ']' { $1->push_back($3); $$ = $1; }
+	| '[' INTEGER ']' { $1->push_back($3); $$ = $1; }
 	;
 
 cast:
