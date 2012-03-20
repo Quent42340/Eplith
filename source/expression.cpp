@@ -96,22 +96,27 @@ unsigned int a = 0;
 bool aa = false;
 Value* ElementExpression::evaluate() {
 	Variable *array = Variable::findByName(m_arrayName);
-	if(array == 0) yyerror("Variable undefined");
+	if(array == 0) yyerror(string("Variable \"") + string(m_arrayName) + string("\" undefined"));
 	if(array->value()->type() != typeArray) yyerror("Trying to access to an element of non-array variable");
-	vector<Value*> vArray = array->value()->value< vector<Value*> >();
+	vector<Value*> *vArray = new vector<Value*>(array->value()->value< vector<Value*> >());
 	if(aa) {
-		vArray = vArray[(*m_index)[a]]->value< vector<Value*> >();
+		vArray = new vector<Value*>((*vArray)[(*m_index)[a]]->value< vector<Value*> >());
 		aa = false;
 	}
 forlbl:
-	if(vArray[(*m_index)[a]]->type() == typeArray) {
-		vArray = vArray[(*m_index)[a]]->value< vector<Value*> >();
-		a++;
-		if(m_index->size() - 1 > a) yyerror("Bad array element access");
+	//cout << "array[" << a << "] (size=" << vArray->size() << ") - " << (*m_index)[a] << endl;
+	if((*vArray)[(*m_index)[a]]->type() == typeArray) {
+		vArray = new vector<Value*>((*vArray)[(*m_index)[a]]->value< vector<Value*> >());
+		//cout << "m_index->size() = " << m_index->size() << endl;
+		if(m_index->size() - 1 < ++a) yyerror("Bad array element access");
+		if(vArray->size() - 1 < (*m_index)[a]) yyerror("Out of memory element access");
 		aa = true;
 		goto forlbl;
 	} else {
-		return vArray[(*m_index)[a]];
+		aa = false;
+		int olda = a;
+		a = 0;
+		return (*vArray)[(*m_index)[olda]];
 	}
 }
 
