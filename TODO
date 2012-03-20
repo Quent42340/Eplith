@@ -1,6 +1,7 @@
 - Arrays
 	* Basic: OK.
 	* Multidimensional: OK.
+	* Elements affectation: Not OK.
 	* String index: Not OK.
 - Continue / Break
 - Include

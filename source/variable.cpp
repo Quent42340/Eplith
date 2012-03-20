@@ -63,7 +63,7 @@ Variable* Variable::findByName(std::string name) {
 			return vars[i];
 		}
 	}
-	return vars[0];
+	return 0;
 }
 
 bool Variable::exists(std::string name) {

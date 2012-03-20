@@ -25,14 +25,15 @@
 using namespace std;
 
 extern FILE* yyin;
+string filename;
 
 void yyerror(string str) {
-	cerr << "Error: " << str << " at symbol \"" << yytext-YYTEXT_DEBUG << "\" at line " << yylineno << endl;
+	cerr << "\33[0;31;01m" << filename << ":" << yylineno << ": Error: " << str << "\33[0m" << endl;
 	exit(1);
 }
 
 void yywarn(string str) {
-	cerr << "Warning: " << str << " at symbol \"" << yytext << "\" at line " << yylineno << endl;
+	cerr << "\33[0;33;01m" << filename << ":" << yylineno << ": Warning: " << str << "\33[0m" << endl;
 }
 
 extern "C" {
@@ -54,6 +55,8 @@ int main(int argc, char* argv[]) {
 		fprintf(stderr, "Error: File %s doesn't exist.\n", argv[1]);
 		exit(0);
 	}
+	
+	filename = argv[1];
 	
 	yyparse();
 	
