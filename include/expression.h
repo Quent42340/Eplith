@@ -134,10 +134,14 @@ class ElementExpression : public Expression {
 
 		Value *evaluate();
 		void doExp() {}
-
+		
+		std::string arrayName() const { return m_arrayName; }
+		int index() { return (*m_index)[m_olda]; }
+		
 	private:
 		std::string m_arrayName;
 		std::vector<int> *m_index;
+		int m_olda;
 };
 
 class OpExpression : public Expression {
@@ -174,6 +178,7 @@ class VarExpression : public Expression {
 class AssignExpression : public Expression {
 	public:
 		AssignExpression(std::string varName, Expression *valExp, int op = -1);
+		AssignExpression(ElementExpression *element, Expression *valExp, int op = -1);
 		~AssignExpression();
 		
 		Value* evaluate();
@@ -186,6 +191,7 @@ class AssignExpression : public Expression {
 		Variable *m_var;
 		Expression *m_valExp;
 		int m_op;
+		ElementExpression *m_element;
 };
 
 class CrExpression : public Expression {

@@ -86,6 +86,7 @@ Value* ArrayExpression::evaluate() {
 ElementExpression::ElementExpression(string arrayName, vector<int> *index) {
 	m_arrayName = arrayName;
 	m_index = index;
+	m_olda = 0;
 }
 
 ElementExpression::~ElementExpression() {
@@ -114,9 +115,9 @@ forlbl:
 		goto forlbl;
 	} else {
 		aa = false;
-		int olda = a;
+		m_olda = a;
 		a = 0;
-		return (*vArray)[(*m_index)[olda]];
+		return (*vArray)[(*m_index)[m_olda]];
 	}
 }
 
@@ -214,6 +215,15 @@ AssignExpression::AssignExpression(string varName, Expression *valExp, int op) {
 	m_varName = varName;
 	m_valExp = valExp;
 	m_op = op;
+	m_element = 0;
+	doThings();
+}
+
+AssignExpression::AssignExpression(ElementExpression *element, Expression *valExp, int op) {
+	m_type = "AssignExpression";
+	m_valExp = valExp;
+	m_op = op;
+	m_element = element;
 	doThings();
 }
 
@@ -227,10 +237,16 @@ Value* AssignExpression::evaluate() {
 }
 
 void AssignExpression::doExp() {
+	bool array = (m_element == 0) ? false : true;
 	if(Variable::exists(m_varName)) {
-		m_var = Variable::findByName(m_varName);
+		if(!array) m_var = Variable::findByName(m_varName);
+		else m_var = Variable::findByName(m_element->arrayName());
 		if(m_op == -1) {
-			m_var->value(m_valExp->evaluate());
+			if(!array) m_var->value(m_valExp->evaluate());
+			else {
+				m_element->evaluate();
+				m_var->value()->value< vector<Value*> >()[m_element->index()];
+			}
 		} else {
 			Value *val = m_var->value();
 			Value *val2 = m_valExp->evaluate();

@@ -76,6 +76,7 @@ int main(int argc, char* argv[]) {
 	std::vector<VarExpression*> *varList;
 	std::vector<int> *elementIndex;
 	int op;
+	ElementExpression *elem;
 }
 
 %token <iValue> INTEGER
@@ -132,6 +133,7 @@ int main(int argc, char* argv[]) {
 %type <list> exp_list stmt_list stmts
 %type <varList> var_list
 %type <elementIndex> element_index
+%type <elem> element
 
 %%
 program:
@@ -236,7 +238,11 @@ exp:
 	| '(' exp ')' { $$ = $2; }
 	| NAME '(' exp_list ')' { $$ = new CallExpression(string($1), $3); }
 	| '{' exp_list '}' { $$ = new ArrayExpression($2); }
-	| NAME element_index { $$ = new ElementExpression(string($1), $2); }
+	| element { $$ = $1; }
+	;
+
+element:
+	NAME element_index { $$ = new ElementExpression(string($1), $2); }
 	;
 
 element_index:
@@ -261,6 +267,7 @@ integer:
 assign:
 	NAME '=' assignExpVal { $$ = new AssignExpression(string($1), $3); }
 	| NAME ASSIGN_OP assignExpVal { $$ = new AssignExpression(string($1), $3, $2); }
+	| element '=' assignExpVal { $$ = new AssignExpression($1, $3); }
 	;
 
 assignExpVal:
