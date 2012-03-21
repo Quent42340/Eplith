@@ -233,19 +233,21 @@ AssignExpression::~AssignExpression() {
 }
 
 Value* AssignExpression::evaluate() {
-	return m_var->value();
+	if(m_element != 0) m_element->evaluate();
+	return (m_element == 0) ? m_var->value() : m_var->value()->value< vector<Value*> >()[m_element->index()];
 }
 
 void AssignExpression::doExp() {
 	bool array = (m_element == 0) ? false : true;
-	if(Variable::exists(m_varName)) {
+	if(Variable::exists(m_varName) || array) {
 		if(!array) m_var = Variable::findByName(m_varName);
 		else m_var = Variable::findByName(m_element->arrayName());
 		if(m_op == -1) {
 			if(!array) m_var->value(m_valExp->evaluate());
 			else {
 				m_element->evaluate();
-				m_var->value()->value< vector<Value*> >()[m_element->index()];
+				cout << m_var->value()->value< vector<Value*> >()[m_element->index()]->value<string>() << endl;
+				m_var->value()->value< vector<Value*> >()[m_element->index()] = m_valExp->evaluate();
 			}
 		} else {
 			Value *val = m_var->value();
