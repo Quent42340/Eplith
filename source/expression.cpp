@@ -245,8 +245,8 @@ void AssignExpression::doExp() {
 		if(m_op == -1) {
 			if(!array) m_var->value(m_valExp->evaluate());
 			else {
-				m_element->evaluate();
-				cout << m_var->value()->value< vector<Value*> >()[m_element->index()]->value<string>() << endl;
+				m_var->value(m_element->evaluate());
+				cout << "DEBUG: " << m_var->value()->value< vector<Value*> >()[m_element->index()]->value<string>() << endl;
 				m_var->value()->value< vector<Value*> >()[m_element->index()] = m_valExp->evaluate();
 			}
 		} else {
