@@ -2,12 +2,15 @@
 	* Basic: OK.
 	* Multidimensional: OK.
 	* Elements affectation: Not OK.
-	* String index: Not OK.
+	* Functions in array: Not OK.
+	* String indexes: Not OK.
 - Continue / Break
 - Include
+- Functions
+	* Function overloading
 - puts() / type()
 - Switch
 - Structs
 - Enums
 - Classes
-- Goto
+- Labels and Goto

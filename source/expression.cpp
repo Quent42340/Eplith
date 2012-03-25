@@ -94,27 +94,22 @@ ElementExpression::~ElementExpression() {
 }
 
 unsigned int a = 0;
-bool aa = false;
 Value* ElementExpression::evaluate() {
 	Variable *array = Variable::findByName(m_arrayName);
 	if(array == 0) yyerror(string("Variable \"") + string(m_arrayName) + string("\" undefined"));
-	if(array->value()->type() != typeArray) yyerror("Trying to access to an element of non-array variable");
+	if(array->value()->type() != typeArray) yyerror("Trying to access to an element of a non-array variable");
 	vector<Value*> *vArray = new vector<Value*>(array->value()->value< vector<Value*> >());
-	if(aa) {
-		vArray = new vector<Value*>((*vArray)[(*m_index)[a]]->value< vector<Value*> >());
-		aa = false;
-	}
 forlbl:
 	//cout << "array[" << a << "] (size=" << vArray->size() << ") - " << (*m_index)[a] << endl;
 	if((*vArray)[(*m_index)[a]]->type() == typeArray) {
+		if(a == m_index->size() - 1) goto returnlbl;
 		vArray = new vector<Value*>((*vArray)[(*m_index)[a]]->value< vector<Value*> >());
 		//cout << "m_index->size() = " << m_index->size() << endl;
 		if(m_index->size() - 1 < ++a) yyerror("Bad array element access");
 		if(vArray->size() - 1 < (*m_index)[a]) yyerror("Out of memory element access");
-		aa = true;
 		goto forlbl;
 	} else {
-		aa = false;
+returnlbl:
 		m_olda = a;
 		a = 0;
 		return (*vArray)[(*m_index)[m_olda]];
@@ -148,22 +143,13 @@ Value* OpExpression::evaluate() {
 		bool pb;
 		if(!isNum(val) || !isNum(val2)) {
 			string tmp, tmp2;
-			if(isNum(val)) {
-				stringstream out;
-				val->print(out, m_mode);
-				out << ends;
-				tmp = out.str();
-			} else {
-				tmp = val->value<string>();
-			}
-			if(isNum(val2)) {
-				stringstream out2;
-				val2->print(out2, m_mode);
-				out2 << ends;
-				tmp2 = out2.str();
-			} else {
-				tmp2 = val2->value<string>();
-			}
+			stringstream out, out2;
+			val->print(out, m_mode);
+			out << ends;
+			tmp = out.str();
+			val2->print(out2, m_mode);
+			out2 << ends;
+			tmp2 = out2.str();
 			return new Value(tmp + tmp2);
 		} else {
 			return new Value(getNumVal(val) + getNumVal(val2), m_mode);
@@ -245,6 +231,7 @@ void AssignExpression::doExp() {
 		if(m_op == -1) {
 			if(!array) m_var->value(m_valExp->evaluate());
 			else {
+				//m_var->setElement(m_element);
 				m_var->value(m_element->evaluate());
 				cout << "DEBUG: " << m_var->value()->value< vector<Value*> >()[m_element->index()]->value<string>() << endl;
 				m_var->value()->value< vector<Value*> >()[m_element->index()] = m_valExp->evaluate();
@@ -256,22 +243,13 @@ void AssignExpression::doExp() {
 				bool pb;
 				if(!isNum(val) || !isNum(val2)) {
 					string tmp, tmp2;
-					if(isNum(val)) {
-						stringstream out;
-						val->print(out, m_mode);
-						out << ends;
-						tmp = out.str();
-					} else {
-						tmp = val->value<string>();
-					}
-					if(isNum(val2)) {
-						stringstream out2;
-						val2->print(out2, m_mode);
-						out2 << ends;
-						tmp2 = out2.str();
-					} else {
-						tmp2 = val2->value<string>();
-					}
+					stringstream out, out2;
+					val->print(out, m_mode);
+					out << ends;
+					tmp = out.str();
+					val2->print(out2, m_mode);
+					out2 << ends;
+					tmp2 = out2.str();
 					m_var->value()->value<string>(tmp + tmp2);
 				} else {
 					setNumVal(m_var->value(), getNumVal(val) + getNumVal(val2));

@@ -57,6 +57,13 @@ void Variable::value(Value *value) {
 #endif
 }
 
+/*void Variable::setElement() {
+	if(m_value->type() != typeArray) yyerror("Trying to access to an element of a non-array variable");
+	Value *val = m_value;
+lbl:
+	vector<Value*> *vArray = m_value->value< vector<Value*> >();
+}*/
+
 Variable* Variable::findByName(std::string name) {
 	for(unsigned int i = vars.size() - 1 ; i > 0 ; i--) {
 		if(vars[i]->name() == name) {
