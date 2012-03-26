@@ -1,9 +1,9 @@
 - Arrays
 	* Basic: OK.
 	* Multidimensional: OK.
-	* Element assignment: Not OK.
-	* Functions in arrays: Not OK.
+	* Element assignment: OK.
 	* String indexes: Not OK.
+	* Functions in arrays: Not OK.
 - Continue / Break
 - Include
 - Functions
