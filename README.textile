@@ -1,7 +1,7 @@
-h1. WordSphere Interpreter
+h1. Eplith Interpreter
 
 h2. By Quent42340
 
-* WordSphere is a new language fast and simple, easy to use and to understand.
-* Please see the "wiki":http://github.com/Quent42340/WordSphere/wiki for documentation.
-* WordSphere is written in C++, flex, bison, and uses boost::any library.
+* Eplith is a new language fast and simple, easy to use and to understand.
+* Please see the "wiki":http://github.com/Quent42340/Eplith/wiki for documentation.
+* Eplith is written in C++, flex, bison, and uses boost::any library.

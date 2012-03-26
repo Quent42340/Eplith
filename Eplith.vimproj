@@ -1,6 +1,6 @@
-WordSphere=/home/quentin/Bureau/FlexBison/WordSphere CD=. filter=".gitignore *.c *.h *.l *.y *.diff AUTHORS ChangeLog COPYING Makefile TODO *.textile *.ws *.cpp" {
+Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l *.y *.diff AUTHORS ChangeLog COPYING Makefile TODO *.textile *.ep *.cpp" {
  .gitignore
- WordSphere.diff
+ Eplith.diff
  AUTHORS
  ChangeLog
  COPYING
@@ -25,15 +25,16 @@ WordSphere=/home/quentin/Bureau/FlexBison/WordSphere CD=. filter=".gitignore *.c
   variable.cpp
  }
  tests=tests {
-  bit_test.ws
-  cond_test.ws
-  cr_test.ws
-  factorial.ws
-  float_issue.ws
-  float_test.ws
-  functions_test.ws
-  test.ws
-  type_test.ws
+  array_test.ep
+  bit_test.ep
+  cond_test.ep
+  cr_test.ep
+  factorial.ep
+  float_issue.ep
+  float_test.ep
+  functions_test.ep
+  test.ep
+  type_test.ep
  }
  wiki=wiki {
   .gitignore

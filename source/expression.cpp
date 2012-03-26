@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------------
 
-	WordSphere Intepreter
+	Eplith Intepreter
 	Copyright (C) 2012 Quent42340 <quent42340@gmail.com>
 
 	This program is free software: you can redistribute it and/or modify
