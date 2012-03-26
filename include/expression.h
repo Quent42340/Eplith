@@ -136,12 +136,11 @@ class ElementExpression : public Expression {
 		void doExp() {}
 		
 		std::string arrayName() const { return m_arrayName; }
-		int index() { return (*m_index)[m_olda]; }
+		std::vector<int>* index() { return m_index; }
 		
 	private:
 		std::string m_arrayName;
 		std::vector<int> *m_index;
-		int m_olda;
 };
 
 class OpExpression : public Expression {

@@ -36,7 +36,7 @@ Function::Function(string name, vector<VarExpression*> *args, vector<Expression*
 	m_ret = Variable::vars[0]->value();
 	
 #ifdef FUNC_DEBUG
-	cout << "Func name: " << m_name << " | Address: " << m_address << endl;
+	edbg("Func name: " << m_name << " | Address: " << m_address);
 #endif
 	
 	funcs.push_back(this);

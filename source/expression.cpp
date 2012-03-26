@@ -86,34 +86,18 @@ Value* ArrayExpression::evaluate() {
 ElementExpression::ElementExpression(string arrayName, vector<int> *index) {
 	m_arrayName = arrayName;
 	m_index = index;
-	m_olda = 0;
 }
 
 ElementExpression::~ElementExpression() {
 	delete m_index;
 }
 
-unsigned int a = 0;
 Value* ElementExpression::evaluate() {
 	Variable *array = Variable::findByName(m_arrayName);
 	if(array == 0) yyerror(string("Variable \"") + string(m_arrayName) + string("\" undefined"));
 	if(array->value()->type() != typeArray) yyerror("Trying to access to an element of a non-array variable");
-	vector<Value*> *vArray = new vector<Value*>(array->value()->value< vector<Value*> >());
-forlbl:
-	//cout << "array[" << a << "] (size=" << vArray->size() << ") - " << (*m_index)[a] << endl;
-	if((*vArray)[(*m_index)[a]]->type() == typeArray) {
-		if(a == m_index->size() - 1) goto returnlbl;
-		vArray = new vector<Value*>((*vArray)[(*m_index)[a]]->value< vector<Value*> >());
-		//cout << "m_index->size() = " << m_index->size() << endl;
-		if(m_index->size() - 1 < ++a) yyerror("Bad array element access");
-		if(vArray->size() - 1 < (*m_index)[a]) yyerror("Out of memory element access");
-		goto forlbl;
-	} else {
-returnlbl:
-		m_olda = a;
-		a = 0;
-		return (*vArray)[(*m_index)[m_olda]];
-	}
+	//cout << array->value()->element(*m_index)->type() << endl;
+	return array->value()->element(*m_index);
 }
 
 OpExpression::OpExpression(Expression *exp1, int oper, Expression *exp2) {
@@ -220,7 +204,7 @@ AssignExpression::~AssignExpression() {
 
 Value* AssignExpression::evaluate() {
 	if(m_element != 0) m_element->evaluate();
-	return (m_element == 0) ? m_var->value() : m_var->value()->value< vector<Value*> >()[m_element->index()];
+	return (m_element == 0) ? m_var->value() : m_var->value()->element(*m_element->index());
 }
 
 void AssignExpression::doExp() {
@@ -231,10 +215,7 @@ void AssignExpression::doExp() {
 		if(m_op == -1) {
 			if(!array) m_var->value(m_valExp->evaluate());
 			else {
-				//m_var->setElement(m_element);
-				m_var->value(m_element->evaluate());
-				cout << "DEBUG: " << m_var->value()->value< vector<Value*> >()[m_element->index()]->value<string>() << endl;
-				m_var->value()->value< vector<Value*> >()[m_element->index()] = m_valExp->evaluate();
+				m_var->value()->element(m_element, m_valExp->evaluate());
 			}
 		} else {
 			Value *val = m_var->value();

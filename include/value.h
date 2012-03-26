@@ -24,6 +24,7 @@
 #include <cmath>
 
 class Variable;
+class ElementExpression;
 
 typedef enum {
 	typeInt,
@@ -64,9 +65,14 @@ class Value {
 		template <typename T>
 			T* valuePtr() { T *c = boost::any_cast<T>(&m_value); return (c) ? c : 0; }
 		template <typename T>
-			T value() { return *valuePtr<T>(); }
+			T value() { T *c = valuePtr<T>(); if(c) return *c; else yyerror("Out of memory value access"); }
 		template <typename T>
 			T value(T value) { m_value = value; }
+		
+		Value *element(std::vector<int> indexTable);
+		void element(ElementExpression *element, Value *newValue);
+		
+		void copy(Value *value);
 		
 		boost::any* any() { return &m_value; }
 		

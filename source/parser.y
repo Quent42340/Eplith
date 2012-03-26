@@ -27,13 +27,19 @@ using namespace std;
 extern FILE* yyin;
 string filename;
 
-void yyerror(string str) {
+void error(string str, const char* file, unsigned int line) {
 	cerr << "\33[0;31;01m" << filename << ":" << yylineno << ": Error: " << str << "\33[0m" << endl;
+#ifdef EPLITH_DEBUG
+	edbg(file << ":" << line);
+#endif
 	exit(1);
 }
 
-void yywarn(string str) {
+void warn(string str, const char* file, unsigned int line) {
 	cerr << "\33[0;33;01m" << filename << ":" << yylineno << ": Warning: " << str << "\33[0m" << endl;
+#ifdef EPLITH_DEBUG
+	edbg(file << ":" << line);
+#endif
 }
 
 extern "C" {
@@ -44,10 +50,8 @@ int yywrap() {
 
 int main(int argc, char* argv[]) {
 #ifdef TYPES_DEBUG
-	cout << "Types: Int: " << typeInt << " | Float: " << typeFloat << " | String: " << typeStr << " | Void: " << typeVoid << endl;
+	edbg("Types: Int: " << typeInt << " | Float: " << typeFloat << " | String: " << typeStr << " | Array: " << typeArray << " | Void: " << typeVoid);
 #endif
-	
-	Variable::initNullVar();
 	
 	yyin = fopen(argv[1], "r");
 	
@@ -57,6 +61,8 @@ int main(int argc, char* argv[]) {
 	}
 	
 	filename = argv[1];
+	
+	Variable::initNullVar();
 	
 	yyparse();
 	
@@ -246,9 +252,9 @@ element:
 	;
 
 element_index:
-	element_index '[' INTEGER ']' { $1->push_back($3); $$ = $1; }
+	element_index '[' INTEGER ']' { $1->insert($1->begin(), $3); $$ = $1; }
 	| '[' INTEGER ']' { vector<int> *v = new vector<int>;
-						v->push_back($2);
+						v->insert(v->begin(), $2);
 						$$ = v; }
 	;
 

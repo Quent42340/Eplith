@@ -33,7 +33,7 @@ Variable::Variable(string name, Value *value) {
 	vars.push_back(this);
 	
 #ifdef VAR_DEBUG
-	cout << "Var name: " << m_name << " | Value: "; m_value->print(); cout << " | ID: " << m_id << endl;
+	edbg2("Var name: " << m_name << " | Value: ", m_value->print(), " | ID: " << m_id);
 #endif
 }
 
@@ -41,9 +41,7 @@ Variable::~Variable() {
 	vars.erase(vars.begin() + m_id);
 	
 #ifdef DELVAR_DEBUG
-	cout << "Variable \"" << m_name << "\" with ID: " << m_id;
-	if(isNum(m_value)) cout << " and value: " << getNumVal(m_value);
-	cout << " deleted. | vars.size: " << vars.size() << endl;
+	edbg("Variable \"" << m_name << "\" with ID: " << m_id << " deleted. | vars.size: " << vars.size());
 #endif
 	
 	delete m_value;
@@ -53,16 +51,9 @@ void Variable::value(Value *value) {
 	m_value = value;
 	
 #ifdef SETVAR_DEBUG
-	cout << "Variable \"" << m_name << "\" has a new value: "; m_value->print(); cout << std::endl;
+	edbg2("Variable \"" << m_name << "\" has a new value: ", m_value->print(), "");
 #endif
 }
-
-/*void Variable::setElement() {
-	if(m_value->type() != typeArray) yyerror("Trying to access to an element of a non-array variable");
-	Value *val = m_value;
-lbl:
-	vector<Value*> *vArray = m_value->value< vector<Value*> >();
-}*/
 
 Variable* Variable::findByName(std::string name) {
 	for(unsigned int i = vars.size() - 1 ; i > 0 ; i--) {

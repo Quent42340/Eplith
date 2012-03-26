@@ -142,8 +142,31 @@ void Value::print(ostream &out, Mode mode) {
 		}
 		out << "}";
 	}
-	else if(m_type == typeVoid) {
-		out << "(null)";
+}
+
+Value *Value::element(vector<int> indexTable) {
+	if(indexTable.size() > 0) {
+		unsigned int i = indexTable[indexTable.size() - 1];
+		indexTable.pop_back();
+		return value< vector<Value*> >()[i]->element(indexTable);
+	} else {
+		return this;
+	}
+}
+
+void Value::copy(Value *value) {
+	m_type = value->m_type;
+	m_value = value->m_value;
+	m_mode = value->m_mode;
+}
+
+void Value::element(ElementExpression *element, Value *newValue) {
+	if(element->index()->size() > 0) {
+		unsigned int i = (*element->index())[element->index()->size() - 1];
+		element->index()->pop_back();
+		value< vector<Value*> >()[i]->element(element, newValue);
+	} else {
+		copy(newValue);
 	}
 }
 

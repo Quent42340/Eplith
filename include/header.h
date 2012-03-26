@@ -32,15 +32,20 @@
 #include <cstddef>
 #include <cstdarg>
 
-#define WARNINGS
+#define EPLITH_DEBUG
 
-#define YYTEXT_DEBUG 0
+#define WARNINGS
 
 #define FUNC_DEBUG
 #define VAR_DEBUG
 #define TYPES_DEBUG
 //#define DELVAR_DEBUG
 //#define SETVAR_DEBUG
+
+#define edbg(str) cout << "\33[0;36;01m" << str << "\33[0m" << endl;
+#define edbg2(str, other, str2) cout << "\33[0;36;01m" << str; other; cout << str2 << "\33[0m" << endl;
+#define cdbg(str) cout << "\33[0;35;01m" << str << "\t\t\t" << __FILE__ << ":" << __LINE__ << "\33[0m" << endl;
+#define cdbg2(str, other, str2) cout << "\33[0;35;01m" << str; other; cout << str2 << "\t\t\t" << __FILE__ << ":" << __LINE__ << "\33[0m" << endl;
 
 extern int yylineno;
 extern char* yytext;
@@ -61,6 +66,12 @@ extern "C" {
 
 void yyerror(std::string str);
 void yywarn(std::string str);
+
+#define yyerror(str) error(str, __FILE__, __LINE__)
+#define yywarn(str) warn(str, __FILE__, __LINE__)
+
+void error(std::string str, const char* file, unsigned int line);
+void warn(std::string str, const char* file, unsigned int line);
 
 #define DBG(n) { printf("\t%d\n", n); }
 
