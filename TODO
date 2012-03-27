@@ -1,14 +1,14 @@
 - Arrays
-	* Basic: OK.
-	* Multidimensional: OK.
-	* Element assignment: OK.
 	* String indexes: Not OK.
-	* Functions in arrays: Not OK.
 - Continue / Break
-- Include
+- Include files
+- C++ Eplith implementation
 - Functions
 	* Function overloading
-- puts() / type()
+- Functions
+	* Function as a value
+- Arrays
+	* Functions in arrays: Not OK.
 - Switch
 - Structs
 - Enums

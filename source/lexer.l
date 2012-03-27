@@ -81,7 +81,6 @@ char* stringBufPtr;
 -?[0-9]*"."[0-9]+ |
 -?[0-9]*("."[0-9]+)?[eE][-+]?[0-9]+ yylval.fValue = atof(yytext); return FLOAT;
 
-
 	/* Operators */
 [-()<>=+*/%{}.,;^]|"["|"]"	return *yytext;
 ("!"|"not")					return NOT;
