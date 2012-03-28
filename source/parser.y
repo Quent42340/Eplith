@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
 	Expression *exp;
 	std::vector<Expression*> *list;
 	std::vector<VarExpression*> *varList;
-	std::vector<int> *elementIndex;
+	std::vector<std::string> *elementIndex;
 	int op;
 	ElementExpression *elem;
 }
@@ -135,7 +135,7 @@ int main(int argc, char* argv[]) {
 
 %start program
 
-%type <exp> exp var assign assignExpVal stmt cast integer
+%type <exp> exp var assign assignExpVal stmt cast integer index
 %type <list> exp_list stmt_list stmts
 %type <varList> var_list
 %type <elementIndex> element_index
@@ -252,10 +252,17 @@ element:
 	;
 
 element_index:
-	element_index '[' INTEGER ']' { $1->insert($1->begin(), $3); $$ = $1; }
-	| '[' INTEGER ']' { vector<int> *v = new vector<int>;
-						v->insert(v->begin(), $2);
-						$$ = v; }
+	element_index '[' index ']' { $1->insert($1->begin(), $3); $$ = $1; }
+	| '[' index ']' { vector<string> *v = new vector<string>;
+					  v->insert(v->begin(), $2);
+					  $$ = v; }
+	;
+
+index:
+	INTEGER { $$ = new string($1); }
+	| STRING { $$ = new string($1); }
+	| var { VarExpression *v = (VarExpression*)$1;
+			if(isIndex(v->evaluate())) $$ = StringExpression(getIndexVal(v->evaluate())); else yyerror("Requires an integer or string expression here."); }
 	;
 
 cast:
@@ -266,6 +273,7 @@ cast:
 integer:
 	INTEGER { $$ = new IntExpression($1); }
 	| HEX_INT { $$ = new IntExpression($1); }
+	| FLOAT { $$ = new FloatExpression($1); }
 	| var { VarExpression *v = (VarExpression*)$1;
 			if(isNum(v->evaluate())) $$ = v; else yyerror("Requires a numeric expression here."); }
 	;

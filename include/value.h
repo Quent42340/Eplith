@@ -45,6 +45,8 @@ typedef enum {
 #define valPow(val1, val2) pow((double)getNumVal(val1), (double)getNumVal(val2))
 #define valNumToBool(val) ((val->any()->type() != typeid(bool)) ? (bool)getNumVal(val) : val->value<bool>())
 #define isNum(val) ((val->type() == typeInt || val->type() == typeFloat) ? true : false)
+#define isIndex(val) ((val->type() == typeInt || val->type() == typeString) ? true : false)
+#define getIndexVal(val) ((val->type() == typeInt) ? string(val->value<int>()) : val->value<std::string>())
 
 class Value {
 	public:

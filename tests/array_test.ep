@@ -6,7 +6,11 @@ print(a[5][0][0] + "\n");
 a[3][0] = {5, 2, 3, "Fuck!"};
 print(a[3][0][3] + "\n");
 
-b = {thing = "TEST", t24 = 24, table = {"New", "Table"}, "OMG..."};
+b = {24, 25, "Truc"};
+b["thing"] = "Test";
+print(b["thing"] + "\n");
+
+#[b = {thing = "TEST", t24 = 24, table = {"New", "Table"}, "OMG..."};
 print(b.thing + "\n");
 print(b.t24 + "\n");
 print(b.table[1] + "\n");
@@ -14,4 +18,4 @@ print(b[0] + "\n");
 b.element = "Wah.";
 print(b.element + "\n");
 b.thing = "THING";
-print(b.thing + "\n");
+print(b.thing + "\n");]#

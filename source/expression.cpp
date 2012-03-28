@@ -83,7 +83,7 @@ Value* ArrayExpression::evaluate() {
 	return new Value(*vElements);
 }
 
-ElementExpression::ElementExpression(string arrayName, vector<int> *index) {
+ElementExpression::ElementExpression(string arrayName, vector<string> *index) {
 	m_arrayName = arrayName;
 	m_index = index;
 }

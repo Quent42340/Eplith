@@ -129,18 +129,18 @@ class ArrayExpression : public Expression {
 
 class ElementExpression : public Expression {
 	public:
-		ElementExpression(std::string arrayName, std::vector<int> *index);
+		ElementExpression(std::string arrayName, std::vector<std::string> *index);
 		~ElementExpression();
 
 		Value *evaluate();
 		void doExp() {}
 		
 		std::string arrayName() const { return m_arrayName; }
-		std::vector<int>* index() { return m_index; }
+		std::vector<std::string>* index() { return m_index; }
 		
 	private:
 		std::string m_arrayName;
-		std::vector<int> *m_index;
+		std::vector<std::string> *m_index;
 };
 
 class OpExpression : public Expression {
