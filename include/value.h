@@ -45,18 +45,18 @@ typedef enum {
 #define valPow(val1, val2) pow((double)getNumVal(val1), (double)getNumVal(val2))
 #define valNumToBool(val) ((val->any()->type() != typeid(bool)) ? (bool)getNumVal(val) : val->value<bool>())
 #define isNum(val) ((val->type() == typeInt || val->type() == typeFloat) ? true : false)
-#define isIndex(val) ((val->type() == typeInt || val->type() == typeString) ? true : false)
-#define getIndexVal(val) ((val->type() == typeInt) ? string(val->value<int>()) : val->value<std::string>())
+#define isIndex(val) ((val->type() == typeInt || val->type() == typeStr) ? true : false)
+#define getIndexVal(val) ((val->type() == typeInt) ? itos(val->value<int>()) : val->value<std::string>())
 
 class Value {
 	public:
 		Value();
-		Value(int value, Mode mode = noMode);	// Int type
-		Value(double value, Mode mode = noMode);// Float type
-		Value(std::string value);				// String type
-		Value(char *value);						// String type
-		Value(bool value);						// Bool type
-		Value(std::vector<Value*> array);		// Array
+		Value(int value, Mode mode = noMode);		// Int type
+		Value(double value, Mode mode = noMode);	// Float type
+		Value(std::string value);					// String type
+		Value(char *value);							// String type
+		Value(bool value);							// Bool type
+		Value(std::map<std::string, Value*> array);	// Array
 		Value(Type type, boost::any value, Mode mode = noMode);
 		Value(boost::any *value, Mode mode = noMode);
 		Value(Variable *var, Mode mode = noMode);
@@ -71,7 +71,7 @@ class Value {
 		template <typename T>
 			T value(T value) { m_value = value; }
 		
-		Value *element(std::vector<int> indexTable);
+		Value *element(std::vector<std::string> indexTable);
 		void element(ElementExpression *element, Value *newValue);
 		
 		void copy(Value *value);

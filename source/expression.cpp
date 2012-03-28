@@ -76,9 +76,9 @@ ArrayExpression::~ArrayExpression() {
 }
 
 Value* ArrayExpression::evaluate() {
-	vector<Value*> *vElements = new vector<Value*>;
+	map<string, Value*> *vElements = new map<string, Value*>;
 	for(unsigned int i = 0 ; i < m_elements->size() ; i++) {
-		vElements->push_back((*m_elements)[i]->evaluate());
+		vElements->insert(vElements->end(), pair<string, Value*>(string(itos(i)), (*m_elements)[i]->evaluate()));
 	}
 	return new Value(*vElements);
 }

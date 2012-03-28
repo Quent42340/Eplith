@@ -56,7 +56,7 @@ Value::Value(bool value) {
 	m_value = value;
 }
 
-Value::Value(vector<Value*> array) {
+Value::Value(map<string, Value*> array) {
 	m_type = typeArray;
 	m_value = array;
 }
@@ -82,7 +82,7 @@ Value::Value(boost::any *value, Mode mode) {
 	else if(bool *pb = valuePtr<bool>()) {
 		m_type = typeInt;
 	}
-	else if(vector<Value*> *pa = valuePtr< vector<Value*> >()) {
+	else if(map<string, Value*> *pa = valuePtr< map<string, Value*> >()) {
 		m_type = typeArray;
 	} else {
 		m_type = typeVoid;
@@ -106,7 +106,7 @@ Value::Value(Variable *var, Mode mode) {
 	else if(bool *pb = valuePtr<bool>()) {
 		m_type = typeInt;
 	}
-	else if(vector<Value*> *pa = valuePtr< vector<Value*> >()) {
+	else if(map<string, Value*> *pa = valuePtr< map<string, Value*> >()) {
 		m_type = typeArray;
 	} else {
 		m_type = typeVoid;
@@ -132,23 +132,25 @@ void Value::print(ostream &out, Mode mode) {
 	else if(bool *pb = valuePtr<bool>()) {
 		out << ((*pb) ? "true" : "false");
 	}
-	else if(vector<Value*> *pa = valuePtr< vector<Value*> >()) {
+	else if(map<string, Value*> *pa = valuePtr< map<string, Value*> >()) {
 		out << "{";
-		for(unsigned int i = 0 ; i < pa->size() ; i++) {
-			if((*pa)[i]->type() == typeStr) out << "\"";
-			(*pa)[i]->print(out);
-			if((*pa)[i]->type() == typeStr) out << "\"";
-			if(i != pa->size() - 1) out << ", ";
+		for(map<string, Value*>::iterator it = pa->begin() ; it != pa->end() ; it++) {
+			if(atoi(it->first.c_str()) == 0 && it->first != itos(0)) out << it->first << " = ";
+			if((*pa)[it->first]->type() == typeStr) out << "\"";
+			(*pa)[it->first]->print(out);
+			if((*pa)[it->first]->type() == typeStr) out << "\"";
+			cdbg(it->first << " -> " << pa->rend()->first);
+			//if(it != pa->rend().base()) out << ", ";
 		}
 		out << "}";
 	}
 }
 
-Value *Value::element(vector<int> indexTable) {
+Value *Value::element(vector<string> indexTable) {
 	if(indexTable.size() > 0) {
-		unsigned int i = indexTable[indexTable.size() - 1];
+		string i = indexTable[indexTable.size() - 1];
 		indexTable.pop_back();
-		return value< vector<Value*> >()[i]->element(indexTable);
+		return value< map<string, Value*> >()[i]->element(indexTable);
 	} else {
 		return this;
 	}
@@ -162,9 +164,9 @@ void Value::copy(Value *value) {
 
 void Value::element(ElementExpression *element, Value *newValue) {
 	if(element->index()->size() > 0) {
-		unsigned int i = (*element->index())[element->index()->size() - 1];
+		string i = (*element->index())[element->index()->size() - 1];
 		element->index()->pop_back();
-		value< vector<Value*> >()[i]->element(element, newValue);
+		value< map<string, Value*> >()[i]->element(element, newValue);
 	} else {
 		copy(newValue);
 	}

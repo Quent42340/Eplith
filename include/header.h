@@ -25,6 +25,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <map>
 #include <cstdio>
 #include <cmath>
 #include <cstring>
@@ -46,6 +47,12 @@
 #define edbg2(str, other, str2) cout << "\33[0;36;01m" << str; other; cout << str2 << "\33[0m" << endl;
 #define cdbg(str) cout << "\33[0;35;01m" << str << "\t\t\t" << __FILE__ << ":" << __LINE__ << "\33[0m" << endl;
 #define cdbg2(str, other, str2) cout << "\33[0;35;01m" << str; other; cout << str2 << "\t\t\t" << __FILE__ << ":" << __LINE__ << "\33[0m" << endl;
+
+static inline std::string itos(int n) {
+	std::ostringstream oss;
+	oss << n;
+	return oss.str();
+}
 
 extern int yylineno;
 extern char* yytext;
