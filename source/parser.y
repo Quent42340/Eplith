@@ -141,7 +141,7 @@ int main(int argc, char* argv[]) {
 %type <varList> var_list
 %type <elementIndex> element_index
 %type <elem> element
-%type <str> index
+%type <str> member index
 
 %%
 program:
@@ -254,11 +254,15 @@ element:
 	;
 
 element_index:
-	element_index '[' index ']' { $1->insert($1->begin(), *$3); $$ = $1; }
-	| '[' index ']' { vector<string> *v = new vector<string>;
-					  v->insert(v->begin(), *$2);
+	element_index member { $1->insert($1->begin(), *$2); $$ = $1; }
+	| member { vector<string> *v = new vector<string>;
+					  v->insert(v->begin(), *$1);
 					  $$ = v; }
 	;
+
+member:
+	  '[' index ']' { $$ = new string(*$2); }
+	| '.' NAME { $$ = new string($2); }
 
 index:
 	INTEGER { $$ = new string(itos($1)); }

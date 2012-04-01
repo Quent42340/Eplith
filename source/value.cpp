@@ -139,8 +139,8 @@ void Value::print(ostream &out, Mode mode) {
 			if((*pa)[it->first]->type() == typeStr) out << "\"";
 			(*pa)[it->first]->print(out);
 			if((*pa)[it->first]->type() == typeStr) out << "\"";
-			cdbg(it->first << " -> " << pa->rend()->first);
-			//if(it != pa->rend().base()) out << ", ";
+			//cdbg(it->first << " -> " << pa->rend()->first);
+			if(++it != pa->end()) out << ", "; it--;
 		}
 		out << "}";
 	}
@@ -162,10 +162,17 @@ void Value::copy(Value *value) {
 	m_mode = value->m_mode;
 }
 
+void mapInsert(map<string, Value*> *m, string index, Value *value) {
+	m->insert(m->end(), pair<string, Value*>(index, value));
+}
+
 void Value::element(ElementExpression *element, Value *newValue) {
 	if(element->index()->size() > 0) {
 		string i = (*element->index())[element->index()->size() - 1];
 		element->index()->pop_back();
+		if(value< map<string, Value*> >()[i] == 0) {
+			mapInsert(valuePtr< map<string, Value*> >(), i, new Value());
+		}
 		value< map<string, Value*> >()[i]->element(element, newValue);
 	} else {
 		copy(newValue);

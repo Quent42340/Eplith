@@ -6,9 +6,11 @@ print(a[5][0][0] + "\n");
 a[3][0] = {5, 2, 3, "Fuck!"};
 print(a[3][0][3] + "\n");
 
-b = {24, 25, "Truc"};
-b["thing"] = "Test";
+b = {24, 25, "Truc", other = "You're in!"};
+b.thing = "Test";
 print(b["thing"] + "\n");
+print(b.other + "\n")
+print(b + "\n");
 
 #[b = {thing = "TEST", t24 = 24, table = {"New", "Table"}, "OMG..."};
 print(b.thing + "\n");
