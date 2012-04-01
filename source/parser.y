@@ -83,7 +83,9 @@ int main(int argc, char* argv[]) {
 	std::vector<VarExpression*> *varList;
 	std::vector<std::string> *elementIndex;
 	int op;
-	ElementExpression *elem;
+	ElementExpression *element;
+	std::map<std::string, Value*> *elemList;
+	std::pair<std::string, Value*> *elem;
 }
 
 %token <iValue> INTEGER
@@ -140,8 +142,10 @@ int main(int argc, char* argv[]) {
 %type <list> exp_list stmt_list stmts
 %type <varList> var_list
 %type <elementIndex> element_index
-%type <elem> element
+%type <element> element
 %type <str> member index
+%type <elemList> elem_list
+%type <elem> elem
 
 %%
 program:
@@ -207,6 +211,20 @@ exp_list:
 						 v->push_back($3);
 						 $$ = v; }
 
+elem_list:
+	/* void */ { map<string, Value*> *m = new map<string, Value*>;
+				 $$ = m; }
+	| elem { map<string, Value*> *m = new map<string, Value*>;
+			 m->insert(m->end(), *$1);
+			 $$ = m; }
+	| elem_list ',' elem { map<string, Value*> *m = $1;
+						   m->insert(m->end(), *$3);
+						   $$ = m; }
+
+elem:
+	  exp { $$ = new pair<string, Value*>("<<nothing>>", $1->evaluate()); }
+	| NAME '=' exp { $$ = new pair<string, Value*>(string($1), $3->evaluate()); }
+
 exp:
 	  INTEGER { $$ = new IntExpression($1); }
 	| HEX_INT { $$ = new IntExpression($1); }
@@ -245,7 +263,7 @@ exp:
 	| exp NE exp { $$ = new OpExpression($1, NE, $3); }
 	| '(' exp ')' { $$ = $2; }
 	| NAME '(' exp_list ')' { $$ = new CallExpression(string($1), $3); }
-	| '{' exp_list '}' { $$ = new ArrayExpression($2); }
+	| '{' elem_list '}' { $$ = new ArrayExpression($2); }
 	| element { $$ = $1; }
 	;
 

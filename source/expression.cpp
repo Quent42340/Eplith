@@ -67,7 +67,8 @@ BoolExpression::BoolExpression(bool value) {
 BoolExpression::~BoolExpression() {
 }
 
-ArrayExpression::ArrayExpression(vector<Expression*> *elements) {
+ArrayExpression::ArrayExpression(map<string, Value*> *elements) {
+	m_type = "ArrayExpression";
 	m_elements = elements;
 }
 
@@ -76,14 +77,19 @@ ArrayExpression::~ArrayExpression() {
 }
 
 Value* ArrayExpression::evaluate() {
-	map<string, Value*> *vElements = new map<string, Value*>;
-	for(unsigned int i = 0 ; i < m_elements->size() ; i++) {
-		vElements->insert(vElements->end(), pair<string, Value*>(string(itos(i)), (*m_elements)[i]->evaluate()));
+	unsigned int a = 0;
+	for(map<string, Value*>::iterator it ; it != m_elements->end() ; it++) {
+		cdbg(it->first);
+		if(it->first == "<<nothing>>") {
+			m_elements->insert(m_elements->end(), pair<string, Value*>(it->first, it->second));
+			m_elements->erase(it);
+		}
 	}
-	return new Value(*vElements);
+	return new Value(*m_elements);
 }
 
 ElementExpression::ElementExpression(string arrayName, vector<string> *index) {
+	m_type = "ElementExpression";
 	m_arrayName = arrayName;
 	m_index = index;
 }
