@@ -79,8 +79,7 @@ ArrayExpression::~ArrayExpression() {
 Value* ArrayExpression::evaluate() {
 	unsigned int a = 0;
 	map<string, Value*> *mElements = new map<string, Value*>;
-	for(multimap<string, Value*>::iterator it ; it != m_elements->end() ; it++) {
-		cdbg(it->first);
+	for(multimap<string, Value*>::iterator it = m_elements->begin() ; it != m_elements->end() ; it++) {
 		if(it->first == "<<nothing>>") {
 			mElements->insert(pair<string, Value*>(itos(a++), it->second));
 		} else {
