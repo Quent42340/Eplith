@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
 	std::vector<std::string> *elementIndex;
 	int op;
 	ElementExpression *element;
-	std::map<std::string, Value*> *elemList;
+	std::multimap<std::string, Value*> *elemList;
 	std::pair<std::string, Value*> *elem;
 }
 
@@ -212,12 +212,12 @@ exp_list:
 						 $$ = v; }
 
 elem_list:
-	/* void */ { map<string, Value*> *m = new map<string, Value*>;
+	/* void */ { multimap<string, Value*> *m = new multimap<string, Value*>;
 				 $$ = m; }
-	| elem { map<string, Value*> *m = new map<string, Value*>;
+	| elem { multimap<string, Value*> *m = new multimap<string, Value*>;
 			 m->insert(m->end(), *$1);
 			 $$ = m; }
-	| elem_list ',' elem { map<string, Value*> *m = $1;
+	| elem_list ',' elem { multimap<string, Value*> *m = $1;
 						   m->insert(m->end(), *$3);
 						   $$ = m; }
 
