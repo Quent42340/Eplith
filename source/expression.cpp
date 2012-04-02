@@ -163,8 +163,8 @@ Value* OpExpression::evaluate() {
 			case '>':	 return new Value(getNumVal(val) > getNumVal(val2));
 			case GE:	 return new Value(getNumVal(val) >= getNumVal(val2));
 			case LE:	 return new Value(getNumVal(val) <= getNumVal(val2));
-			case EQ:	 return new Value(valNumToBool(val) == valNumToBool(val2));
-			case NE:	 return new Value(valNumToBool(val) != valNumToBool(val2));
+			case EQ:	 return new Value(getNumVal(val) == getNumVal(val2));
+			case NE:	 return new Value(getNumVal(val) != getNumVal(val2));
 			case AND:	 return new Value(valNumToBool(val) && valNumToBool(val2));
 			case OR:	 return new Value(valNumToBool(val) || valNumToBool(val2));
 			case BAND:	 return new Value((int)getNumVal(val) & (int)getNumVal(val2));
@@ -425,6 +425,15 @@ PrintExpression::~PrintExpression() {
 	delete m_exp;
 }
 
+SignalExpression::SignalExpression(Signal s) {
+	m_signal = s;
+	doThings();
+}
+
+void SignalExpression::doExp() {
+	signal = m_signal;
+}
+
 WhileExpression::WhileExpression(Expression *whileExp, vector<Expression*> *statements) {
 	m_type = "WhileExpression";
 	m_whileExp = whileExp;
@@ -443,9 +452,16 @@ void WhileExpression::doExp() {
 	while(m_whileExp->evaluate()->intToBool()->value<bool>()) {
 		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
 			yylineno = (*m_statements)[i]->line();
-			//if((*m_statements)[i] == (Expression*)BREAK) cout << "Oh" << endl; continue;
-			//if((*m_statements)[i] == (Expression*)CONTINUE) cout << "OMG" << endl; continue;
 			(*m_statements)[i]->doExp();
+			if(signal == sBREAK || signal == sCONTINUE) break;
+		}
+		if(signal == sBREAK) {
+			signal = sNONE;
+			break;
+		}
+		else if(signal == sCONTINUE) {
+			signal = sNONE;
+			continue;
 		}
 	}
 	yylineno = oldlineno;

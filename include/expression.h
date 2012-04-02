@@ -277,6 +277,18 @@ class PrintExpression : public Expression {
 		Expression *m_exp;
 };
 
+class SignalExpression : public Expression {
+	public:
+		SignalExpression(Signal s);
+		~SignalExpression() {}
+		
+		Value* evaluate() { return new Value(); }
+		void doExp();
+	
+	private:
+		Signal m_signal;
+};
+
 class WhileExpression : public Expression {
 	public:
 		WhileExpression(Expression *whileExp, std::vector<Expression*> *statements);

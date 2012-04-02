@@ -109,9 +109,9 @@ char* stringBufPtr;
 "--"						return DECR;
 
 	/* Comments */
-#[^\[].*\n						;
-"#["						BEGIN COMMENT;
-<COMMENT>"]#"				BEGIN INITIAL;
+#[^!].*\n					;
+"#!"						BEGIN COMMENT;
+<COMMENT>"!#"				BEGIN INITIAL;
 <COMMENT>.|\n				;
 <COMMENT><<EOF>>			yyerror("Unterminated comment");
 

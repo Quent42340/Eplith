@@ -1,6 +1,12 @@
-a = 7;
+a = 10;
 
 while(a-- > 0) {
-	print(a + "\n"); # 6 5 4 3 2 1 0
+	if(a == 2) {
+		break;
+	}
+	else if(a == 8) {
+		continue;
+	}
+	print(a + "\n"); # 9 7 6 5 4 3
 }
 
