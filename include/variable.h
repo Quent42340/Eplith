@@ -43,13 +43,14 @@ class Variable {
 		
 		static void initNullVar();
 		
-		static std::vector<Variable*> vars;
+		static std::vector< std::vector<Variable*> > vars;
 		
 	private:
 		std::string m_name;
 		std::string m_address;
 		Value* m_value;
 		unsigned int m_id;
+		int m_scope;
 };
 
 #endif // VARIABLE_H

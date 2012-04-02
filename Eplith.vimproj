@@ -7,6 +7,7 @@ Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l
  TODO
  README.textile
  include=include {
+  environment.h
   expression.h
   function.h
   header.h
@@ -17,6 +18,7 @@ Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l
  source=source {
   lexer.l
   parser.y
+  environment.cpp
   expression.cpp
   function.cpp
   program.cpp

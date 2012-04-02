@@ -33,7 +33,7 @@ Function::Function(string name, vector<VarExpression*> *args, vector<Expression*
 	for(unsigned int i = 0 ; i < stmts->size() ; i++) {
 		m_stmts->push_back((*stmts)[i]);
 	}
-	m_ret = Variable::vars[0]->value();
+	m_ret = new Value();
 	
 #ifdef FUNC_DEBUG
 	edbg("Func name: " << m_name << " | Address: " << m_address);
