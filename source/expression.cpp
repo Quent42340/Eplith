@@ -495,6 +495,15 @@ void ForExpression::doExp() {
 		for(unsigned int j = 0 ; j < m_statements->size() ; j++) {
 			yylineno = (*m_statements)[j]->line();
 			(*m_statements)[j]->doExp();
+			if(signal == sBREAK || signal == sCONTINUE) break;
+		}
+		if(signal == sBREAK) {
+			signal = sNONE;
+			break;
+		}
+		else if(signal == sCONTINUE) {
+			signal = sNONE;
+			continue;
 		}
 	}
 	yylineno = oldlineno;
