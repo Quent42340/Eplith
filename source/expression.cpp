@@ -124,12 +124,7 @@ Value* OpExpression::evaluate() {
 	if(m_exp1->sciMode() || ((m_exp2) ? m_exp2->sciMode() : 0)) m_mode = modeSci;
 	Value *val = m_exp1->evaluate();
 	Value *val2 = (m_exp2) ? m_exp2->evaluate() : 0;
-	//cout << "At line " << yylineno << " Type: exp(" << m_exp1->type() << ") " << val->type() << " / exp2(" << m_exp2->type() << ") " << val2->type() << " => ";
-	//cout << "oper = " << "(" << m_oper << ") " << (char)m_oper << endl;
-	//cout << "val: " << val->value<int>() << " + " << val2->value<string>() << endl;
-	//if(val2->type() == typeInt) cout << val2->value<int>() << endl;
-	//else cout << val2->value<string>() << endl;
-	//if(isNum(val) && isNum(val2)) cout << getNumVal(val) << " " << (char)m_oper << " " << getNumVal(val2) << endl;
+	//cdbg("val type: " << val->type() << " | val2 type: " << val2->type());
 	if(m_oper == '+') {
 		bool pb;
 		if(!isNum(val) || !isNum(val2)) {
@@ -310,7 +305,7 @@ IfExpression::IfExpression(Expression *ifExp, vector<Expression*> *statements, v
 	m_statements = statements;
 	m_elseStatements = elseStatements;
 	doThings(true);
-	scopes--;
+	endScope();
 }
 
 IfExpression::~IfExpression() {
@@ -356,7 +351,7 @@ FuncExpression::FuncExpression(string funcName, vector<VarExpression*> *args, ve
 	m_args = args;
 	m_stmts = stmts;
 	doThings(true);
-	scopes--;
+	endScope();
 }
 
 FuncExpression::~FuncExpression() {
@@ -439,7 +434,7 @@ WhileExpression::WhileExpression(Expression *whileExp, vector<Expression*> *stat
 	m_whileExp = whileExp;
 	m_statements = statements;
 	doThings(true);
-	scopes--;
+	endScope();
 }
 
 WhileExpression::~WhileExpression() {
@@ -474,7 +469,7 @@ ForExpression::ForExpression(Expression *varExp, std::vector<Expression*> *state
 	m_stepExp = stepExp;
 	m_statements = statements;
 	doThings(true);
-	scopes--;
+	endScope();
 }
 
 ForExpression::~ForExpression() {
@@ -486,12 +481,12 @@ ForExpression::~ForExpression() {
 
 void ForExpression::doExp() {
 	if(m_stepExp == 0) m_stepExp = new IntExpression(1);
-	m_varExp->doExp();
+	Variable *var = m_varExp->getVar();
 	Value *vi = new Value((int)-1);
 	int oldlineno = yylineno;
 	for(unsigned int i = m_varExp->evaluate()->value<int>() ; i <= m_toExp->evaluate()->value<int>() ; i += m_stepExp->evaluate()->value<int>()) {
 		vi->value<int>(i);
-		m_varExp->getVar()->value(vi);
+		var->value(vi);
 		for(unsigned int j = 0 ; j < m_statements->size() ; j++) {
 			yylineno = (*m_statements)[j]->line();
 			(*m_statements)[j]->doExp();

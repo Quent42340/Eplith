@@ -1,14 +1,15 @@
-- Variable scope
+- Variable scope: OK.
 - Include files
-- C++ Eplith implementation
-- Functions
-	* Function overloading
 - Functions
 	* Function as a value
+	* Test 'lua classes'*
+- C++ Eplith implementation
 - Arrays
 	* Functions in arrays: Not OK.
 - Switch
-- Structs
-- Enums
-- Classes
+? Functions
+	* Function overloading
+? Structs
+? Enums
+* Classes
 - Labels and Goto

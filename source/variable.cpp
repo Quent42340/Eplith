@@ -29,10 +29,12 @@ Variable::Variable(string name, Value *value) {
 	m_address = getPtrAddr((void*)this);
 	m_name = name;
 	m_value = value;
-	m_id = vars.size();
 	m_scope = Expression::scopes;
 	
-	if(vars.size() - 1 < m_scope) vars.push_back(vector<Variable*>());
+	if(vars.size() < m_scope + 1) vars.push_back(vector<Variable*>());
+	
+	m_id = vars[m_scope].size();
+	
 	vars[m_scope].push_back(this);
 	
 #ifdef VAR_DEBUG
@@ -59,19 +61,19 @@ void Variable::value(Value *value) {
 }
 
 Variable* Variable::findByName(std::string name) {
-	for(unsigned int s = vars.size() - 1 ; s >= 0 ; s--) {
-		for(unsigned int i = vars[s].size() - 1 ; i > 0 ; i--) {
+	for(int s = vars.size() - 1 ; s >= 0 ; s--) {
+		for(int i = vars[s].size() - 1 ; i >= 0 ; i--) {
 			if(vars[s][i]->name() == name) {
 				return vars[s][i];
 			}
 		}
 	}
-	return 0;
+	yyerror("Variable '" + name + "' not found");
 }
 
 bool Variable::exists(std::string name) {
-	for(unsigned int s = vars.size() - 1 ; s >= 0 ; s--) {
-		for(unsigned int i = 1 ; i < vars[s].size() ; i++) {
+	for(int s = vars.size() - 1 ; s >= 0 ; s--) {
+		for(int i = 0 ; i < vars[s].size() ; i++) {
 			if(vars[s][i]->name() == name) {
 				return true;
 			}

@@ -1,13 +1,13 @@
-Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l *.y *.diff AUTHORS ChangeLog COPYING Makefile TODO *.textile *.ep *.cpp" {
+Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l *.y *.diff AUTHORS ChangeLog COPYING Makefile Notes TODO *.textile *.ep *.cpp" {
  .gitignore
  AUTHORS
  ChangeLog
  COPYING
  Makefile
+ Notes
  TODO
  README.textile
  include=include {
-  environment.h
   expression.h
   function.h
   header.h
@@ -18,7 +18,6 @@ Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l
  source=source {
   lexer.l
   parser.y
-  environment.cpp
   expression.cpp
   function.cpp
   program.cpp

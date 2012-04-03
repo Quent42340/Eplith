@@ -139,7 +139,6 @@ void Value::print(ostream &out, Mode mode) {
 			if((*pa)[it->first]->type() == typeStr) out << "\"";
 			(*pa)[it->first]->print(out);
 			if((*pa)[it->first]->type() == typeStr) out << "\"";
-			//cdbg(it->first << " -> " << pa->rend()->first);
 			if(++it != pa->end()) out << ", "; it--;
 		}
 		out << "}";
