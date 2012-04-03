@@ -310,7 +310,7 @@ IfExpression::IfExpression(Expression *ifExp, vector<Expression*> *statements, v
 	m_statements = statements;
 	m_elseStatements = elseStatements;
 	doThings(true);
-	scopes--;
+	endScope();
 }
 
 IfExpression::~IfExpression() {
@@ -356,7 +356,7 @@ FuncExpression::FuncExpression(string funcName, vector<VarExpression*> *args, ve
 	m_args = args;
 	m_stmts = stmts;
 	doThings(true);
-	scopes--;
+	endScope();
 }
 
 FuncExpression::~FuncExpression() {
@@ -439,7 +439,7 @@ WhileExpression::WhileExpression(Expression *whileExp, vector<Expression*> *stat
 	m_whileExp = whileExp;
 	m_statements = statements;
 	doThings(true);
-	scopes--;
+	endScope();
 }
 
 WhileExpression::~WhileExpression() {
@@ -474,7 +474,7 @@ ForExpression::ForExpression(Expression *varExp, std::vector<Expression*> *state
 	m_stepExp = stepExp;
 	m_statements = statements;
 	doThings(true);
-	scopes--;
+	endScope();
 }
 
 ForExpression::~ForExpression() {

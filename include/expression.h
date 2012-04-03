@@ -32,6 +32,8 @@ typedef enum {
 	sCONTINUE
 } Signal;
 
+#define endScope() { Variable::vars.erase(Variable::vars.begin() + scopes); scopes--; }
+
 class Expression {
 	public:	
 		Expression();

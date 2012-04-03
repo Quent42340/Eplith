@@ -32,8 +32,10 @@ Variable::Variable(string name, Value *value) {
 	m_id = vars.size();
 	m_scope = Expression::scopes;
 	
-	if(vars.size() - 1 < m_scope) vars.push_back(vector<Variable*>());
-	vars[m_scope].push_back(this);
+	vector<Variable*> *v = new vector<Variable*>;
+	v->push_back(this);
+	if(vars.size() - 1 < m_scope) vars.push_back(*v);
+	//vars[m_scope].push_back(this);
 	
 #ifdef VAR_DEBUG
 	edbg2("Var name: " << m_name << " | Value: ", m_value->print(), " | ID: " << m_id << " | Scope: " << m_scope);
