@@ -28,12 +28,24 @@ using namespace std;
 char stringBuf[1024];
 char* stringBufPtr;
 
+struct EFile {
+		struct EFile *prev;
+		YY_BUFFER_STATE bs;
+		int lineno;
+		char *filename;
+		FILE *f;
+} *currentFile = 0;
+
+int newFile(char *filename);
+int popFile();
+
 %}
 
 %option yylineno
 
 %x str
 %x COMMENT
+%x IFILE
 
 %%
 	/* Strings */
@@ -118,7 +130,61 @@ char* stringBufPtr;
 	/* Whitespace */
 [ \t\n]+					;	/* Ignore whitespace */
 	
+	/* Include */
+^"#"[ \t]*include[ \t]*[\"<] { BEGIN IFILE; }
+
+<IFILE>[^ \t\n\">]+          { 
+								{ int c;
+									while((c = input()) && c != '\n');
+								}
+								yylineno++;
+								if(!newFile(yytext))
+								yyterminate(); /* no such file */
+								BEGIN INITIAL;
+                           }
+
+<IFILE>.|\n                { yyerror("Bad include file"); }
+<<EOF>>                    { if(!popFile()) yyterminate(); }
+
 	/* Other */
 .							yyerror("Unknown character");
 %%
+
+int newFile(char *filename) {
+	FILE *f = fopen(filename, "r");
+	struct EFile *file = new EFile;
+	
+	if(!f) yyerror(string("File '") + string(filename) + "' not found");
+	
+	if(currentFile) currentFile->lineno = yylineno;
+	file->prev = currentFile;
+	
+	file->bs = yy_create_buffer(f, YY_BUF_SIZE);
+	file->f = f;
+	file->filename = filename;
+	yy_switch_to_buffer(file->bs);
+	currentFile = file;
+	yylineno = 1;
+	return 1;
+}
+
+int popFile() {
+	struct EFile *file = currentFile;
+	struct EFile *prevFile;
+	
+	if(!file) return 0;
+	
+	fclose(file->f);
+	yy_delete_buffer(file->bs);
+	
+	prevFile = file->prev;
+	free(file);
+	
+	if(!prevFile) return 0;
+	
+	yy_switch_to_buffer(prevFile->bs);
+	currentFile = prevFile;
+	yylineno = currentFile->lineno;
+	return 1; 
+}
 
