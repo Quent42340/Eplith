@@ -1,0 +1,4 @@
+-include "tests/include_file.ep"
+
+puts("a = " + a + " | b = " + b);
+

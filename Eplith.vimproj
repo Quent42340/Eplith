@@ -33,6 +33,8 @@ Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l
   float_issue.ep
   float_test.ep
   functions_test.ep
+  include_file.ep
+  include_test.ep
   test.ep
   type_test.ep
  }

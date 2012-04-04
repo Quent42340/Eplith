@@ -365,6 +365,7 @@ void FuncExpression::doExp() {
 #ifdef WARNINGS
 		yywarn("The function already exists, this declaration will overwrite it");
 #endif
+		m_func = new Function(m_funcName, m_args, m_stmts);
 	} else {
 		m_func = new Function(m_funcName, m_args, m_stmts);
 	}

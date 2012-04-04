@@ -1,5 +1,6 @@
-- Include files
+- Include files: OK.
 - Functions
+	* Function scopes
 	* Function as a value
 	* Test 'lua classes'*
 - C++ Eplith implementation

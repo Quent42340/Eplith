@@ -82,5 +82,7 @@ void warn(std::string str, const char* file, unsigned int line);
 
 #define DBG(n) { printf("\t%d\n", n); }
 
+int newFile(char *filename);
+
 #endif // HEADER_H
 

@@ -1,0 +1,7 @@
+function puts(str) {
+	print(str + "\n");
+}
+
+a = 5;
+b = 10;
+

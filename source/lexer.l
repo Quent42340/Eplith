@@ -131,20 +131,18 @@ int popFile();
 [ \t\n]+					;	/* Ignore whitespace */
 	
 	/* Include */
-^"#"[ \t]*include[ \t]*[\"<] { BEGIN IFILE; }
+^"-"[ \t]*include[ \t]*\" { BEGIN IFILE; }
 
-<IFILE>[^ \t\n\">]+          { 
-								{ int c;
-									while((c = input()) && c != '\n');
-								}
-								yylineno++;
-								if(!newFile(yytext))
-								yyterminate(); /* no such file */
-								BEGIN INITIAL;
-                           }
+<IFILE>[^ \t\n\"]+		  {
+							{ int c;
+							  while((c = yyinput()) && c != '\n') ;
+							}
+							if(!newFile(yytext)) yyterminate();
+							BEGIN INITIAL;
+						  }
 
-<IFILE>.|\n                { yyerror("Bad include file"); }
-<<EOF>>                    { if(!popFile()) yyterminate(); }
+<IFILE>.|\n				  { yyerror("Bad include line"); }
+<<EOF>>					  { if(!popFile()) yyterminate(); }
 
 	/* Other */
 .							yyerror("Unknown character");
@@ -152,9 +150,10 @@ int popFile();
 
 int newFile(char *filename) {
 	FILE *f = fopen(filename, "r");
-	struct EFile *file = new EFile;
+	struct EFile *file = new struct EFile;
 	
-	if(!f) yyerror(string("File '") + string(filename) + "' not found");
+	if(!f) { yylineno--; yyerror(string("File '") + string(filename) + "' not found"); }
+	if(!file) { yylineno--; yyerror("Memory allocation error"); }
 	
 	if(currentFile) currentFile->lineno = yylineno;
 	file->prev = currentFile;
@@ -178,7 +177,7 @@ int popFile() {
 	yy_delete_buffer(file->bs);
 	
 	prevFile = file->prev;
-	free(file);
+	delete file;
 	
 	if(!prevFile) return 0;
 	

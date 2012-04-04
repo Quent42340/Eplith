@@ -49,24 +49,26 @@ int yywrap() {
 }
 
 int main(int argc, char* argv[]) {
+	filename = "Eplith";
+	
+	if(argc < 2) {
+		yyerror("Filename not given");
+	}
+	else if(argc > 2) {
+		yyerror("Too much arguments");
+	}
+	
 #ifdef TYPES_DEBUG
 	edbg("Types: Int: " << typeInt << " | Float: " << typeFloat << " | String: " << typeStr << " | Array: " << typeArray << " | Void: " << typeVoid);
 #endif
 	
-	yyin = fopen(argv[1], "r");
-	
-	if(yyin == NULL) {
-		fprintf(stderr, "Error: File %s doesn't exist.\n", argv[1]);
-		exit(0);
-	}
+	newFile(argv[1]);
 	
 	filename = argv[1];
 	
 	Variable::initNullVar();
 	
 	yyparse();
-	
-	fclose(yyin);
 	
 	return 0;
 } 
