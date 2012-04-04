@@ -1,15 +1,17 @@
-- Include files: OK.
 - Functions
-	* Function scopes
 	* Function as a value
-	* Test 'lua classes'*
-- C++ Eplith implementation
 - Arrays
 	* Functions in arrays: Not OK.
+- Functions
+	* Function scopes
+- Classes
+	* Test 'lua classes'*
+- C++ Eplith implementation
 - Switch
+- Labels and Goto
 ? Functions
 	* Function overloading
 ? Structs
 ? Enums
 * Classes
-- Labels and Goto
+	* C++ type classes
