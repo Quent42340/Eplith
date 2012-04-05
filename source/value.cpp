@@ -61,6 +61,11 @@ Value::Value(map<string, Value*> array) {
 	m_value = array;
 }
 
+Value::Value(Function *func) {
+	m_type = typeFunc;
+	m_value = func;
+}
+
 Value::Value(Type type, boost::any value, Mode mode) {
 	m_type = type;
 	m_value = value;
@@ -84,6 +89,9 @@ Value::Value(boost::any *value, Mode mode) {
 	}
 	else if(map<string, Value*> *pa = valuePtr< map<string, Value*> >()) {
 		m_type = typeArray;
+	}
+	else if(Function **func = valuePtr<Function*>()) {
+		m_type = typeFunc;
 	} else {
 		m_type = typeVoid;
 	}
@@ -108,6 +116,9 @@ Value::Value(Variable *var, Mode mode) {
 	}
 	else if(map<string, Value*> *pa = valuePtr< map<string, Value*> >()) {
 		m_type = typeArray;
+	}
+	else if(Function **func = valuePtr<Function*>()) {
+		m_type = typeFunc;
 	} else {
 		m_type = typeVoid;
 	}
@@ -142,6 +153,9 @@ void Value::print(ostream &out, Mode mode) {
 			if(++it != pa->end()) out << ", "; it--;
 		}
 		out << "}";
+	}
+	else if(Function **func = valuePtr<Function*>()) {
+		out << (*func)->address();
 	}
 }
 

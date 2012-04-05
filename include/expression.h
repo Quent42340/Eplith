@@ -229,7 +229,7 @@ class FuncExpression : public Expression {
 		FuncExpression(std::string funcName, std::vector<VarExpression*> *args, std::vector<Expression*> *stmts);
 		~FuncExpression();
 		
-		Value* evaluate() { return new Value(); }
+		Value* evaluate() { return new Value(m_func); }
 		void doExp();
 		
 	private:

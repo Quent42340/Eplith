@@ -161,6 +161,7 @@ instruction: /* empty */
 stmt:
 	  ';' { ; }
 	| assign ';' { ; }
+	| exp { if($1->type() == "FuncExpression") $$ = $1; }
 	| exp ';' { $$ = $1; if($$->type() == "CallExpression") $1->doThings(); }
 	| BREAK ';' { $$ = new SignalExpression(sBREAK); }
 	| CONTINUE ';' { $$ = new SignalExpression(sCONTINUE); }
@@ -172,7 +173,6 @@ stmt:
 	| IF '(' exp ')' stmts ELSE stmts { $$ = new IfExpression($3, $5, $7); }
 	| FOR '(' assign TO exp ';' exp ')' stmts { $$ = new ForExpression($3, $9, $5, $7);  }
 	| FOR '(' assign TO exp ')' stmts { $$ = new ForExpression($3, $7, $5);  }
-	| FUNCTION NAME '(' var_list ')' stmts { $$ = new FuncExpression(string($2), $4, $6); }
 	;
 
 stmts:
@@ -264,6 +264,7 @@ exp:
 	| exp EQ exp { $$ = new OpExpression($1, EQ, $3); }
 	| exp NE exp { $$ = new OpExpression($1, NE, $3); }
 	| '(' exp ')' { $$ = $2; }
+	| FUNCTION NAME '(' var_list ')' stmts { $$ = new FuncExpression(string($2), $4, $6); }
 	| NAME '(' exp_list ')' { $$ = new CallExpression(string($1), $3); }
 	| '{' elem_list '}' { $$ = new ArrayExpression($2); }
 	| element { $$ = $1; }

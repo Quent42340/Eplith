@@ -24,6 +24,7 @@
 #include <cmath>
 
 class Variable;
+class Function;
 class ElementExpression;
 
 typedef enum {
@@ -31,6 +32,7 @@ typedef enum {
 	typeFloat,
 	typeStr,
 	typeArray,
+	typeFunc,
 	typeVoid
 } Type;
 
@@ -57,6 +59,7 @@ class Value {
 		Value(char *value);							// String type
 		Value(bool value);							// Bool type
 		Value(std::map<std::string, Value*> array);	// Array
+		Value(Function *func);						// Function
 		Value(Type type, boost::any value, Mode mode = noMode);
 		Value(boost::any *value, Mode mode = noMode);
 		Value(Variable *var, Mode mode = noMode);
