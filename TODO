@@ -1,7 +1,8 @@
 - Functions
 	* Function as a value
-- Arrays
++ Arrays
 	* Functions in arrays: Not OK.
+- Rewrite Makefile
 - Functions
 	* Function scopes
 - Classes
