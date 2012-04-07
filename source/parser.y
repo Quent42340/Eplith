@@ -140,7 +140,7 @@ int main(int argc, char* argv[]) {
 
 %start program
 
-%type <exp> exp var assign assignExpVal stmt cast integer
+%type <exp> call exp var assign assignExpVal stmt cast integer func ufunc
 %type <list> exp_list stmt_list stmts
 %type <varList> var_list
 %type <elementIndex> element_index
@@ -172,7 +172,15 @@ stmt:
 	| IF '(' exp ')' stmts ELSE stmts { $$ = new IfExpression($3, $5, $7); }
 	| FOR '(' assign TO exp ';' exp ')' stmts { $$ = new ForExpression($3, $9, $5, $7);  }
 	| FOR '(' assign TO exp ')' stmts { $$ = new ForExpression($3, $7, $5);  }
-	| FUNCTION NAME '(' var_list ')' stmts { $$ = new FuncExpression(string($2), $4, $6); }
+	| func { $$ = $1; }
+	;
+
+func:
+	FUNCTION NAME '(' var_list ')' stmts { $$ = new FuncExpression(string($2), $4, $6); }
+	;
+
+ufunc:
+	FUNCTION '(' var_list ')' stmts { $$ = new FuncExpression("<<unamed>>", $3, $5); }
 	;
 
 stmts:
@@ -202,6 +210,7 @@ var_list:
 	| var_list ',' var { vector<VarExpression*> *v = $1;
 						 v->push_back((VarExpression*)$3);
 						 $$ = v; }
+	;
 
 exp_list:
 	/* void */ { vector<Expression*> *v = new vector<Expression*>;
@@ -212,6 +221,7 @@ exp_list:
 	| exp_list ',' exp { vector<Expression*> *v = $1;
 						 v->push_back($3);
 						 $$ = v; }
+	;
 
 elem_list:
 	/* void */ { multimap<string, Value*> *m = new multimap<string, Value*>;
@@ -222,10 +232,12 @@ elem_list:
 	| elem_list ',' elem { multimap<string, Value*> *m = $1;
 						   m->insert(m->end(), *$3);
 						   $$ = m; }
+	;
 
 elem:
 	  exp { $$ = new pair<string, Value*>("<<nothing>>", $1->evaluate()); }
 	| NAME '=' exp { $$ = new pair<string, Value*>(string($1), $3->evaluate()); }
+	;
 
 exp:
 	  INTEGER { $$ = new IntExpression($1); }
@@ -264,9 +276,16 @@ exp:
 	| exp EQ exp { $$ = new OpExpression($1, EQ, $3); }
 	| exp NE exp { $$ = new OpExpression($1, NE, $3); }
 	| '(' exp ')' { $$ = $2; }
-	| NAME '(' exp_list ')' { $$ = new CallExpression(string($1), $3); }
+	/*| NAME '(' exp_list ')' { $$ = new CallExpression(string($1), $3); }*/
+	| call { $$ = $1; }
 	| '{' elem_list '}' { $$ = new ArrayExpression($2); }
 	| element { $$ = $1; }
+	| ufunc { $$ = $1; }
+	;
+
+call:
+	  NAME '(' exp_list ')' { $$ = new CallExpression(string($1), $3); }
+	| element '(' exp_list ')' { $$ = new CallExpression($1, $3); }
 	;
 
 element:

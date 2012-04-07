@@ -16,3 +16,8 @@ print(b.element + "\n");
 b.thing = "THING";
 print(b["thing"] + "\n");
 
+c = {puts = function(str) {
+		print(str + "\n");
+	} };
+
+c.puts("Truc");

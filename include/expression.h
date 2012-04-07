@@ -242,6 +242,7 @@ class FuncExpression : public Expression {
 class CallExpression : public Expression {
 	public:
 		CallExpression(std::string funcName, std::vector<Expression*> *args);
+		CallExpression(ElementExpression *element, std::vector<Expression*> *args);
 		~CallExpression();
 		
 		void initFunc();
@@ -252,6 +253,7 @@ class CallExpression : public Expression {
 		std::string m_funcName;
 		std::vector<Function*> m_funcs;
 		std::vector<Expression*> *m_args;
+		ElementExpression *m_element;
 		bool m_init;
 };
 
