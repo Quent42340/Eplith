@@ -21,3 +21,4 @@ c = {puts = function(str) {
 	} };
 
 c.puts("Truc");
+

@@ -67,7 +67,7 @@ BoolExpression::BoolExpression(bool value) {
 BoolExpression::~BoolExpression() {
 }
 
-ArrayExpression::ArrayExpression(multimap<string, Value*> *elements) {
+ArrayExpression::ArrayExpression(multimap<string, Expression*> *elements) {
 	m_type = "ArrayExpression";
 	m_elements = elements;
 }
@@ -79,11 +79,11 @@ ArrayExpression::~ArrayExpression() {
 Value* ArrayExpression::evaluate() {
 	unsigned int a = 0;
 	map<string, Value*> *mElements = new map<string, Value*>;
-	for(multimap<string, Value*>::iterator it = m_elements->begin() ; it != m_elements->end() ; it++) {
+	for(multimap<string, Expression*>::iterator it = m_elements->begin() ; it != m_elements->end() ; it++) {
 		if(it->first == "<<nothing>>") {
-			mElements->insert(pair<string, Value*>(itos(a++), it->second));
+			mElements->insert(pair<string, Value*>(itos(a++), it->second->evaluate()));
 		} else {
-			mElements->insert(pair<string, Value*>(it->first, it->second));
+			mElements->insert(pair<string, Value*>(it->first, it->second->evaluate()));
 		}
 	}
 	return new Value(*mElements);
@@ -393,7 +393,9 @@ CallExpression::~CallExpression() {
 }
 
 void CallExpression::initFunc() {
-	if(m_element == 0)m_funcs.push_back(new Function(*Function::findByName(m_funcName)));
+	Function *func = Function::findByName(m_funcName);
+	if(func == 0) func = Variable::findByName(m_funcName)->value()->value<Function*>();
+	if(m_element == 0) m_funcs.push_back(new Function(*func));
 	else m_funcs.push_back(new Function(*m_element->evaluate()->value<Function*>()));
 	if(m_funcs.back() == 0) yyerror("Function undefined");
 	m_init = true;
@@ -409,7 +411,9 @@ Value* CallExpression::evaluate() {
 
 void CallExpression::doExp() {
 	if(!m_init) initFunc();
+	scopes++;
 	m_funcs.back()->doFunc(m_args);
+	endScope();
 }
 
 ReturnExpression::ReturnExpression(Expression *exp) {

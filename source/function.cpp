@@ -36,7 +36,7 @@ Function::Function(string name, vector<VarExpression*> *args, vector<Expression*
 	m_ret = new Value();
 	
 #ifdef FUNC_DEBUG
-	edbg("Func name: " << m_name << " | Address: " << m_address);
+	edbg("Func name: " << m_name << " | Address: " << m_address << " | Scope: " << Expression::scopes);
 #endif
 	
 	funcs.push_back(this);
@@ -49,7 +49,7 @@ Function::~Function() {
 }
 
 Function* Function::findByName(std::string name) {
-	for(unsigned int i = funcs.size() - 1 ; i >= 0 ; i--) {
+	for(int i = funcs.size() - 1 ; i >= 0 ; i--) {
 		if(funcs[i]->name() == name) {
 			return funcs[i];
 		}
@@ -58,7 +58,7 @@ Function* Function::findByName(std::string name) {
 }
 
 bool Function::exists(std::string name) {
-	for(unsigned int i = 0 ; i < funcs.size() ; i++) {
+	for(int i = 0 ; i < funcs.size() ; i++) {
 		if(funcs[i]->name() == name) {
 			return true;
 		}

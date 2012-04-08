@@ -119,14 +119,14 @@ class BoolExpression : public Expression {
 
 class ArrayExpression : public Expression {
 	public:
-		ArrayExpression(std::multimap<std::string, Value*> *elements);
+		ArrayExpression(std::multimap<std::string, Expression*> *elements);
 		~ArrayExpression();
 
 		Value *evaluate();
 		void doExp() {}
 		
 	private:
-		std::multimap<std::string, Value*> *m_elements;
+		std::multimap<std::string, Expression*> *m_elements;
 };
 
 class ElementExpression : public Expression {

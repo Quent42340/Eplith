@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 	}
 	
 #ifdef TYPES_DEBUG
-	edbg("Types: Int: " << typeInt << " | Float: " << typeFloat << " | String: " << typeStr << " | Array: " << typeArray << " | Void: " << typeVoid);
+	edbg("Types: Int: " << typeInt << " | Float: " << typeFloat << " | String: " << typeStr << " | Array: " << typeArray << " | Function: " << typeFunc << " | Void: " << typeVoid);
 #endif
 	
 	newFile(argv[1]);
@@ -86,8 +86,8 @@ int main(int argc, char* argv[]) {
 	std::vector<std::string> *elementIndex;
 	int op;
 	ElementExpression *element;
-	std::multimap<std::string, Value*> *elemList;
-	std::pair<std::string, Value*> *elem;
+	std::multimap<std::string, Expression*> *elemList;
+	std::pair<std::string, Expression*> *elem;
 }
 
 %token <iValue> INTEGER
@@ -224,19 +224,19 @@ exp_list:
 	;
 
 elem_list:
-	/* void */ { multimap<string, Value*> *m = new multimap<string, Value*>;
+	/* void */ { multimap<string, Expression*> *m = new multimap<string, Expression*>;
 				 $$ = m; }
-	| elem { multimap<string, Value*> *m = new multimap<string, Value*>;
+	| elem { multimap<string, Expression*> *m = new multimap<string, Expression*>;
 			 m->insert(m->end(), *$1);
 			 $$ = m; }
-	| elem_list ',' elem { multimap<string, Value*> *m = $1;
+	| elem_list ',' elem { multimap<string, Expression*> *m = $1;
 						   m->insert(m->end(), *$3);
 						   $$ = m; }
 	;
 
 elem:
-	  exp { $$ = new pair<string, Value*>("<<nothing>>", $1->evaluate()); }
-	| NAME '=' exp { $$ = new pair<string, Value*>(string($1), $3->evaluate()); }
+	  exp { $$ = new pair<string, Expression*>("<<nothing>>", $1); }
+	| NAME '=' exp { $$ = new pair<string, Expression*>(string($1), $3); }
 	;
 
 exp:
