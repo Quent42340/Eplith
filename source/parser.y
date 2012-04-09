@@ -276,7 +276,6 @@ exp:
 	| exp EQ exp { $$ = new OpExpression($1, EQ, $3); }
 	| exp NE exp { $$ = new OpExpression($1, NE, $3); }
 	| '(' exp ')' { $$ = $2; }
-	/*| NAME '(' exp_list ')' { $$ = new CallExpression(string($1), $3); }*/
 	| call { $$ = $1; }
 	| '{' elem_list '}' { $$ = new ArrayExpression($2); }
 	| element { $$ = $1; }
@@ -335,7 +334,7 @@ assignExpVal:
 	;
 
 var:
-	NAME { $$ = new VarExpression(string($1)); }
+	  NAME { $$ = new VarExpression(string($1)); }
 	;
 %%
 

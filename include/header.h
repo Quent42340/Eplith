@@ -40,6 +40,7 @@
 #define FUNC_DEBUG
 #define VAR_DEBUG
 #define TYPES_DEBUG
+#define CALL_DEBUG
 //#define DELVAR_DEBUG
 //#define SETVAR_DEBUG
 

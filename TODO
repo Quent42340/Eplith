@@ -1,11 +1,10 @@
-- Functions
-	* Function scopes
 - Classes
 	* Test 'lua classes'*
-- Fix conflits
 - Make a 'return;' to end a function
 - Rewrite Makefile
 - Operation of string int and int. Ex: "6" + 7 = 13, not "67"
+- Operation of tables
+- Delete variables
 - C++ Eplith implementation
 - Switch
 - Labels and Goto

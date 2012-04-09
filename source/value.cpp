@@ -148,7 +148,8 @@ void Value::print(ostream &out, Mode mode) {
 		for(map<string, Value*>::iterator it = pa->begin() ; it != pa->end() ; it++) {
 			if(atoi(it->first.c_str()) == 0 && it->first != itos(0)) out << it->first << " = ";
 			if((*pa)[it->first]->type() == typeStr) out << "\"";
-			(*pa)[it->first]->print(out);
+			//(*pa)[it->first]->print(out);
+			cout << (*pa)[it->first]->type();
 			if((*pa)[it->first]->type() == typeStr) out << "\"";
 			if(++it != pa->end()) out << ", "; it--;
 		}

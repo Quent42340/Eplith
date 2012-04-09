@@ -1,20 +1,23 @@
 Op = {
-	new = function() {
-		a = 0;
-		b = 0;
+	new = function(_a, _b) {
+		a = _a;
+		b = _b;
 		
-		add = function() {
-			return a + b;
+		add = function(self) {
+			return self.a + self.b;
 		};
 		
-		sub = function() {
-			return a - b;
+		sub = function(self) {
+			return self.a - self.b;
 		};
 		
 		return {a = a,
-				b = b};
+				b = b,
+				add = add,
+				sub = sub};
 	}
 };
 
-test = Op.new();
+test = Op.new(5, 3);
+print(test.sub(test) + "\n");
 

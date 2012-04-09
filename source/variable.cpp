@@ -25,21 +25,25 @@ using namespace std;
 
 vector< vector<Variable*> > Variable::vars;
 
-Variable::Variable(string name, Value *value) {
+Variable::Variable(string name, Value *value, bool tmp) {
 	m_address = getPtrAddr((void*)this);
 	m_name = name;
 	m_value = value;
 	m_scope = Expression::scopes;
 	
-	if(vars.size() < m_scope + 1) vars.push_back(vector<Variable*>());
-	
-	m_id = vars[m_scope].size();
-	
-	vars[m_scope].push_back(this);
-	
+	if(!tmp) {
+		if(vars.size() < m_scope + 1) vars.push_back(vector<Variable*>());
+		
+		m_id = vars[m_scope].size();
+		
+		vars[m_scope].push_back(this);
+		
 #ifdef VAR_DEBUG
-	edbg2("Var name: " << m_name << " | Value: ", m_value->print(), " | ID: " << m_id << " | Scope: " << m_scope);
+		edbg2("Var name: " << m_name << " | Value: ", m_value->print(), " | ID: " << m_id << " | Scope: " << m_scope);
 #endif
+	} else {
+		m_id = -1;
+	}
 }
 
 Variable::~Variable() {

@@ -25,7 +25,7 @@
 
 class Variable {
 	public:
-		Variable(std::string name, Value *value);
+		Variable(std::string name, Value *value, bool tmp = false);
 		~Variable();
 		
 		void print() { m_value->print(); }
@@ -49,7 +49,7 @@ class Variable {
 		std::string m_name;
 		std::string m_address;
 		Value* m_value;
-		unsigned int m_id;
+		int m_id;
 		int m_scope;
 };
 

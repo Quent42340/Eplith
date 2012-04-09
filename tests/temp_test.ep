@@ -1,7 +1,8 @@
-function puts(str) {
-	function truc(str) { print("\t" + str + "\n"); }
+function test(str) {
+	truc = function(str) { print("\t" + str + "\n"); };
 	print(str + "\n");
-};
+}
 
+puts = test;
 puts("Truc");
 

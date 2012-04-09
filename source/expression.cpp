@@ -182,6 +182,22 @@ VarExpression::~VarExpression() {
 	delete m_var;
 }
 
+Value* VarExpression::evaluate() {
+	doExp();
+	return m_var->value();
+}
+
+void VarExpression::doExp() {
+	if(Variable::exists(m_varName)) {
+		m_var = Variable::findByName(m_varName);
+	}
+	else if(Function::exists(m_varName)) {
+		m_var = new Variable("<<unamed>>", new Value(Function::findByName(m_varName)), true);
+	} else {
+		yyerror(string("Variable or function '") + m_varName + "' not found.");
+	}
+}
+
 AssignExpression::AssignExpression(string varName, Expression *valExp, int op) {
 	m_type = "AssignExpression";
 	m_varName = varName;
@@ -361,7 +377,7 @@ FuncExpression::~FuncExpression() {
 }
 
 void FuncExpression::doExp() {
-	if(Function::exists(m_funcName)) {
+	if(Function::exists(m_funcName) && m_funcName != "<<unamed>>") {
 #ifdef WARNINGS
 		yywarn("The function already exists, this declaration will overwrite it");
 #endif
