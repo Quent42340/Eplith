@@ -37,6 +37,8 @@ class Function {
 		
 		Value *ret() { return m_ret; }
 		
+		void colon(bool colon) { m_colon = colon; }
+		
 		void doFunc(std::vector<Expression*> *args);
 		
 		static Function* findByName(std::string name);
@@ -51,6 +53,7 @@ class Function {
 		std::vector<Variable*> m_vars;
 		std::vector<Expression*> *m_stmts;
 		Value *m_ret;
+		bool m_colon;
 };
 
 #endif // FUNCTION_H

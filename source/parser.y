@@ -301,6 +301,7 @@ element_index:
 member:
 	  '[' index ']' { $$ = new string(*$2); }
 	| '.' NAME { $$ = new string($2); }
+	| ':' NAME { $$ = new string(string("*") + $2); }
 
 index:
 	INTEGER { $$ = new string(itos($1)); }

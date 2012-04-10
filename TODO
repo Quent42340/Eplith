@@ -4,6 +4,8 @@
 - Rewrite Makefile
 - Operation of string int and int. Ex: "6" + 7 = 13, not "67"
 - Operation of tables
+- Operations by type
+- Operator ','
 - Delete variables
 - C++ Eplith implementation
 - Switch

@@ -39,7 +39,7 @@ Variable::Variable(string name, Value *value, bool tmp) {
 		vars[m_scope].push_back(this);
 		
 #ifdef VAR_DEBUG
-		edbg2("Var name: " << m_name << " | Value: ", m_value->print(), " | ID: " << m_id << " | Scope: " << m_scope);
+		edbg2("Var name: " << m_name << " | Type: " << m_value->type() << " | Value: ", m_value->print(), " | ID: " << m_id << " | Scope: " << m_scope);
 #endif
 	} else {
 		m_id = -1;

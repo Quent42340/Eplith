@@ -161,10 +161,24 @@ void Value::print(ostream &out, Mode mode) {
 }
 
 Value *Value::element(vector<string> indexTable) {
+	colon = false;
 	if(indexTable.size() > 0) {
 		string i = indexTable[indexTable.size() - 1];
 		indexTable.pop_back();
-		return value< map<string, Value*> >()[i]->element(indexTable);
+		if(i[0] == '*') {
+			i.erase(i.begin());
+			colon = true;
+		}
+		Value *v = value< map<string, Value*> >()[i]->element(indexTable);
+		if(colon) {
+			if(v->type() == typeFunc) {
+				v->value<Function*>()->colon(true);
+			} else {
+				yyerror("Operator ':' only available with functions");
+			}
+		}
+		if(v) return v;
+		else yyerror("Bad element access");
 	} else {
 		return this;
 	}

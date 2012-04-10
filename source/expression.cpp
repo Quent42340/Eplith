@@ -81,9 +81,9 @@ Value* ArrayExpression::evaluate() {
 	map<string, Value*> *mElements = new map<string, Value*>;
 	for(multimap<string, Expression*>::iterator it = m_elements->begin() ; it != m_elements->end() ; it++) {
 		if(it->first == "<<nothing>>") {
-			mElements->insert(pair<string, Value*>(itos(a++), it->second->evaluate()));
+			mElements->insert(pair<string, Value*>(itos(a++), new Value(*it->second->evaluate())));
 		} else {
-			mElements->insert(pair<string, Value*>(it->first, it->second->evaluate()));
+			mElements->insert(pair<string, Value*>(it->first, new Value(*it->second->evaluate())));
 		}
 	}
 	return new Value(*mElements);
@@ -103,7 +103,6 @@ Value* ElementExpression::evaluate() {
 	Variable *array = Variable::findByName(m_arrayName);
 	if(array == 0) yyerror(string("Variable \"") + string(m_arrayName) + string("\" undefined"));
 	if(array->value()->type() != typeArray) yyerror("Trying to access to an element of a non-array variable");
-	//cout << array->value()->element(*m_index)->type() << endl;
 	return array->value()->element(*m_index);
 }
 
@@ -421,6 +420,7 @@ Value* CallExpression::evaluate() {
 	if(m_init) initFunc();
 	doExp();
 	Value* ret = new Value(*m_funcs.back()->ret());
+	endScope();
 	m_funcs.pop_back();
 	return ret;
 }
@@ -429,7 +429,6 @@ void CallExpression::doExp() {
 	if(!m_init) initFunc();
 	scopes++;
 	m_funcs.back()->doFunc(m_args);
-	endScope();
 }
 
 ReturnExpression::ReturnExpression(Expression *exp) {
