@@ -1,7 +1,12 @@
-function f(x) {
-	print(x + "\n");
-	return;
-}
+a = 5;
+b = 6;
+c = "7";
+#d = {5, 6};
+#e = {7, 8};
 
-a = f(5);
+f = a + b;
+g = b + c;
+#h = d + e;
+#i = a + d;
+#j = c + e;
 

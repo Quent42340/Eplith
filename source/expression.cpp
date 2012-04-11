@@ -123,6 +123,14 @@ Value* OpExpression::evaluate() {
 	if(m_exp1->sciMode() || ((m_exp2) ? m_exp2->sciMode() : 0)) m_mode = modeSci;
 	Value *val = m_exp1->evaluate();
 	Value *val2 = (m_exp2) ? m_exp2->evaluate() : 0;
+	if(val->type() == typeStr) {
+		int i = atoi(val->value<string>().c_str());
+		if(i) val = new Value(i);
+	}
+	if(val2->type() == typeStr) {
+		int i = atoi(val2->value<string>().c_str());
+		if(i) val2 = new Value(i);
+	}
 	//cdbg("val type: " << val->type() << " | val2 type: " << val2->type());
 	if(m_oper == '+') {
 		bool pb;
@@ -140,14 +148,12 @@ Value* OpExpression::evaluate() {
 			return new Value(getNumVal(val) + getNumVal(val2), m_mode);
 		}
 	} else {
+		if(!isNum(val) || !isNum(val2)) yyerror("Operation not available with these type");
 		switch(m_oper) {
 			case NEG:	 return new Value(-getNumVal(val));
 			case POS:	 return new Value(+getNumVal(val));
-			case NOT:	 return new Value(!val->value<bool>());
+			case NOT:	 return new Value(!valNumToBool(val));
 			case BNOT:	 return new Value(~(int)getNumVal(val));
-		}
-		if(!isNum(val) || !isNum(val2)) yyerror("Operation not available with these type");
-		switch(m_oper) {
 			case '-':	 return new Value(getNumVal(val) - getNumVal(val2));
 			case '*':	 return new Value(getNumVal(val) * getNumVal(val2));
 			case '/':	 return new Value(getNumVal(val) / getNumVal(val2));
@@ -166,7 +172,7 @@ Value* OpExpression::evaluate() {
 			case XOR:	 return new Value((int)getNumVal(val) ^ (int)getNumVal(val2));
 			case LSHIFT: return new Value((int)getNumVal(val) << (int)getNumVal(val2));
 			case RSHIFT: return new Value((int)getNumVal(val) >> (int)getNumVal(val2));
-			default:	 yyerror("Unexpected operator"); break;
+			default:	 yyerror("Unexpected operator");
 		}
 	}
 }

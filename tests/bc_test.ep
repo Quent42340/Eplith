@@ -1,0 +1,18 @@
+break;
+
+if(true) {
+	break;
+}
+
+function f() {
+	break;
+}
+
+f();
+
+a = 0;
+while(++a) {
+	if(a == 5) break;
+	print(a + "\n");
+}
+

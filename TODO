@@ -1,10 +1,7 @@
-- Make a 'return;' to end a function
-- Error for 'break' and 'continue' out of a loop
-- Operation of string int and int. Ex: "6" + 7 = 13, not "67"
-- Operation of tables
-- Operations by type
-- Operator ','
 - Delete variables
+- Operations on tables
+- Operator ','
+- Error for 'break' and 'continue' out of a loop
 - Rewrite Makefile
 - C++ Eplith implementation
 - Switch
