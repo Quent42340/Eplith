@@ -72,6 +72,7 @@ int popFile();
 "break"						return BREAK;
 "continue"					return CONTINUE;
 "return"					return RETURN;
+"delete"					return DELETE;
 ("->"|"to")					return TO;
 "hex"						return HEX;
 	/* TODO: "oct"						return OCT;*/

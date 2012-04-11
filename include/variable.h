@@ -40,6 +40,7 @@ class Variable {
 		
 		static Variable* findByName(std::string name);
 		static bool exists(std::string name);
+		static bool erase(std::string name);
 		
 		static void initNullVar();
 		

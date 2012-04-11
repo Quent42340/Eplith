@@ -66,9 +66,7 @@ void Variable::value(Value *value) {
 
 Variable* Variable::findByName(std::string name) {
 	for(int s = vars.size() - 1 ; s >= 0 ; s--) {
-		//cdbg("Scope: " << s);
 		for(int i = vars[s].size() - 1 ; i >= 0 ; i--) {
-			//cdbg("ID: " << i);
 			if(vars[s][i]->name() == name) {
 				return vars[s][i];
 			}
@@ -81,6 +79,18 @@ bool Variable::exists(std::string name) {
 	for(int s = vars.size() - 1 ; s >= 0 ; s--) {
 		for(int i = 0 ; i < vars[s].size() ; i++) {
 			if(vars[s][i]->name() == name) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool Variable::erase(std::string name) {
+	for(int s = vars.size() - 1 ; s >= 0 ; s--) {
+		for(int i = 0 ; i < vars[s].size() ; i++) {
+			if(vars[s][i]->name() == name) {
+				vars[s].erase(vars[s].begin() + i);
 				return true;
 			}
 		}

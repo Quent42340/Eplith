@@ -248,6 +248,18 @@ void AssignExpression::doExp() {
 		} else {
 			Value *val = m_var->value();
 			Value *val2 = m_valExp->evaluate();
+			if(val) {
+				if(val->type() == typeStr) {
+					int i = atoi(val->value<string>().c_str());
+					if(i) val = new Value(i);
+				}
+			}
+			if(val2) {
+				if(val2->type() == typeStr) {
+					int i = atoi(val2->value<string>().c_str());
+					if(i) val2 = new Value(i);
+				}
+			}
 			if(m_op == ADD) {
 				bool pb;
 				if(!isNum(val) || !isNum(val2)) {
@@ -461,7 +473,22 @@ PrintExpression::~PrintExpression() {
 	delete m_exp;
 }
 
+DeleteExpression::DeleteExpression(VarExpression *varExp) {
+	m_type = "DeleteExpression";
+	m_var = varExp->getVar();
+	doThings();
+}
+
+DeleteExpression::~DeleteExpression() {
+	delete m_var;
+}
+
+void DeleteExpression::doExp() {
+	if(!Variable::erase(m_var->name())) yyerror("Error when deleting variable");
+}
+
 SignalExpression::SignalExpression(Signal s) {
+	m_type = "SignalExpression";
 	m_signal = s;
 	doThings();
 }

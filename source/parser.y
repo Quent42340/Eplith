@@ -111,6 +111,7 @@ int main(int argc, char* argv[]) {
 
 %token BREAK CONTINUE
 %token RETURN
+%token DELETE
 
 %token STRA
 %token EQI EQS
@@ -166,6 +167,7 @@ stmt:
 	| CONTINUE ';' { $$ = new SignalExpression(sCONTINUE); }
 	| RETURN  ';' { $$ = new SignalExpression(sRETURN); }
 	| RETURN exp ';' { $$ = new ReturnExpression($2); }
+	| DELETE var ';' { $$ = new DeleteExpression((VarExpression*)$2); }
 	| PRINT '(' exp ')' ';' { $$ = new PrintExpression($3); }
 	| WHILE '(' exp ')' stmts { $$ = new WhileExpression($3, $5); }
 	| DO stmts WHILE '(' exp ')' ';' { $$ = new WhileExpression($5, $2); }

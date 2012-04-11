@@ -281,6 +281,18 @@ class PrintExpression : public Expression {
 		Expression *m_exp;
 };
 
+class DeleteExpression : public Expression {
+	public:
+		DeleteExpression(VarExpression *varExp);
+		~DeleteExpression();
+		
+		Value *evaluate() { return new Value(); }
+		void doExp();
+		
+	private:
+		Variable *m_var;
+};
+
 class SignalExpression : public Expression {
 	public:
 		SignalExpression(Signal s);
