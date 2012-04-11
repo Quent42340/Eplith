@@ -1,13 +1,11 @@
-- Delete variables
-- Operations on tables
 - Operator ','
 - Error for 'break' and 'continue' out of a loop
 - Switch
 - Labels and Goto
 - C++ Eplith implementation
-? Functions
-	* Function overloading
+- EPlib
+? Operations on tables
+? Function overloading
 ? Structs
 ? Enums
-* Classes
-	* C++ type classes
+? Classes (C++)
