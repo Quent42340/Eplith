@@ -164,6 +164,7 @@ stmt:
 	| exp ';' { $$ = $1; if($$->type() == "CallExpression") $1->doThings(); }
 	| BREAK ';' { $$ = new SignalExpression(sBREAK); }
 	| CONTINUE ';' { $$ = new SignalExpression(sCONTINUE); }
+	| RETURN  ';' { $$ = new SignalExpression(sRETURN); }
 	| RETURN exp ';' { $$ = new ReturnExpression($2); }
 	| PRINT '(' exp ')' ';' { $$ = new PrintExpression($3); }
 	| WHILE '(' exp ')' stmts { $$ = new WhileExpression($3, $5); }

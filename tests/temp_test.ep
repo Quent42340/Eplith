@@ -1,1 +1,7 @@
+function f(x) {
+	print(x + "\n");
+	return;
+}
+
+a = f(5);
 

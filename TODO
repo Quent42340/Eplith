@@ -1,11 +1,11 @@
-- Lua-like pseudo-classes: OK.
 - Make a 'return;' to end a function
-- Rewrite Makefile
+- Error for 'break' and 'continue' out of a loop
 - Operation of string int and int. Ex: "6" + 7 = 13, not "67"
 - Operation of tables
 - Operations by type
 - Operator ','
 - Delete variables
+- Rewrite Makefile
 - C++ Eplith implementation
 - Switch
 - Labels and Goto
