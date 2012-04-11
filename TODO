@@ -1,5 +1,4 @@
-- Classes
-	* Test 'lua classes'*
+- Lua-like pseudo-classes: OK.
 - Make a 'return;' to end a function
 - Rewrite Makefile
 - Operation of string int and int. Ex: "6" + 7 = 13, not "67"

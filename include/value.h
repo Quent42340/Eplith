@@ -79,7 +79,7 @@ class Value {
 		
 		void copy(Value *value);
 		
-		boost::any* any() { return &m_value; }
+		boost::any *any() { return &m_value; }
 		
 		Type type() const { return m_type; }
 		

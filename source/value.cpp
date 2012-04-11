@@ -161,7 +161,7 @@ void Value::print(ostream &out, Mode mode) {
 }
 
 Value *Value::element(vector<string> indexTable) {
-	colon = false;
+	bool colon = false;
 	if(indexTable.size() > 0) {
 		string i = indexTable[indexTable.size() - 1];
 		indexTable.pop_back();
@@ -173,6 +173,7 @@ Value *Value::element(vector<string> indexTable) {
 		if(colon) {
 			if(v->type() == typeFunc) {
 				v->value<Function*>()->colon(true);
+				v->value<Function*>()->mainElement(this);
 			} else {
 				yyerror("Operator ':' only available with functions");
 			}

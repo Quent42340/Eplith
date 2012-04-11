@@ -35,6 +35,7 @@ Function::Function(string name, vector<VarExpression*> *args, vector<Expression*
 	}
 	m_ret = new Value();
 	m_colon = false;
+	m_mainElement = 0;
 	
 #ifdef FUNC_DEBUG
 	edbg("Func name: " << m_name << " | Address: " << m_address << " | Scope: " << Expression::scopes);
@@ -73,10 +74,25 @@ void Function::doFunc(vector<Expression*> *args) {
 #endif
 	
 	// With m_colon, set variable self to the current object we're working on
+	// The bug here is that there is not the first argument given, I must find it by another way
 	
-	if(m_args->size() != args->size()) yyerror("Unexpected number of arguments given");
+	if(m_colon) {
+		if(m_args->size() != args->size() + 1) {
+			yyerror("Unexpected number of arguments given");
+		}
+	} else {
+		if(m_args->size() != args->size()) {
+			yyerror("Unexpected number of arguments givenn");
+		}
+	}
+	
 	for(unsigned int i = 0 ; i < m_args->size() ; i++) {
-		m_vars.push_back(new Variable((*m_args)[i]->varName(), new Value(*(*args)[i]->evaluate())));
+		if(m_colon && (*m_args)[i]->varName() == "self") {
+			if(!m_mainElement) yyerror("Unexpected error");
+			else m_vars.push_back(new Variable((*m_args)[i]->varName(), new Value(*m_mainElement)));
+		} else {
+			m_vars.push_back(new Variable((*m_args)[i]->varName(), new Value(*(*args)[i]->evaluate())));
+		}
 	}
 	
 	int oldlineno = yylineno;

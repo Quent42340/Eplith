@@ -11,8 +11,6 @@ Op = {
 			return self.a - self.b;
 		};
 		
-		#print(a + " " + b + "\n");
-		
 		return {a = a,
 				b = b,
 				add = add,

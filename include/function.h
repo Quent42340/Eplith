@@ -38,6 +38,7 @@ class Function {
 		Value *ret() { return m_ret; }
 		
 		void colon(bool colon) { m_colon = colon; }
+		void mainElement(Value *mainElement) { m_mainElement = mainElement; }
 		
 		void doFunc(std::vector<Expression*> *args);
 		
@@ -54,6 +55,7 @@ class Function {
 		std::vector<Expression*> *m_stmts;
 		Value *m_ret;
 		bool m_colon;
+		Value *m_mainElement;
 };
 
 #endif // FUNCTION_H
