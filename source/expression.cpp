@@ -127,9 +127,11 @@ Value* OpExpression::evaluate() {
 		int i = atoi(val->value<string>().c_str());
 		if(i) val = new Value(i);
 	}
-	if(val2->type() == typeStr) {
-		int i = atoi(val2->value<string>().c_str());
-		if(i) val2 = new Value(i);
+	if(val2) {
+		if(val2->type() == typeStr) {
+			int i = atoi(val2->value<string>().c_str());
+			if(i) val2 = new Value(i);
+		}
 	}
 	//cdbg("val type: " << val->type() << " | val2 type: " << val2->type());
 	if(m_oper == '+') {
@@ -148,12 +150,15 @@ Value* OpExpression::evaluate() {
 			return new Value(getNumVal(val) + getNumVal(val2), m_mode);
 		}
 	} else {
-		if(!isNum(val) || !isNum(val2)) yyerror("Operation not available with these type");
+		if(!isNum(val)) yyerror("Operation not available with these type");
 		switch(m_oper) {
 			case NEG:	 return new Value(-getNumVal(val));
 			case POS:	 return new Value(+getNumVal(val));
 			case NOT:	 return new Value(!valNumToBool(val));
 			case BNOT:	 return new Value(~(int)getNumVal(val));
+		}
+		if(!isNum(val) || !isNum(val2)) yyerror("Operation not available with these type");
+		switch(m_oper) {
 			case '-':	 return new Value(getNumVal(val) - getNumVal(val2));
 			case '*':	 return new Value(getNumVal(val) * getNumVal(val2));
 			case '/':	 return new Value(getNumVal(val) / getNumVal(val2));

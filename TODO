@@ -1,9 +1,9 @@
+- Rewrite Makefile
+- C++ Eplith implementation
 - Delete variables
 - Operations on tables
 - Operator ','
 - Error for 'break' and 'continue' out of a loop
-- Rewrite Makefile
-- C++ Eplith implementation
 - Switch
 - Labels and Goto
 ? Functions
