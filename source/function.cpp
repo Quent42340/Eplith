@@ -23,25 +23,18 @@
 
 using namespace std;
 
-vector<Function*> Function::funcs;
-
-Function::Function(string name, vector<VarExpression*> *args, vector<Expression*> *stmts, boost::any returnValue) {
+Function::Function(vector<VarExpression*> *args, vector<Expression*> *stmts, boost::any returnValue) {
 	m_address = getPtrAddr((void*)this);
-	m_name = name;
 	m_args = args;
 	m_stmts = new vector<Expression*>;
+	
 	for(unsigned int i = 0 ; i < stmts->size() ; i++) {
 		m_stmts->push_back((*stmts)[i]);
 	}
+	
 	m_ret = new Value();
 	m_colon = false;
 	m_mainElement = 0;
-	
-#ifdef FUNC_DEBUG
-	edbg("Func name: " << m_name << " | Address: " << m_address << " | Scope: " << Expression::scopes);
-#endif
-	
-	funcs.push_back(this);
 }
 
 Function::~Function() {
@@ -50,31 +43,10 @@ Function::~Function() {
 	delete m_ret;
 }
 
-Function* Function::findByName(std::string name) {
-	for(int i = funcs.size() - 1 ; i >= 0 ; i--) {
-		if(funcs[i]->name() == name) {
-			return funcs[i];
-		}
-	}
-	return 0;
-}
-
-bool Function::exists(std::string name) {
-	for(int i = 0 ; i < funcs.size() ; i++) {
-		if(funcs[i]->name() == name) {
-			return true;
-		}
-	}
-	return false;
-}
-
 void Function::doFunc(vector<Expression*> *args) {
 #ifdef CALL_DEBUG
 	edbg("Function called: '" << m_name << "' | Scope: " << Expression::scopes);
 #endif
-	
-	// With m_colon, set variable self to the current object we're working on
-	// The bug here is that there is not the first argument given, I must find it by another way
 	
 	if(m_colon) {
 		if(m_args->size() != args->size() + 1) {

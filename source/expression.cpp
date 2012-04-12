@@ -200,9 +200,6 @@ Value* VarExpression::evaluate() {
 void VarExpression::doExp() {
 	if(Variable::exists(m_varName)) {
 		m_var = Variable::findByName(m_varName);
-	}
-	else if(Function::exists(m_varName)) {
-		m_var = new Variable("<<unamed>>", new Value(Function::findByName(m_varName)), true);
 	} else {
 		yyerror(string("Variable or function '") + m_varName + "' not found.");
 	}
@@ -399,13 +396,18 @@ FuncExpression::~FuncExpression() {
 }
 
 void FuncExpression::doExp() {
-	if(Function::exists(m_funcName) && m_funcName != "<<unamed>>") {
+	if(Variable::exists(m_funcName) && m_funcName != "<<unamed>>") {
 #ifdef WARNINGS
 		yywarn("The function already exists, this declaration will overwrite it");
 #endif
-		m_func = new Function(m_funcName, m_args, m_stmts);
+		m_func = new Function(m_args, m_stmts);
 	} else {
-		m_func = new Function(m_funcName, m_args, m_stmts);
+		m_func = new Function(m_args, m_stmts);
+		if(m_funcName != "<<unamed>>") {
+			scopes--;
+			Variable *func = new Variable(m_funcName, new Value(m_func));
+			scopes++;
+		}
 	}
 }
 
@@ -431,27 +433,28 @@ CallExpression::~CallExpression() {
 }
 
 void CallExpression::initFunc() {
-	Function *func = Function::findByName(m_funcName);
-	if(func == 0) func = Variable::findByName(m_funcName)->value()->value<Function*>();
-	if(m_element == 0) m_funcs.push_back(new Function(*func));
-	else m_funcs.push_back(new Function(*m_element->evaluate()->value<Function*>()));
-	if(m_funcs.back() == 0) yyerror("Function undefined");
+	if(m_element == 0) {
+		Function *func = Variable::findByName(m_funcName)->value()->value<Function*>();
+		m_funcs.push_back(new Function(*func));
+	} else {
+		m_funcs.push_back(new Function(*m_element->evaluate()->value<Function*>()));
+	}
+	if(m_funcs.back() == 0) yyerror(string("Function '") + m_funcName + "' undefined");
 	m_init = true;
 }
 
 Value* CallExpression::evaluate() {
-	if(m_init) initFunc();
 	doExp();
-	Value* ret = new Value(*m_funcs.back()->ret());
-	endScope();
 	m_funcs.pop_back();
-	return ret;
+	return m_ret;
 }
 
 void CallExpression::doExp() {
-	if(!m_init) initFunc();
+	initFunc();
 	scopes++;
 	m_funcs.back()->doFunc(m_args);
+	m_ret = new Value(*m_funcs.back()->ret());
+	endScope();
 }
 
 ReturnExpression::ReturnExpression(Expression *exp) {
@@ -485,6 +488,7 @@ DeleteExpression::~DeleteExpression() {
 
 void DeleteExpression::doExp() {
 	if(!Variable::erase(m_var->name())) yyerror("Error when deleting variable");
+	delete m_var;
 }
 
 SignalExpression::SignalExpression(Signal s) {

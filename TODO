@@ -1,3 +1,7 @@
+- Functions are variables: OK.
+- Constants
+- Reduce interpreter size
+- Operator ':' in function declaration
 - Operator ','
 - Error for 'break' and 'continue' out of a loop
 - Switch

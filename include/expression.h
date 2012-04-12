@@ -255,6 +255,7 @@ class CallExpression : public Expression {
 		std::vector<Expression*> *m_args;
 		ElementExpression *m_element;
 		bool m_init;
+		Value *m_ret;
 };
 
 class ReturnExpression : public Expression {

@@ -29,10 +29,9 @@ class VarExpression;
 
 class Function {
 	public:
-		Function(std::string name, std::vector<VarExpression*> *args, std::vector<Expression*> *stmts, boost::any returnValue = -1);
+		Function(std::vector<VarExpression*> *args, std::vector<Expression*> *stmts, boost::any returnValue = -1);
 		~Function();
 		
-		std::string name() const { return m_name; }
 		std::string address() const { return m_address; }
 		
 		Value *ret() { return m_ret; }
@@ -42,13 +41,7 @@ class Function {
 		
 		void doFunc(std::vector<Expression*> *args);
 		
-		static Function* findByName(std::string name);
-		static bool exists(std::string name);
-		
-		static std::vector<Function*> funcs;
-		
 	private:
-		std::string m_name;
 		std::string m_address;
 		std::vector<VarExpression*> *m_args;
 		std::vector<Variable*> m_vars;
