@@ -1,12 +1,13 @@
+- Error for 'break' and 'continue' out of a loop: OK.
 - Operator ':' in function declaration
 - Operator ','
-- Error for 'break' and 'continue' out of a loop
 - Switch
 - Labels and Goto
 - Reduce interpreter size ( maybe making an EPlib.so )
+- Vim syntax coloration file
 - C++ Eplith implementation
 - Base library for Eplith ( I/O, Math, etc.. )
-? Constants
+- Constants and 'nil' keyword
 ? Operations on tables
 ? Function overloading
 ? Structs

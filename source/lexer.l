@@ -61,14 +61,13 @@ int popFile();
 <str>[^\\\n\"]+				{ char* yPtr = yytext; while(*yPtr) { *stringBufPtr++ = *yPtr++; } }
 
 	/* Keywords */
-^"#debug"[ \t\n]*$			return DEBUG;
-"while"						Expression::scopes++; return WHILE;
+"while"						beginScope(stLOOP); return WHILE;
 "do"						return DO;
 "if"						Expression::scopes++; return IF;
 "else"						return ELSE;
 "print"						return PRINT;
-"function"					Expression::scopes++; return FUNCTION;
-"for"						Expression::scopes++; return FOR;
+"function"					beginScope(stFUNC); return FUNCTION;
+"for"						beginScope(stLOOP); return FOR;
 "break"						return BREAK;
 "continue"					return CONTINUE;
 "return"					return RETURN;
@@ -123,9 +122,9 @@ int popFile();
 "--"						return DECR;
 
 	/* Comments */
-#[^!].*\n					;
-"#!"						BEGIN COMMENT;
-<COMMENT>"!#"				BEGIN INITIAL;
+"//"[^!].*\n				;
+"/*"						BEGIN COMMENT;
+<COMMENT>"*/"				BEGIN INITIAL;
 <COMMENT>.|\n				;
 <COMMENT><<EOF>>			yyerror("Unterminated comment");
 
@@ -134,7 +133,6 @@ int popFile();
 	
 	/* Include */
 ^"-"[ \t]*include[ \t]*\" { BEGIN IFILE; }
-
 <IFILE>[^ \t\n\"]+		  {
 							{ int c;
 							  while((c = yyinput()) && c != '\n') ;

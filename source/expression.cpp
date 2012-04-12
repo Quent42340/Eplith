@@ -25,6 +25,7 @@
 using namespace std;
 
 int Expression::scopes = 0;
+ScopeTypeList *Expression::scopeType = 0;
 Signal Expression::signal = sNONE;
 
 Expression::Expression() {
@@ -346,7 +347,7 @@ IfExpression::IfExpression(Expression *ifExp, vector<Expression*> *statements, v
 	m_statements = statements;
 	m_elseStatements = elseStatements;
 	doThings(true);
-	endScope();
+	endOtherScope();
 }
 
 IfExpression::~IfExpression() {
@@ -457,7 +458,7 @@ Value* CallExpression::evaluate() {
 
 void CallExpression::doExp() {
 	initFunc();
-	scopes++;
+	beginScope(stFUNC);
 	
 #ifdef CALL_DEBUG
 	edbg("Function called: '" << m_funcName << "' | Scope: " << Expression::scopes);
@@ -469,6 +470,8 @@ void CallExpression::doExp() {
 }
 
 ReturnExpression::ReturnExpression(Expression *exp) {
+	if(!Expression::scopeType) yyerror("Signal statement out of a scope");
+	if(Expression::scopeType->type != stFUNC) yyerror("Return statement not within function");
 	m_type = "ReturnExpression";
 	m_exp = exp;
 }
@@ -503,6 +506,9 @@ void DeleteExpression::doExp() {
 }
 
 SignalExpression::SignalExpression(Signal s) {
+	if(!Expression::scopeType) yyerror("Signal statement out of a scope");
+	if(s == sBREAK && (Expression::scopeType->type != stLOOP && Expression::scopeType->type != stSWITCH)) yyerror("Break statement not within a loop or a switch");
+	if(s == sCONTINUE && (Expression::scopeType->type != stLOOP && Expression::scopeType->type != stSWITCH)) yyerror("Continue statement not within a loop or a switch");
 	m_type = "SignalExpression";
 	m_signal = s;
 	doThings();

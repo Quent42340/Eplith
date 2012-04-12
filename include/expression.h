@@ -32,7 +32,33 @@ typedef enum {
 	sCONTINUE
 } Signal;
 
-#define endScope() { if(Variable::vars.size() == scopes + 1) Variable::vars.erase(Variable::vars.begin() + scopes); scopes--; }
+typedef enum {
+	stLOOP,
+	stSWITCH,
+	stFUNC
+} ScopeType;
+
+typedef struct ScopeTypeList ScopeTypeList;
+
+struct ScopeTypeList {
+	ScopeTypeList *prev;
+	ScopeType type;
+};
+
+#define beginScope(st) { Expression::scopes++; \
+						 ScopeTypeList *stList = new ScopeTypeList; \
+						 stList->prev = Expression::scopeType; \
+						 stList->type = st; \
+						 Expression::scopeType = stList; }
+#define endScope() { if(Variable::vars.size() == scopes + 1) \
+						Variable::vars.erase(Variable::vars.begin() + scopes); \
+					 scopes--; \
+					 ScopeTypeList *stList = Expression::scopeType; \
+					 Expression::scopeType = stList->prev; \
+					 delete stList; }
+#define endOtherScope() { if(Variable::vars.size() == scopes + 1) \
+						  Variable::vars.erase(Variable::vars.begin() + scopes); \
+						  scopes--; }
 
 class Expression {
 	public:	
@@ -46,6 +72,7 @@ class Expression {
 		void doThings(bool inScope) { if(scopes - 1 == 0) doExp(); }
 		
 		static int scopes;
+		static ScopeTypeList *scopeType;
 		static Signal signal;
 		
 		bool hexMode() const { return m_mode == modeHex; }
