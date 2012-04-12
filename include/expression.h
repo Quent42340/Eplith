@@ -185,7 +185,9 @@ class AssignExpression : public Expression {
 		Value* evaluate();
 		void doExp();
 		
-		virtual Variable* getVar() { doExp(); return m_var; }
+		Variable* getVar() { doExp(); return m_var; }
+		
+		void global(bool global) { m_global = global; }
 		
 	private:
 		std::string m_varName;
@@ -193,6 +195,7 @@ class AssignExpression : public Expression {
 		Expression *m_valExp;
 		int m_op;
 		ElementExpression *m_element;
+		bool m_global;
 };
 
 class CrExpression : public Expression {

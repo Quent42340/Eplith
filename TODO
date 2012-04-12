@@ -1,13 +1,12 @@
-- Functions are variables: OK.
-- Constants
-- Reduce interpreter size
 - Operator ':' in function declaration
 - Operator ','
 - Error for 'break' and 'continue' out of a loop
 - Switch
 - Labels and Goto
+- Reduce interpreter size ( maybe making an EPlib.so )
 - C++ Eplith implementation
-- EPlib
+- Base library for Eplith ( I/O, Math, etc.. )
+? Constants
 ? Operations on tables
 ? Function overloading
 ? Structs

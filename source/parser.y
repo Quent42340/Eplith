@@ -100,6 +100,8 @@ int main(int argc, char* argv[]) {
 %token OCT BIN
 %token SCI
 
+%token GLOBAL
+
 %token ADD SUB
 %token MUL DIV
 %token EXP MOD
@@ -328,7 +330,13 @@ integer:
 
 assign:
 	NAME '=' assignExpVal { $$ = new AssignExpression(string($1), $3); }
+	| GLOBAL NAME '=' assignExpVal { AssignExpression *exp = new AssignExpression(string($2), $4);
+									 exp->global(true);
+									 $$ = exp; }
 	| NAME ASSIGN_OP assignExpVal { $$ = new AssignExpression(string($1), $3, $2); }
+	| GLOBAL NAME ASSIGN_OP assignExpVal { AssignExpression *exp = new AssignExpression(string($2), $4, $3);
+										   exp->global(true);
+										   $$ = exp; }
 	| element '=' assignExpVal { $$ = new AssignExpression($1, $3); }
 	;
 

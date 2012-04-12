@@ -44,10 +44,6 @@ Function::~Function() {
 }
 
 void Function::doFunc(vector<Expression*> *args) {
-#ifdef CALL_DEBUG
-	edbg("Function called: '" << m_name << "' | Scope: " << Expression::scopes);
-#endif
-	
 	if(m_colon) {
 		if(m_args->size() != args->size() + 1) {
 			yyerror("Unexpected number of arguments given");

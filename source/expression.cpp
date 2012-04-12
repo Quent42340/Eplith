@@ -211,6 +211,7 @@ AssignExpression::AssignExpression(string varName, Expression *valExp, int op) {
 	m_valExp = valExp;
 	m_op = op;
 	m_element = 0;
+	m_global = false;
 	doThings();
 }
 
@@ -219,6 +220,7 @@ AssignExpression::AssignExpression(ElementExpression *element, Expression *valEx
 	m_valExp = valExp;
 	m_op = op;
 	m_element = element;
+	m_global = false;
 	doThings();
 }
 
@@ -235,6 +237,7 @@ Value* AssignExpression::evaluate() {
 void AssignExpression::doExp() {
 	bool array = (m_element == 0) ? false : true;
 	if(Variable::exists(m_varName) || array) {
+		if(m_global) yyerror("Can't use global keyword on variables already defined");
 		if(!array) m_var = Variable::findByName(m_varName);
 		else m_var = Variable::findByName(m_element->arrayName());
 		if(m_op == -1) {
@@ -289,7 +292,10 @@ void AssignExpression::doExp() {
 		}
 	} else {
 		if(m_op != -1) yyerror("Variable undeclared");
+		int oldScopes = scopes;
+		if(m_global) scopes = 0;
 		m_var = new Variable(m_varName, m_valExp->evaluate());
+		scopes = oldScopes;
 	}
 }
 
@@ -452,6 +458,11 @@ Value* CallExpression::evaluate() {
 void CallExpression::doExp() {
 	initFunc();
 	scopes++;
+	
+#ifdef CALL_DEBUG
+	edbg("Function called: '" << m_funcName << "' | Scope: " << Expression::scopes);
+#endif
+	
 	m_funcs.back()->doFunc(m_args);
 	m_ret = new Value(*m_funcs.back()->ret());
 	endScope();
