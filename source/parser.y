@@ -173,6 +173,7 @@ stmt:
 	| PRINT '(' exp ')' ';' { $$ = new PrintExpression($3); }
 	| WHILE '(' exp ')' stmts { $$ = new WhileExpression($3, $5); }
 	| DO stmts WHILE '(' exp ')' ';' { $$ = new WhileExpression($5, $2); }
+	| DO stmts ';' { $$ = new DoExpression($2); }
 	| IF '(' exp ')' stmts %prec IFX { $$ = new IfExpression($3, $5); }
 	| IF '(' exp ')' stmts ELSE stmts { $$ = new IfExpression($3, $5, $7); }
 	| FOR '(' assign TO exp ';' exp ')' stmts { $$ = new ForExpression($3, $9, $5, $7);  }

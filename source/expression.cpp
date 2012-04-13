@@ -384,6 +384,22 @@ void IfExpression::doExp() {
 	yylineno = oldlineno;
 }
 
+DoExpression::DoExpression(std::vector<Expression*> *statements) {
+	m_type = "DoExpression";
+	m_statements = statements;
+}
+
+DoExpression::~DoExpression() {
+	delete m_statements;
+}
+
+void DoExpression::doExp() {
+	for(int i = 0 ; i < m_statements->size() ; i++) {
+		yylineno = (*m_statements)[i]->line();
+		(*m_statements)[i]->doExp();
+	}
+}
+
 FuncExpression::FuncExpression(string funcName, vector<VarExpression*> *args, vector<Expression*> *stmts) {
 	m_type = "FuncExpression";
 	m_funcName = funcName;

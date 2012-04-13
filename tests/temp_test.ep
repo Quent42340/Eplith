@@ -1,7 +1,9 @@
-a, b = 5, 7;
-print(a + " - " + b + "\n");
-a += "5";
-print(a + "\n");
-a = null;
-print(a + "\n");
+do {
+	a, b = 5, 7;
+	print(a + " - " + b + "\n");
+	a += "5";
+	print(a + "\n");
+	a = null;
+	print(a + "\n");
+};
 

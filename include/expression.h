@@ -264,6 +264,18 @@ class IfExpression : public Expression {
 		std::vector<Expression*> *m_elseStatements;
 };
 
+class DoExpression : public Expression {
+	public:
+		DoExpression(std::vector<Expression*> *statements);
+		~DoExpression();
+		
+		Value* evaluate() { return new Value(); }
+		void doExp();
+		
+	private:
+		std::vector<Expression*> *m_statements;
+};
+
 class FuncExpression : public Expression {
 	public:
 		FuncExpression(std::string funcName, std::vector<VarExpression*> *args, std::vector<Expression*> *stmts);
