@@ -96,6 +96,15 @@ class Expression {
 		std::string m_type;
 };
 
+class NullExpression : public Expression {
+	public:
+		NullExpression() {}
+		~NullExpression() {}
+		
+		Value *evaluate() { return Variable::vars[0][0]->value(); }
+		void doExp() {}
+};
+
 class IntExpression : public Expression {
 	public:
 		IntExpression(int value);
@@ -223,6 +232,7 @@ class AssignExpression : public Expression {
 		int m_op;
 		ElementExpression *m_element;
 		bool m_global;
+		Value *m_val;
 };
 
 class CrExpression : public Expression {

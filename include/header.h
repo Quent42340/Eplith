@@ -55,6 +55,23 @@ static inline std::string itos(int n) {
 	return oss.str();
 }
 
+static int stoi(const char *c) {
+    int value = 0;
+    while(isdigit(*c)) {
+        value *= 10;
+        value += int(*c-'0');
+        c++;
+    }
+	while(*c != '\0') {
+		if(!isdigit(*c)) {
+			value = 0;
+			break;
+		}
+		c++;
+	}
+    return value;
+}
+
 extern int yylineno;
 extern char* yytext;
 

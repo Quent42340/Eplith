@@ -1,6 +1,7 @@
-function f(x) return 2*x + 2;
-g = function(x) return 2*x^2 + 4*x + 5; ;
-
-a = f(5);
-b = g(5);
+a, b = 5, 7;
+print(a + " - " + b + "\n");
+a += "5";
+print(a + "\n");
+a = null;
+print(a + "\n");
 

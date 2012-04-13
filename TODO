@@ -1,6 +1,8 @@
-- Error for 'break' and 'continue' out of a loop: OK.
+- Operations bug: OK.
+- 'null' keyword: OK.
+- Do block
+- Operator ',' to finish
 - Operator ':' in function declaration
-- Operator ','
 - Switch
 - Labels and Goto
 - Reduce interpreter size ( maybe making an EPlib.so )

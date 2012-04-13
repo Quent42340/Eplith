@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
 	Expression *exp;
 	std::vector<Expression*> *list;
 	std::vector<VarExpression*> *varList;
-	std::vector<std::string> *elementIndex;
+	std::vector<std::string> *strVec;
 	int op;
 	ElementExpression *element;
 	std::multimap<std::string, Expression*> *elemList;
@@ -144,9 +144,9 @@ int main(int argc, char* argv[]) {
 %start program
 
 %type <exp> call exp var assign assignExpVal stmt cast integer func ufunc
-%type <list> exp_list stmt_list stmts
+%type <list> exp_list stmt_list stmts assignExp_list
 %type <varList> var_list
-%type <elementIndex> element_index
+%type <strVec> element_index name_list
 %type <element> element
 %type <str> member index
 %type <elemList> elem_list
@@ -212,9 +212,8 @@ var_list:
 	| var { vector<VarExpression*> *v = new vector<VarExpression*>;
 			v->push_back((VarExpression*)$1);
 			$$ = v; }
-	| var_list ',' var { vector<VarExpression*> *v = $1;
-						 v->push_back((VarExpression*)$3);
-						 $$ = v; }
+	| var_list ',' var { $1->push_back((VarExpression*)$3);
+						 $$ = $1; }
 	;
 
 exp_list:
@@ -223,9 +222,8 @@ exp_list:
 	| exp { vector<Expression*> *v = new vector<Expression*>;
 			v->push_back($1);
 			$$ = v; }
-	| exp_list ',' exp { vector<Expression*> *v = $1;
-						 v->push_back($3);
-						 $$ = v; }
+	| exp_list ',' exp { $1->push_back($3);
+						 $$ = $1; }
 	;
 
 elem_list:
@@ -251,6 +249,7 @@ exp:
 	| STRING { $$ = new StrExpression($1); }
 	| TRUE { $$ = new BoolExpression(true); }
 	| FALSE { $$ = new BoolExpression(false); }
+	| vNULL { $$ = new NullExpression(); }
 	| var { $$ = $1; }
 	| INCR var { $$ = new CrExpression($2, INCR); }
 	| DECR var { $$ = new CrExpression($2, DECR); }
@@ -329,7 +328,7 @@ integer:
 	;
 
 assign:
-	NAME '=' assignExpVal { $$ = new AssignExpression(string($1), $3); }
+	  NAME '=' assignExpVal { $$ = new AssignExpression(string($1), $3); }
 	| GLOBAL NAME '=' assignExpVal { AssignExpression *exp = new AssignExpression(string($2), $4);
 									 exp->global(true);
 									 $$ = exp; }
@@ -338,15 +337,39 @@ assign:
 										   exp->global(true);
 										   $$ = exp; }
 	| element '=' assignExpVal { $$ = new AssignExpression($1, $3); }
+	| name_list '=' assignExp_list { while($1->size() > $3->size()) $3->push_back(new NullExpression());
+									 while($1->size() < $3->size()) $3->pop_back();
+									 if($1->size() != $3->size()) yyerror("Unexpected error");
+									 for(int i = 0 ; i < $1->size() ; i++) {
+										 $$ = new AssignExpression((*$1)[i], (*$3)[i]);
+								  	 }
+								    }
+	;
+
+name_list:
+	  NAME ',' NAME { vector<string> *v = new vector<string>;
+					  v->push_back(string($1));
+					  v->push_back(string($3));
+					  $$ = v; }
+	| name_list ',' NAME { $1->push_back($3);
+						   $$ = $1; }
+	;
+
+assignExp_list:
+	  exp { vector<Expression*> *v = new vector<Expression*>;
+			v->push_back($1);
+			$$ = v; }
+	| assignExp_list ',' exp { $1->push_back($3);
+							   $$ = $1; }
 	;
 
 assignExpVal:
-	exp { $$ = $1; }
+	  exp { $$ = $1; }
 	| assign { $$ = $1; }
 	;
 
 var:
-	  NAME { $$ = new VarExpression(string($1)); }
+	NAME { $$ = new VarExpression(string($1)); }
 	;
 %%
 

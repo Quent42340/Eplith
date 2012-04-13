@@ -72,6 +72,7 @@ int popFile();
 "continue"					return CONTINUE;
 "return"					return RETURN;
 "delete"					return DELETE;
+"null"						return vNULL;
 "global"					return GLOBAL;
 ("->"|"to")					return TO;
 "hex"						return HEX;

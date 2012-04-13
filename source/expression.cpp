@@ -125,12 +125,12 @@ Value* OpExpression::evaluate() {
 	Value *val = m_exp1->evaluate();
 	Value *val2 = (m_exp2) ? m_exp2->evaluate() : 0;
 	if(val->type() == typeStr) {
-		int i = atoi(val->value<string>().c_str());
+		int i = stoi(val->value<string>().c_str());
 		if(i) val = new Value(i);
 	}
 	if(val2) {
 		if(val2->type() == typeStr) {
-			int i = atoi(val2->value<string>().c_str());
+			int i = stoi(val2->value<string>().c_str());
 			if(i) val2 = new Value(i);
 		}
 	}
@@ -141,14 +141,13 @@ Value* OpExpression::evaluate() {
 			string tmp, tmp2;
 			stringstream out, out2;
 			val->print(out, m_mode);
-			out << ends;
 			tmp = out.str();
 			val2->print(out2, m_mode);
 			out2 << ends;
 			tmp2 = out2.str();
 			return new Value(tmp + tmp2);
 		} else {
-			return new Value(getNumVal(val) + getNumVal(val2), m_mode);
+			return new Value(getNumVal(val) + getNumVal(val2));
 		}
 	} else {
 		if(!isNum(val)) yyerror("Operation not available with these type");
@@ -248,7 +247,7 @@ void AssignExpression::doExp() {
 			}
 		} else {
 			Value *val = m_var->value();
-			Value *val2 = m_valExp->evaluate();
+			Value *val2 = (m_valExp) ? m_valExp->evaluate() : m_val;
 			if(val) {
 				if(val->type() == typeStr) {
 					int i = atoi(val->value<string>().c_str());
@@ -267,7 +266,6 @@ void AssignExpression::doExp() {
 					string tmp, tmp2;
 					stringstream out, out2;
 					val->print(out, m_mode);
-					out << ends;
 					tmp = out.str();
 					val2->print(out2, m_mode);
 					out2 << ends;
@@ -275,7 +273,6 @@ void AssignExpression::doExp() {
 					m_var->value()->value<string>(tmp + tmp2);
 				} else {
 					setNumVal(m_var->value(), getNumVal(val) + getNumVal(val2));
-					m_var->value()->hexMode(true);
 				}
 			} else { 
 				switch(m_op) {
