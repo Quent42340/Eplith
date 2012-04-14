@@ -179,6 +179,7 @@ stmt:
 	| IF '(' exp ')' stmts ELSE stmts { $$ = new IfExpression($3, $5, $7); }
 	| FOR '(' assign TO exp ';' exp ')' stmts { $$ = new ForExpression($3, $9, $5, $7);  }
 	| FOR '(' assign TO exp ')' stmts { $$ = new ForExpression($3, $7, $5);  }
+	| func { $$ = $1; }
 	;
 
 func:
@@ -283,7 +284,6 @@ exp:
 	| call { $$ = $1; }
 	| '{' elem_list '}' { $$ = new ArrayExpression($2); }
 	| elemName { $$ = $1; $$->doThings(); }
-	| func { $$ = $1; }
 	| ufunc { $$ = $1; }
 	;
 

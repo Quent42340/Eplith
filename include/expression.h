@@ -271,7 +271,7 @@ class IfExpression : public Expression {
 		IfExpression(Expression *ifExp, std::vector<Expression*> *statements, std::vector<Expression*> *elseStatements = 0);
 		~IfExpression();
 		
-		Value* evaluate() { return new Value(); }
+		Value* evaluate();
 		void doExp();
 		
 	private:

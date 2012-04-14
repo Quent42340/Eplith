@@ -1,5 +1,5 @@
 *~
 *.swp
-build/*.o
+source/*.o
 build
 Eplith*

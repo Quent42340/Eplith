@@ -400,19 +400,32 @@ IfExpression::~IfExpression() {
 	delete m_elseStatements;
 }
 
+unsigned int n = 0, m = 0;
+Value* IfExpression::evaluate() {
+	if(m_ifExp->evaluate()->intToBool()->value<bool>()) {
+		return (*m_statements)[n]->evaluate();
+	} else {
+		if(m_elseStatements != 0) {
+			return (*m_elseStatements)[m]->evaluate();
+		} else {
+			return new Value();
+		}
+	}
+}
+
 void IfExpression::doExp() {
 	int oldlineno = yylineno;
 	if(m_ifExp->evaluate()->intToBool()->value<bool>()) {
-		for(int i = 0 ; i < m_statements->size() ; i++) {
-			yylineno = (*m_statements)[i]->line();
-			(*m_statements)[i]->doExp();
-		}
+		for(n = 0 ; n < m_statements->size() ; n++) {
+			yylineno = (*m_statements)[n]->line();
+			(*m_statements)[n]->doExp();
+		} n--;
 	} else {
 		if(m_elseStatements != 0) {
-			for(int j = 0 ; j < m_elseStatements->size() ; j++) {
-				yylineno = (*m_elseStatements)[j]->line();
-				(*m_elseStatements)[j]->doExp();
-			}
+			for(m = 0 ; m < m_elseStatements->size() ; m++) {
+				yylineno = (*m_elseStatements)[m]->line();
+				(*m_elseStatements)[m]->doExp();
+			} m--;
 		}
 	}
 	yylineno = oldlineno;
