@@ -34,6 +34,7 @@
 #include <cstdarg>
 
 #define EPLITH_DEBUG
+#define YYERROR_VERBOSE
 
 #define WARNINGS
 
