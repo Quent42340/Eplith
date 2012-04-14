@@ -309,10 +309,12 @@ member:
 	| ':' NAME { $$ = new string(string("*") + $2); }
 
 index:
-	INTEGER { $$ = new string(itos($1)); }
+	/*INTEGER { $$ = new string(itos($1)); }
 	| STRING { $$ = new string($1); }
 	| var { VarExpression *v = (VarExpression*)$1;
 			if(isIndex(v->evaluate())) $$ = new string(getIndexVal(v->evaluate())); else yyerror("Requires an integer or string expression here."); }
+	*/
+	exp { string *s = valToStr($1->evaluate()); if(s) $$ = s; else yyerror("Indexes are only integers and strings"); }
 	;
 
 cast:

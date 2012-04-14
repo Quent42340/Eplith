@@ -49,6 +49,7 @@ typedef enum {
 #define isNum(val) ((val->type() == typeInt || val->type() == typeFloat) ? true : false)
 #define isIndex(val) ((val->type() == typeInt || val->type() == typeStr) ? true : false)
 #define getIndexVal(val) ((val->type() == typeInt) ? itos(val->value<int>()) : val->value<std::string>())
+#define valToStr(val) ((isIndex(val) ? ((val->type() == typeInt) ? new std::string(itos(val->value<int>())) : new string(val->value<std::string>())) : 0))
 
 class Value {
 	public:

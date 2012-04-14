@@ -1,8 +1,9 @@
-- Finish Operator ','
-- Make all operations possible with vars possible with elements too
+- Elements as indexes: OK.
+- Incr/Decr elements: Not OK.
 - Switch
 - Operator ':' in function declaration
 - Labels and Goto
+- oct and bin casts (TODOs in lexer.l)
 - Reduce interpreter size ( maybe making an EPlib.so )
 - Vim syntax coloration file
 - C++ Eplith implementation
