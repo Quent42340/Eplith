@@ -127,6 +127,7 @@ int main(int argc, char* argv[]) {
 %nonassoc ELSE
 
 	/* See Cp19 for others */
+%left ','	
 %left '=' BAND_EQ BOR_EQ XOR_EQ
 %left OR
 %left AND
@@ -143,10 +144,10 @@ int main(int argc, char* argv[]) {
 
 %start program
 
-%type <exp> call exp var assign assignExpVal stmt cast integer func ufunc
-%type <list> exp_list stmt_list stmts assignExp_list
+%type <exp> call exp prevar var assign assignExpVal stmt cast integer func ufunc elemName
+%type <list> exp_list stmt_list stmts assignExp_list elemName_list
 %type <varList> var_list
-%type <strVec> element_index name_list
+%type <strVec> element_index
 %type <element> element
 %type <str> member index
 %type <elemList> elem_list
@@ -173,12 +174,11 @@ stmt:
 	| PRINT '(' exp ')' ';' { $$ = new PrintExpression($3); }
 	| WHILE '(' exp ')' stmts { $$ = new WhileExpression($3, $5); }
 	| DO stmts WHILE '(' exp ')' ';' { $$ = new WhileExpression($5, $2); }
-	| DO stmts ';' { $$ = new DoExpression($2); }
+	| DO stmts ';' { beginScope(stLOOP); $$ = new DoExpression($2); }
 	| IF '(' exp ')' stmts %prec IFX { $$ = new IfExpression($3, $5); }
 	| IF '(' exp ')' stmts ELSE stmts { $$ = new IfExpression($3, $5, $7); }
 	| FOR '(' assign TO exp ';' exp ')' stmts { $$ = new ForExpression($3, $9, $5, $7);  }
 	| FOR '(' assign TO exp ')' stmts { $$ = new ForExpression($3, $7, $5);  }
-	| func { $$ = $1; }
 	;
 
 func:
@@ -251,7 +251,6 @@ exp:
 	| TRUE { $$ = new BoolExpression(true); }
 	| FALSE { $$ = new BoolExpression(false); }
 	| vNULL { $$ = new NullExpression(); }
-	| var { $$ = $1; }
 	| INCR var { $$ = new CrExpression($2, INCR); }
 	| DECR var { $$ = new CrExpression($2, DECR); }
 	| var INCR { $$ = new CrExpression($1, INCR, true); }
@@ -283,7 +282,8 @@ exp:
 	| '(' exp ')' { $$ = $2; }
 	| call { $$ = $1; }
 	| '{' elem_list '}' { $$ = new ArrayExpression($2); }
-	| element { $$ = $1; }
+	| elemName { $$ = $1; $$->doThings(); }
+	| func { $$ = $1; }
 	| ufunc { $$ = $1; }
 	;
 
@@ -324,8 +324,8 @@ integer:
 	INTEGER { $$ = new IntExpression($1); }
 	| HEX_INT { $$ = new IntExpression($1); }
 	| FLOAT { $$ = new FloatExpression($1); }
-	| var { VarExpression *v = (VarExpression*)$1;
-			if(isNum(v->evaluate())) $$ = v; else yyerror("Requires a numeric expression here."); }
+	| var { if(isNum($1->evaluate())) $$ = $1; else yyerror("Requires a numeric expression here."); }
+	| element { if(isNum($1->evaluate())) $$ = $1; else yyerror("Requires a numeric expression here."); }
 	;
 
 assign:
@@ -338,23 +338,21 @@ assign:
 										   exp->global(true);
 										   $$ = exp; }
 	| element '=' assignExpVal { $$ = new AssignExpression($1, $3); }
-	| name_list '=' assignExp_list { $$ = new AssignExpressionList($1, $3);
-									 /*while($1->size() > $3->size()) $3->push_back(new NullExpression());
-									 while($1->size() < $3->size()) $3->pop_back();
-									 if($1->size() != $3->size()) yyerror("Unexpected error");
-									 for(int i = 0 ; i < $1->size() ; i++) {
-										 $$ = new AssignExpression((*$1)[i], (*$3)[i]);
-								  	 }*/
-								    }
+	| elemName_list '=' assignExp_list { $$ = new AssignExpressionList($1, $3); }
 	;
 
-name_list:
-	  NAME ',' NAME { vector<string> *v = new vector<string>;
-					  v->push_back(string($1));
-					  v->push_back(string($3));
-					  $$ = v; }
-	| name_list ',' NAME { $1->push_back($3);
-						   $$ = $1; }
+elemName_list:
+	  elemName ',' elemName { vector<Expression*> *v = new vector<Expression*>;
+							  v->push_back($1);
+							  v->push_back($3);
+							  $$ = v; }
+	| elemName_list ',' elemName { $1->push_back($3);
+								   $$ = $1; }
+	;
+
+elemName:
+	  element { $$ = $1; }
+	| prevar { $$ = $1; }
 	;
 
 assignExp_list:
@@ -371,7 +369,12 @@ assignExpVal:
 	;
 
 var:
-	NAME { $$ = new VarExpression(string($1)); }
+	prevar { $$ = $1; $$->doThings(); }
 	;
+
+prevar:
+	NAME { $$ = new VarExpression($1); }
+	;
+
 %%
 

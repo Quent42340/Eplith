@@ -239,14 +239,14 @@ class AssignExpression : public Expression {
 
 class AssignExpressionList : public Expression {
 	public:
-		AssignExpressionList(std::vector<std::string> *names, std::vector<Expression*> *exps);
+		AssignExpressionList(std::vector<Expression*> *elemNames, std::vector<Expression*> *exps);
 		~AssignExpressionList();
 		
 		Value *evaluate();
 		void doExp();
 		
 	private:
-		std::vector<std::string> *m_names;
+		std::vector<Expression*> *m_elemNames;
 		std::vector<Expression*> *m_exps;
 };
 

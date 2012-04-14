@@ -185,7 +185,7 @@ Value* OpExpression::evaluate() {
 VarExpression::VarExpression(string varName) {
 	m_type = "VarExpression";
 	m_varName = varName;
-	doThings();
+	//doThings();
 }
 
 VarExpression::~VarExpression() {
@@ -201,7 +201,7 @@ void VarExpression::doExp() {
 	if(Variable::exists(m_varName)) {
 		m_var = Variable::findByName(m_varName);
 	} else {
-		yyerror(string("Variable or function '") + m_varName + "' not found.");
+		yyerror(string("Variable or function '") + m_varName + "' undefined.");
 	}
 }
 
@@ -242,9 +242,7 @@ void AssignExpression::doExp() {
 		else m_var = Variable::findByName(m_element->arrayName());
 		if(m_op == -1) {
 			if(!array) m_var->value((m_valExp) ? m_valExp->evaluate() : m_val);
-			else {
-				m_var->value()->element(m_element, m_valExp->evaluate());
-			}
+			else m_var->value()->element(m_element, (m_valExp) ? m_valExp->evaluate() : m_val);
 		} else {
 			Value *val = m_var->value();
 			Value *val2 = (m_valExp) ? m_valExp->evaluate() : m_val;
@@ -297,15 +295,15 @@ void AssignExpression::doExp() {
 	}
 }
 
-AssignExpressionList::AssignExpressionList(vector<string> *names, vector<Expression*> *exps) {
+AssignExpressionList::AssignExpressionList(vector<Expression*> *elemNames, vector<Expression*> *exps) {
 	m_type = "AssignExpressionList";
-	m_names = names;
+	m_elemNames = elemNames;
 	m_exps = exps;
 	doThings();
 }
 
 AssignExpressionList::~AssignExpressionList() {
-	delete m_names;
+	delete m_elemNames;
 	delete m_exps;
 }
 
@@ -316,11 +314,20 @@ Value *AssignExpressionList::evaluate() {
 void AssignExpressionList::doExp() {
 	vector<Value*> vals;
 	for(int i = 0 ; i < m_exps->size() ; i++) vals.push_back((*m_exps)[i]->evaluate());
-	while(vals.size() < m_names->size()) vals.push_back(new Value());
-	while(vals.size() > m_names->size()) vals.pop_back();
+	while(vals.size() < m_elemNames->size()) vals.push_back(new Value());
+	while(vals.size() > m_elemNames->size()) vals.pop_back();
 	for(int j = 0 ; j < vals.size() ; j++) {
 		scopes++;
-		AssignExpression *a = new AssignExpression((*m_names)[j], 0);
+		AssignExpression *a = 0;
+		if((*m_elemNames)[j]->type() == "VarExpression") {
+			VarExpression *exp = (VarExpression*)(*m_elemNames)[j];
+			a = new AssignExpression(exp->varName(), 0);
+		}
+		else if((*m_elemNames)[j]->type() == "ElementExpression") {
+			a = new AssignExpression((ElementExpression*)(*m_elemNames)[j], 0);
+		} else {
+			yyerror("Unexpected error");
+		}
 		scopes--;
 		a->value(vals[j]);
 		a->doExp();

@@ -1,10 +1,13 @@
-do {
-	a, b = 5, 7;
-	a, b = b, a;
-	print(a + " - " + b + "\n");
-	a += "5";
-	print(a + "\n");
-	a = null;
-	print(a + "\n");
-};
+x, y = 5, 12;
+
+x, y = y, x;
+
+print(x + " / " + y + "\n");
+
+i = 2;
+a = {1,2,3,4,5};
+
+i, a[i] = i + 1, 20;
+
+print(a[2] + "\n");
 

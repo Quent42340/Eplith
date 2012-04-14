@@ -62,7 +62,7 @@ int popFile();
 
 	/* Keywords */
 "while"						return WHILE;
-"do"						beginScope(stLOOP); return DO;
+"do"						return DO;
 "if"						Expression::scopes++; return IF;
 "else"						return ELSE;
 "print"						return PRINT;
