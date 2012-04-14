@@ -218,12 +218,14 @@ class AssignExpression : public Expression {
 		AssignExpression(ElementExpression *element, Expression *valExp, int op = -1);
 		~AssignExpression();
 		
-		Value* evaluate();
+		Value *evaluate();
 		void doExp();
 		
-		Variable* getVar() { doExp(); return m_var; }
+		Variable *getVar() { doExp(); return m_var; }
 		
 		void global(bool global) { m_global = global; }
+		
+		void value(Value *v) { m_val = v; }
 		
 	private:
 		std::string m_varName;
@@ -233,6 +235,19 @@ class AssignExpression : public Expression {
 		ElementExpression *m_element;
 		bool m_global;
 		Value *m_val;
+};
+
+class AssignExpressionList : public Expression {
+	public:
+		AssignExpressionList(std::vector<std::string> *names, std::vector<Expression*> *exps);
+		~AssignExpressionList();
+		
+		Value *evaluate();
+		void doExp();
+		
+	private:
+		std::vector<std::string> *m_names;
+		std::vector<Expression*> *m_exps;
 };
 
 class CrExpression : public Expression {

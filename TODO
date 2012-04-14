@@ -1,7 +1,6 @@
-- Do block: OK.
-- Operator ',' to finish
-- Operator ':' in function declaration
+- Finish Operator ','
 - Switch
+- Operator ':' in function declaration
 - Labels and Goto
 - Reduce interpreter size ( maybe making an EPlib.so )
 - Vim syntax coloration file

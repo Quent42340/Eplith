@@ -338,12 +338,13 @@ assign:
 										   exp->global(true);
 										   $$ = exp; }
 	| element '=' assignExpVal { $$ = new AssignExpression($1, $3); }
-	| name_list '=' assignExp_list { while($1->size() > $3->size()) $3->push_back(new NullExpression());
+	| name_list '=' assignExp_list { $$ = new AssignExpressionList($1, $3);
+									 /*while($1->size() > $3->size()) $3->push_back(new NullExpression());
 									 while($1->size() < $3->size()) $3->pop_back();
 									 if($1->size() != $3->size()) yyerror("Unexpected error");
 									 for(int i = 0 ; i < $1->size() ; i++) {
 										 $$ = new AssignExpression((*$1)[i], (*$3)[i]);
-								  	 }
+								  	 }*/
 								    }
 	;
 

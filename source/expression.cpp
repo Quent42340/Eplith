@@ -241,7 +241,7 @@ void AssignExpression::doExp() {
 		if(!array) m_var = Variable::findByName(m_varName);
 		else m_var = Variable::findByName(m_element->arrayName());
 		if(m_op == -1) {
-			if(!array) m_var->value(m_valExp->evaluate());
+			if(!array) m_var->value((m_valExp) ? m_valExp->evaluate() : m_val);
 			else {
 				m_var->value()->element(m_element, m_valExp->evaluate());
 			}
@@ -292,8 +292,38 @@ void AssignExpression::doExp() {
 		if(m_op != -1) yyerror("Variable undeclared");
 		int oldScopes = scopes;
 		if(m_global) scopes = 0;
-		m_var = new Variable(m_varName, m_valExp->evaluate());
+		m_var = new Variable(m_varName, (m_valExp) ? m_valExp->evaluate() : m_val);
 		scopes = oldScopes;
+	}
+}
+
+AssignExpressionList::AssignExpressionList(vector<string> *names, vector<Expression*> *exps) {
+	m_type = "AssignExpressionList";
+	m_names = names;
+	m_exps = exps;
+	doThings();
+}
+
+AssignExpressionList::~AssignExpressionList() {
+	delete m_names;
+	delete m_exps;
+}
+
+Value *AssignExpressionList::evaluate() {
+	
+}
+
+void AssignExpressionList::doExp() {
+	vector<Value*> vals;
+	for(int i = 0 ; i < m_exps->size() ; i++) vals.push_back((*m_exps)[i]->evaluate());
+	while(vals.size() < m_names->size()) vals.push_back(new Value());
+	while(vals.size() > m_names->size()) vals.pop_back();
+	for(int j = 0 ; j < vals.size() ; j++) {
+		scopes++;
+		AssignExpression *a = new AssignExpression((*m_names)[j], 0);
+		scopes--;
+		a->value(vals[j]);
+		a->doExp();
 	}
 }
 
@@ -387,6 +417,8 @@ void IfExpression::doExp() {
 DoExpression::DoExpression(std::vector<Expression*> *statements) {
 	m_type = "DoExpression";
 	m_statements = statements;
+	doThings(true);
+	endScope();
 }
 
 DoExpression::~DoExpression() {

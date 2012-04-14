@@ -61,8 +61,8 @@ int popFile();
 <str>[^\\\n\"]+				{ char* yPtr = yytext; while(*yPtr) { *stringBufPtr++ = *yPtr++; } }
 
 	/* Keywords */
-"while"						beginScope(stLOOP); return WHILE;
-"do"						return DO;
+"while"						return WHILE;
+"do"						beginScope(stLOOP); return DO;
 "if"						Expression::scopes++; return IF;
 "else"						return ELSE;
 "print"						return PRINT;
