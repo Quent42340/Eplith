@@ -165,7 +165,7 @@ instruction: /* empty */
 stmt:
 	  ';' { ; }
 	| assign ';' { ; }
-	| exp ';' { $$ = $1; if($$->type() == "CallExpression") $1->doThings(); }
+	| exp ';' { $$ = $1; if($$->type() == "CallExpression" || $$->type() == "CrExpression") $1->doThings(); }
 	| BREAK ';' { $$ = new SignalExpression(sBREAK); }
 	| CONTINUE ';' { $$ = new SignalExpression(sCONTINUE); }
 	| RETURN  ';' { $$ = new SignalExpression(sRETURN); }
@@ -251,10 +251,10 @@ exp:
 	| TRUE { $$ = new BoolExpression(true); }
 	| FALSE { $$ = new BoolExpression(false); }
 	| vNULL { $$ = new NullExpression(); }
-	| INCR var { $$ = new CrExpression($2, INCR); }
-	| DECR var { $$ = new CrExpression($2, DECR); }
-	| var INCR { $$ = new CrExpression($1, INCR, true); }
-	| var DECR { $$ = new CrExpression($1, DECR, true); }
+	| INCR elemName { $2->doThings(); $$ = new CrExpression($2, INCR); }
+	| DECR elemName { $2->doThings(); $$ = new CrExpression($2, DECR); }
+	| elemName INCR { $1->doThings(); $$ = new CrExpression($1, INCR, true); }
+	| elemName DECR { $1->doThings(); $$ = new CrExpression($1, DECR, true); }
 	| cast { $$ = $1; }
 	| exp '+' exp { $$ = new OpExpression($1, '+', $3); }
 	| exp '-' exp { $$ = new OpExpression($1, '-', $3); }

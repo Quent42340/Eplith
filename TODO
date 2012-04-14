@@ -1,5 +1,4 @@
-- Elements as indexes: OK.
-- Incr/Decr elements: Not OK.
+- Incr/Decr elements: OK.
 - Switch
 - Operator ':' in function declaration
 - Labels and Goto

@@ -252,7 +252,7 @@ class AssignExpressionList : public Expression {
 
 class CrExpression : public Expression {
 	public:
-		CrExpression(Expression *varExp, int op, bool after = false);
+		CrExpression(Expression *exp, int op, bool after = false);
 		~CrExpression();
 		
 		Value* evaluate();
@@ -260,6 +260,7 @@ class CrExpression : public Expression {
 		
 	private:
 		VarExpression *m_varExp;
+		ElementExpression *m_elemExp;
 		int m_op;
 		bool m_after;
 		Value *m_valA, *m_valB;
@@ -270,7 +271,7 @@ class IfExpression : public Expression {
 		IfExpression(Expression *ifExp, std::vector<Expression*> *statements, std::vector<Expression*> *elseStatements = 0);
 		~IfExpression();
 		
-		Value* evaluate();
+		Value* evaluate() { return new Value(); }
 		void doExp();
 		
 	private:

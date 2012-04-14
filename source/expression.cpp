@@ -334,27 +334,37 @@ void AssignExpressionList::doExp() {
 	}
 }
 
-CrExpression::CrExpression(Expression *varExp, int op, bool after) {
+CrExpression::CrExpression(Expression *exp, int op, bool after) {
 	m_type = "CrExpression";
-	m_varExp = (VarExpression*)varExp;
+	if(exp->type() == "VarExpression") {
+		m_varExp = (VarExpression*)exp;
+		m_elemExp = 0;
+	}
+	else if(exp->type() == "ElementExpression") {
+		m_varExp = 0;
+		m_elemExp = (ElementExpression*)exp;
+	}
 	m_op = op;
 	m_after = after;
 }
 
 CrExpression::~CrExpression() {
 	delete m_varExp;
+	delete m_elemExp;
 	delete m_valA;
 	delete m_valB;
 }
 
 void CrExpression::doExp() {
-	if(m_varExp->getVar()->value()->type() != typeInt) yyerror("Incrementation / decrementation unavailable with these type");
-	m_valB = new Value(*m_varExp->getVar()->value());
+	Variable *var = (m_varExp) ? m_varExp->getVar() : Variable::findByName(m_elemExp->arrayName());
+	Value *val = (m_varExp) ? var->value() : var->value()->element(*m_elemExp->index());
+	if(val->type() != typeInt) yyerror("Incrementation / decrementation unavailable with these type");
+	m_valB = new Value(*val);
 	if(m_op == INCR) {
-		m_valA = m_varExp->getVar()->value()->valIncr();
+		m_valA = val->valIncr();
 	}
 	else if(m_op == DECR) {
-		m_valA = m_varExp->getVar()->value()->valDecr();
+		m_valA = val->valDecr();
 	} else {
 		yyerror("Unexpected operator");
 	}
@@ -390,32 +400,19 @@ IfExpression::~IfExpression() {
 	delete m_elseStatements;
 }
 
-unsigned int n = 0, m = 0;
-Value* IfExpression::evaluate() {
-	if(m_ifExp->evaluate()->intToBool()->value<bool>()) {
-		return (*m_statements)[n]->evaluate();
-	} else {
-		if(m_elseStatements != 0) {
-			return (*m_elseStatements)[m]->evaluate();
-		} else {
-			return new Value();
-		}
-	}
-}
-
 void IfExpression::doExp() {
 	int oldlineno = yylineno;
 	if(m_ifExp->evaluate()->intToBool()->value<bool>()) {
-		for(n = 0 ; n < m_statements->size() ; n++) {
-			yylineno = (*m_statements)[n]->line();
-			(*m_statements)[n]->doExp();
-		} n--;
+		for(int i = 0 ; i < m_statements->size() ; i++) {
+			yylineno = (*m_statements)[i]->line();
+			(*m_statements)[i]->doExp();
+		}
 	} else {
 		if(m_elseStatements != 0) {
-			for(m = 0 ; m < m_elseStatements->size() ; m++) {
-				yylineno = (*m_elseStatements)[m]->line();
-				(*m_elseStatements)[m]->doExp();
-			} m--;
+			for(int j = 0 ; j < m_elseStatements->size() ; j++) {
+				yylineno = (*m_elseStatements)[j]->line();
+				(*m_elseStatements)[j]->doExp();
+			}
 		}
 	}
 	yylineno = oldlineno;
