@@ -1,33 +1,34 @@
 #---------------------------------------------------------------------------------
-# Name of the executable in /usr/bin when installed
+# Name of the shared library
 #---------------------------------------------------------------------------------
-EX_NAME	:=	eplith
-LK_NAME :=	ep
+VERSION	:= 1
+SO_NAME	:= libep.so.$(VERSION)
+UL_NAME	:= libep.so
 
 #---------------------------------------------------------------------------------
 # Compiler executables
 #---------------------------------------------------------------------------------
-CXX		:=	g++
+CXX 	:=	g++
 CXXFLAGS:=	-g -Wno-write-strings -fpermissive -fPIC
 
 #---------------------------------------------------------------------------------
 # Any extra libraries you wish to link with your project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lep
+LIBS	:=	-lfl
 
 #---------------------------------------------------------------------------------
 # List of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:=	
+LIBDIRS :=	
 
 #---------------------------------------------------------------------------------
 # Source folders and executable name
 #---------------------------------------------------------------------------------
-TARGET	:=  $(shell basename $(CURDIR))
+TARGET	:=	$(SO_NAME)
 BUILD	:=	build
-SOURCES	:=	source
-INCLUDES:=	source EPlib/include EPlib/include/EPlib
+SOURCES :=	source
+INCLUDES:=	source include include/EPlib build
 
 #---------------------------------------------------------------------------------
 # Source files
@@ -52,44 +53,54 @@ export LIBPATHS :=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 .PHONY: $(BUILD) clean install uninstall
 #------------------------------------------------------------------------------
 $(BUILD):
-	@echo Compiling EPlib...
-	@make --no-print-directory -C EPlib
-	@sudo make --no-print-directory -C EPlib install
 	@[ -d $@ ] || mkdir -p $@
 	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@make --no-print-directory -C EPlib clean
 	@rm -f $(SOURCES)/*.o
 	@rm -fr $(BUILD) $(TARGET)
 
 #---------------------------------------------------------------------------------
 install:
-	@make --no-print-directory -C EPlib install
-	@cp -u $(TARGET) /usr/bin/$(EX_NAME)
-	@cp -s /usr/bin/$(EX_NAME) /usr/bin/$(LK_NAME)
+	@cp -u $(TARGET) /usr/lib/$(SO_NAME)
+	@cp -u -s /usr/lib/$(SO_NAME) /usr/lib/$(UL_NAME)
+	@cp -u include/*.h /usr/include
+	@cp -u -r include/EPlib /usr/include/EPlib
 	@echo installed.
 
 #---------------------------------------------------------------------------------
 uninstall:
-	@make --no-print-directory -C EPlib uninstall
-	@rm -f /usr/bin/$(EX_NAME)
-	@rm -f /usr/bin/$(LK_NAME)
+	@rm -f /usr/lib/$(SO_NAME)
+	@rm -f /usr/lib/$(UL_NAME)
+	@rm -f /usr/include/EPlib.h
+	@rm -fr /usr/include/EPlib
 	@echo uninstalled.
 
 #---------------------------------------------------------------------------------
 else
 #---------------------------------------------------------------------------------
 # Makefile targets
-#---------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
 all: $(OUTPUT)
 
 #---------------------------------------------------------------------------------
-$(OUTPUT): $(OFILES)
+$(OUTPUT): parser.tab.cpp lex.yy.cpp $(OFILES)
+	@$(CXX) $(CXXFLAGS) -shared parser.tab.cpp lex.yy.cpp $(OFILES) $(INCLUDE) $(LIBS) -o $@
 	@echo built ... $(notdir $@)
-	@$(CXX) $(CXXFLAGS) $(OFILES) $(LIBS) -o $@
+
+#---------------------------------------------------------------------------------
+lex.yy.cpp: $(ADIR)/$(SOURCES)/lexer.l
+#---------------------------------------------------------------------------------
+	@echo $(notdir $<)
+	@flex -o $@ $<
+
+#---------------------------------------------------------------------------------
+parser.tab.cpp: $(ADIR)/$(SOURCES)/parser.y
+#---------------------------------------------------------------------------------
+	@echo $(notdir $<)
+	@bison -d -v -o $@ $<
 
 #---------------------------------------------------------------------------------
 %.o: %.cpp

@@ -7,22 +7,38 @@ Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l
  Notes
  TODO
  README.textile
- include=include {
-  expression.h
-  function.h
-  header.h
-  program.h
-  value.h
-  variable.h
+ EPlib=EPlib {
+  Makefile
+  include=include {
+   EPlib.h
+   EPlib=EPlib {
+    expression.h
+    function.h
+    header.h
+    value.h
+    variable.h
+   }
+  }
+  source=source {
+   lexer.l
+   parser.y
+   expression.cpp
+   function.cpp
+   value.cpp
+   variable.cpp
+  }
+ }
+ sample=sample {
+  Makefile
+  scripts=scripts {
+   sample.ep
+  }
+  source=source {
+   main.cpp
+  }
  }
  source=source {
-  lexer.l
-  parser.y
-  expression.cpp
-  function.cpp
-  program.cpp
-  value.cpp
-  variable.cpp
+  main.cpp
  }
  tests=tests {
   array_test.ep

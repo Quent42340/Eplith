@@ -1,6 +1,7 @@
-- Eplith is 'eplith' or 'ep' in '/usr/bin'
-- Reduce interpreter size ( maybe making an EPlib.so )
-- C++ Eplith implementation
+x Eplith is 'eplith' or 'ep' in '/usr/bin'
+x Reduce interpreter size ( maybe making an EPlib.so )
+x Test C++ Eplith implementation
+- Rename EPlib global variables and functions with EP_<name>
 - Base library for Eplith ( I/O, Math, etc.. )
 => Version 0.1a
 - Operator ':' in function declaration
@@ -13,6 +14,7 @@
 - Constants
 => Version 0.3a
 - Operations on tables
+- Improve C++ implementation
 - Lot of tests
 - Complete documentation
 - Eplith website

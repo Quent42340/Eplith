@@ -17,8 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef HEADER_H
-#define HEADER_H
+#ifndef EPLIB_HEADER_H
+#define EPLIB_HEADER_H
 
 #include <iostream>
 #include <iomanip>
@@ -32,6 +32,7 @@
 #include <cstdlib>
 #include <cstddef>
 #include <cstdarg>
+#include <boost/any.hpp>
 
 #define EPLITH_DEBUG
 #define YYERROR_VERBOSE
@@ -75,6 +76,7 @@ static int stoi(const char *c) {
 
 extern int yylineno;
 extern char* yytext;
+extern std::string EP_filename;
 
 static inline std::string getPtrAddr(void* ptr) {
 	std::stringstream oss;
@@ -103,5 +105,5 @@ void warn(std::string str, const char* file, unsigned int line);
 
 int newFile(char *filename);
 
-#endif // HEADER_H
+#endif // EPLIB_HEADER_H
 

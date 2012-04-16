@@ -17,20 +17,32 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef PROGRAM_H
-#define PROGRAM_H
+#include <EPlib.h>
 
-#include "variable.h"
-#include "function.h"
+using namespace std;
 
-class Program {
-	public:
-		Program(std::string filename);
-		~Program();
-		
-	private:
-		std::string m_filename;
-		Function *m_functions;
-};
+int main(int argc, char* argv[]) {
+	EP_filename = "Eplith";
+	
+	if(argc < 2) {
+		yyerror("Filename not given");
+	}
+	else if(argc > 2) {
+		yyerror("Too much arguments");
+	}
+	
+#ifdef TYPES_DEBUG
+	edbg("Types: Int: " << typeInt << " | Float: " << typeFloat << " | String: " << typeStr << " | Array: " << typeArray << " | Function: " << typeFunc << " | Void: " << typeVoid);
+#endif
+	
+	newFile(argv[1]);
+	
+	EP_filename = argv[1];
+	
+	Variable::initNullVar();
+	
+	yyparse();
+	
+	return 0;
+} 
 
-#endif // PROGRAM_H

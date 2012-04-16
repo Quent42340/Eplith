@@ -17,8 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef VALUE_H
-#define VALUE_H
+#ifndef EPLIB_VALUE_H
+#define EPLIB_VALUE_H
 
 #include <boost/any.hpp>
 #include <cmath>
@@ -104,4 +104,4 @@ class Value {
 		Mode m_mode;
 };
 
-#endif // VALUE_H
+#endif // EPLIB_VALUE_H

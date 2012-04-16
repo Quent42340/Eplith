@@ -17,8 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef EXPRESSION_H
-#define EXPRESSION_H
+#ifndef EPLIB_EXPRESSION_H
+#define EPLIB_EXPRESSION_H
 
 #include <boost/any.hpp>
 #include "variable.h"
@@ -402,4 +402,4 @@ class ForExpression : public Expression {
 		std::vector<Expression*> *m_statements;
 };
 
-#endif // EXPRESSION_H
+#endif // EPLIB_EXPRESSION_H

@@ -17,8 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef FUNCTION_H
-#define FUNCTION_H
+#ifndef EPLIB_FUNCTION_H
+#define EPLIB_FUNCTION_H
 
 #include <vector>
 #include <boost/any.hpp>
@@ -51,4 +51,4 @@ class Function {
 		Value *m_mainElement;
 };
 
-#endif // FUNCTION_H
+#endif // EPLIB_FUNCTION_H

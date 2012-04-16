@@ -1,0 +1,8 @@
+x = 5;
+
+puts("y = " + y);
+
+mputs = function(str, str2, str3) {
+	print(str + " " + str2 + " " + str3 + "\n");
+};
+

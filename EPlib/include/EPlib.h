@@ -17,41 +17,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef VARIABLE_H
-#define VARIABLE_H
+#ifndef EPLIB_H
+#define EPLIB_H
 
-#include <vector>
-#include "value.h"
+#include "EPlib/header.h"
+#include "EPlib/expression.h"
+#include "EPlib/function.h"
+#include "EPlib/value.h"
+#include "EPlib/variable.h"
 
-class Variable {
-	public:
-		Variable(std::string name, Value *value, bool tmp = false);
-		~Variable();
-		
-		void print() { m_value->print(); }
-		
-		Value* value() { return m_value; }
-		void value(Value *value);
-		
-		std::string name() const { return m_name; }
-		std::string address() const { return m_address; }
-		
-		void setElement();
-		
-		static Variable* findByName(std::string name);
-		static bool exists(std::string name);
-		static bool erase(std::string name);
-		
-		static void initNullVar();
-		
-		static std::vector< std::vector<Variable*> > vars;
-		
-	private:
-		std::string m_name;
-		std::string m_address;
-		Value* m_value;
-		int m_id;
-		int m_scope;
-};
-
-#endif // VARIABLE_H
+#endif // EPLIB_H

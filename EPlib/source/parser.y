@@ -25,10 +25,10 @@
 using namespace std;
 
 extern FILE* yyin;
-string filename;
+string EP_filename;
 
 void error(string str, const char* file, unsigned int line) {
-	cerr << "\33[0;31;01m" << filename << ":" << yylineno << ": Error: " << str << "\33[0m" << endl;
+	cerr << "\33[0;31;01m" << EP_filename << ":" << yylineno << ": Error: " << str << "\33[0m" << endl;
 #ifdef EPLITH_DEBUG
 	edbg(file << ":" << line);
 #endif
@@ -36,7 +36,7 @@ void error(string str, const char* file, unsigned int line) {
 }
 
 void warn(string str, const char* file, unsigned int line) {
-	cerr << "\33[0;33;01m" << filename << ":" << yylineno << ": Warning: " << str << "\33[0m" << endl;
+	cerr << "\33[0;33;01m" << EP_filename << ":" << yylineno << ": Warning: " << str << "\33[0m" << endl;
 #ifdef EPLITH_DEBUG
 	edbg(file << ":" << line);
 #endif
@@ -47,31 +47,6 @@ int yywrap() {
 	return 1;
 } 
 }
-
-int main(int argc, char* argv[]) {
-	filename = "Eplith";
-	
-	if(argc < 2) {
-		yyerror("Filename not given");
-	}
-	else if(argc > 2) {
-		yyerror("Too much arguments");
-	}
-	
-#ifdef TYPES_DEBUG
-	edbg("Types: Int: " << typeInt << " | Float: " << typeFloat << " | String: " << typeStr << " | Array: " << typeArray << " | Function: " << typeFunc << " | Void: " << typeVoid);
-#endif
-	
-	newFile(argv[1]);
-	
-	filename = argv[1];
-	
-	Variable::initNullVar();
-	
-	yyparse();
-	
-	return 0;
-} 
 
 %}
 
