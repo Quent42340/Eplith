@@ -74,7 +74,6 @@ ArrayExpression::ArrayExpression(multimap<string, Expression*> *elements) {
 }
 
 ArrayExpression::~ArrayExpression() {
-	delete m_elements;
 }
 
 Value* ArrayExpression::evaluate() {
@@ -498,7 +497,6 @@ CallExpression::CallExpression(ElementExpression *element, vector<Expression*> *
 
 CallExpression::~CallExpression() {
 	m_funcs.clear();
-	delete m_args;
 }
 
 void CallExpression::initFunc() {

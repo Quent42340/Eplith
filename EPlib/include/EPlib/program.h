@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------------
 
-    Eplith Intepreter
+    Eplith sample C++ program
     Copyright (C) 2012 Quent42340 <quent42340@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
@@ -17,14 +17,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef EPLIB_H
-#define EPLIB_H
+#ifndef PROGRAM_H
+#define PROGRAM_H
 
-#include "EPlib/header.h"
-#include "EPlib/expression.h"
-#include "EPlib/function.h"
-#include "EPlib/program.h"
-#include "EPlib/value.h"
-#include "EPlib/variable.h"
+class Program {
+	public:
+		Program(std::string filename);
+		~Program();
+		
+		void readFile();
+		void parseFile();
+		
+		void printVariable(std::string name);
+		
+	private:
+		std::string m_filename;
+};
 
-#endif // EPLIB_H
+#endif // PROGRAM_H

@@ -22,7 +22,8 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-	Variable::initNullVar();
+	// Initialize the script
+	Program *script = new Program("scripts/sample.ep");
 	
 	// New variable: 'y = 3'
 	Variable *y = new Variable("y", new Value(3));
@@ -37,13 +38,13 @@ int main(int argc, char* argv[]) {
 	Variable *puts = new Variable("puts", new Value(new Function(&putsArgs, &putsStmts)));
 	
 	// Read file
-	newFile("scripts/sample.ep");
+	script->readFile();
 	
 	// Parse file
-	yyparse();
+	script->parseFile();
 	
 	// Print variable: 'print("x = " + x + "\n")'
-	cout << "x = "; Variable::findByName("x")->value()->print(); cout << endl;
+	cout << "x = "; script->printVariable("x"); cout << endl;
 	
 	// Calls mputs function: 'mputs("All", "is", "OK.");'
 	vector<Expression*> args;
@@ -53,8 +54,26 @@ int main(int argc, char* argv[]) {
 	CallExpression *call = new CallExpression("mputs", &args);
 	call->doExp();
 	
-	delete y;
+	// Make an array: 'a = {5, "6", "str", 1.2}'
+	multimap<string, Expression*> elements;
+	elements.insert(elements.end(), pair<string, Expression*>("<<nothing>>", new IntExpression(5)));
+	elements.insert(elements.end(), pair<string, Expression*>("<<nothing>>", new StrExpression("6")));
+	elements.insert(elements.end(), pair<string, Expression*>("<<nothing>>", new StrExpression("str")));
+	elements.insert(elements.end(), pair<string, Expression*>("<<nothing>>", new FloatExpression(1.2)));
+	ArrayExpression *arrayExp = new ArrayExpression(&elements);
+	Variable *a = new Variable("a", arrayExp->evaluate());
+	
+	// Print a[2]: 'print(a[2] + "\n")'
+	vector<string> index;
+	index.push_back("2");
+	cout << "a[2] = \""; a->value()->element(index)->print(); cout << "\"" << endl;
+	
+	delete a;
+	delete arrayExp;
+	delete call;
 	delete puts;
+	delete y;
+	delete script;
 	
 	return 0;
 }
