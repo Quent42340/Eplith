@@ -25,5 +25,5 @@ function factorial(n) {
 	}
 }
 
-print(factorial(18) + "\n");
+IO.print(factorial(18) + "\n");
 

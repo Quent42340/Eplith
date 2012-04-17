@@ -14,7 +14,7 @@ LDFLAGS	:=	-g -Wl
 #---------------------------------------------------------------------------------
 # Any extra libraries you wish to link with your project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lep
+LIBS	:=	-lep -lepb
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing

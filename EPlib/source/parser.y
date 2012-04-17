@@ -146,8 +146,8 @@ stmt:
 	| RETURN  ';' { $$ = new SignalExpression(sRETURN); }
 	| RETURN exp ';' { $$ = new ReturnExpression($2); }
 	| DELETE var ';' { $$ = new DeleteExpression((VarExpression*)$2); }
-	| PRINT '(' exp ')' ';' { $$ = new PrintExpression($3); }
-	| WHILE '(' exp ')' stmts { $$ = new WhileExpression($3, $5); }
+	/*| PRINT '(' exp ')' ';' { $$ = new PrintExpression($3); }
+	*/| WHILE '(' exp ')' stmts { $$ = new WhileExpression($3, $5); }
 	| DO stmts WHILE '(' exp ')' ';' { $$ = new WhileExpression($5, $2); }
 	| DO stmts ';' { beginScope(stLOOP); $$ = new DoExpression($2); }
 	| IF '(' exp ')' stmts %prec IFX { $$ = new IfExpression($3, $5); }

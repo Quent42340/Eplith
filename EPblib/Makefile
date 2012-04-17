@@ -1,41 +1,40 @@
 #---------------------------------------------------------------------------------
-# Name of the executable in /usr/bin when installed
+# Name of the shared library
 #---------------------------------------------------------------------------------
-EX_NAME	:=	eplith
-LK_NAME :=	ep
+VERSION	:= 1
+SO_NAME	:= libepb.so.$(VERSION)
+UL_NAME	:= libepb.so
 
 #---------------------------------------------------------------------------------
 # Compiler executables
 #---------------------------------------------------------------------------------
-CXX		:=	g++
+CXX 	:=	g++
 CXXFLAGS:=	-g -Wno-write-strings -fpermissive -fPIC
 
 #---------------------------------------------------------------------------------
 # Any extra libraries you wish to link with your project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lep -lepb
+LIBS	:=	-lep
 
 #---------------------------------------------------------------------------------
 # List of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:=	
+LIBDIRS :=	
 
 #---------------------------------------------------------------------------------
 # Source folders and executable name
 #---------------------------------------------------------------------------------
-TARGET	:=  $(shell basename $(CURDIR))
+TARGET	:=	$(SO_NAME)
 BUILD	:=	build
-SOURCES	:=	source
-INCLUDES:=	source EPlib/include EPlib/include/EPlib EPblib/include EPblib/include/EPblib
+SOURCES :=	source
+INCLUDES:=	source include include/EPblib build
 
 #---------------------------------------------------------------------------------
 # Source files
 #---------------------------------------------------------------------------------
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
-export ADIR 	:=	$(CURDIR)
-
 export OUTPUT	:=	$(CURDIR)/$(TARGET)
 
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
@@ -52,49 +51,43 @@ export LIBPATHS :=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 .PHONY: $(BUILD) clean install uninstall
 #------------------------------------------------------------------------------
 $(BUILD):
-	@echo Compiling EPlib...
-	@make --no-print-directory -C EPlib
-	@sudo make --no-print-directory -C EPlib install
-	@make --no-print-directory -C EPblib
-	@sudo make --no-print-directory -C EPblib install
 	@[ -d $@ ] || mkdir -p $@
 	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@make --no-print-directory -C EPlib clean
-	@make --no-print-directory -C EPblib clean
 	@rm -f $(SOURCES)/*.o
 	@rm -fr $(BUILD) $(TARGET)
 
 #---------------------------------------------------------------------------------
 install:
-	@make --no-print-directory -C EPlib install
-	@make --no-print-directory -C EPblib install
-	@cp -u $(TARGET) /usr/bin/$(EX_NAME)
-	@cp -s -f /usr/bin/$(EX_NAME) /usr/bin/$(LK_NAME)
+	@cp -u $(TARGET) /usr/lib/$(SO_NAME)
+	@cp -u -f -s /usr/lib/$(SO_NAME) /usr/lib/$(UL_NAME)
+	@cp -u include/EPblib.h /usr/include/EPblib.h
+	@mkdir -p /usr/include/EPblib
+	@cp -u include/EPblib/*.h /usr/include/EPblib/
 	@echo installed.
 
 #---------------------------------------------------------------------------------
 uninstall:
-	@make --no-print-directory -C EPlib uninstall
-	@make --no-print-directory -C EPblib uninstall
-	@rm -f /usr/bin/$(EX_NAME)
-	@rm -f /usr/bin/$(LK_NAME)
+	@rm -f /usr/lib/$(SO_NAME)
+	@rm -f /usr/lib/$(UL_NAME)
+	@rm -f /usr/include/EPblib.h
+	@rm -fr /usr/include/EPblib
 	@echo uninstalled.
 
 #---------------------------------------------------------------------------------
 else
 #---------------------------------------------------------------------------------
 # Makefile targets
-#---------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
 all: $(OUTPUT)
 
-#--------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------
 $(OUTPUT): $(OFILES)
+	@$(CXX) $(CXXFLAGS) -shared $(OFILES) $(INCLUDE) $(LIBS) -o $@
 	@echo built ... $(notdir $@)
-	@$(CXX) $(CXXFLAGS) $(OFILES) $(LIBS) -o $@
 
 #---------------------------------------------------------------------------------
 %.o: %.cpp

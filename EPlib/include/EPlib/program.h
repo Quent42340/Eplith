@@ -17,8 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef PROGRAM_H
-#define PROGRAM_H
+#ifndef EPLIB_PROGRAM_H
+#define EPLIB_PROGRAM_H
 
 class Program {
 	public:
@@ -34,4 +34,4 @@ class Program {
 		std::string m_filename;
 };
 
-#endif // PROGRAM_H
+#endif // EPLIB_PROGRAM_H

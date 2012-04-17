@@ -17,5 +17,5 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-print(1 + 1 + "\n");
+IO.print(1 + 1 + "\n");
 

@@ -26,6 +26,6 @@ while(a-- > 0) {
 	else if(a == 8) {
 		continue;
 	}
-	print(a + "\n"); // 9 7 6 5 4 3
+	IO.print(a + "\n"); // 9 7 6 5 4 3
 }
 

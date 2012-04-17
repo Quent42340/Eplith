@@ -66,8 +66,9 @@ clean:
 install:
 	@cp -u $(TARGET) /usr/lib/$(SO_NAME)
 	@cp -u -f -s /usr/lib/$(SO_NAME) /usr/lib/$(UL_NAME)
-	@cp -u include/*.h /usr/include
-	@cp -u -r include/EPlib /usr/include/EPlib
+	@cp -u include/EPlib.h /usr/include/EPlib.h
+	@mkdir -p /usr/include/EPlib
+	@cp -u include/EPlib/*.h /usr/include/EPlib/
 	@echo installed.
 
 #---------------------------------------------------------------------------------

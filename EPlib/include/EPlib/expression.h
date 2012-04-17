@@ -50,15 +50,15 @@ struct ScopeTypeList {
 						 stList->prev = Expression::scopeType; \
 						 stList->type = st; \
 						 Expression::scopeType = stList; }
-#define endScope() { if(Variable::vars.size() == scopes + 1) \
-						Variable::vars.erase(Variable::vars.begin() + scopes); \
-					 scopes--; \
+#define endScope() { if(Variable::vars.size() == Expression::scopes + 1) \
+						Variable::vars.erase(Variable::vars.begin() + Expression::scopes); \
+					 Expression::scopes--; \
 					 ScopeTypeList *stList = Expression::scopeType; \
 					 Expression::scopeType = stList->prev; \
 					 delete stList; }
-#define endOtherScope() { if(Variable::vars.size() == scopes + 1) \
-						  Variable::vars.erase(Variable::vars.begin() + scopes); \
-						  scopes--; }
+#define endOtherScope() { if(Variable::vars.size() == Expression::scopes + 1) \
+						  Variable::vars.erase(Variable::vars.begin() + Expression::scopes); \
+						  Expression::scopes--; }
 
 class Expression {
 	public:	

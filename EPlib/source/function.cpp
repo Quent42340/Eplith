@@ -50,7 +50,8 @@ void Function::doFunc(vector<Expression*> *args) {
 		}
 	} else {
 		if(m_args->size() != args->size()) {
-			yyerror("Unexpected number of arguments givenn");
+			cdbg(m_args->size() << " - " << args->size());
+			yyerror("Unexpected number of arguments given");
 		}
 	}
 	

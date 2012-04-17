@@ -1,11 +1,9 @@
-x Improve C++ implementation
-x Rename EPlib global variables and functions with EP_<name>
 - Base library for Eplith ( I/O, Math, etc.. )
 => Version 0.1a
-- Improve C++ implementation
 - Operator ':' in function declaration
 - Switch
 - Vim syntax coloration file
+- Improve C++ implementation
 - Inline interpreter
 => Version 0.2a
 - Labels and Goto

@@ -18,16 +18,16 @@
 
 ---------------------------------------------------------------------------------*/
 function try() {
-	print("Try\n");
+	IO.print("Try\n");
 }
 
 try();
 
 str = "Ohohoh";
-print(str + "\n");
+IO.print(str + "\n");
 
 function puts(str) {
-	print(str + "\n");
+	IO.print(str + "\n");
 }
 
 puts("That");
@@ -38,7 +38,7 @@ puts("lines.");
 puts(str);
 
 function putsStr(str1, str2, str3) {
-	print(str1 + " " + str2 + " " + str3 + "\n");
+	IO.print(str1 + " " + str2 + " " + str3 + "\n");
 }
 
 putsStr("That", "is", "done.");
@@ -47,5 +47,5 @@ function add(a, b) {
 	return a + b;
 }
 
-print(add(5,2) + "\n");
+IO.print(add(5,2) + "\n");
 
