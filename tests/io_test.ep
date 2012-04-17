@@ -17,9 +17,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-IO.print("Test\n");
-IO.puts("Muhahaha.");
-IO.print("Write something here: ");
-s = IO.gets();
-IO.puts("You wrote: \"" + s + "\".");
+print("Test\n");
+puts("Muhahaha.");
+print("Write something here: ");
+s = gets();
+puts("You wrote: \"" + s + "\".");
 

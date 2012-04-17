@@ -1,4 +1,5 @@
-- Base library for Eplith ( I/O, Math, etc.. )
+- Base library for Eplith ( I/O, Math )
+- Remove the 'IO.' before IO funcs names
 => Version 0.1a
 - Operator ':' in function declaration
 - Switch

@@ -21,12 +21,12 @@ x, y = 5, 12;
 
 x, y = y, x;
 
-IO.print(x + " / " + y + "\n");
+print(x + " / " + y + "\n");
 
 i = 2;
 a = {1,2,3,4,5};
 
 i, a[i] = i + 1, 20;
 
-IO.print(a[2] + "\n");
+print(a[2] + "\n");
 

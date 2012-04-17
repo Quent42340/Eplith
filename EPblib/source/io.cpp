@@ -41,38 +41,30 @@ class GetsExpression : public Expression {
 };
 
 void EPblib_initIO() {
-	map<string, Value*> IO_elements;
-	
-	// IO.puts
+	// puts
 	Expression::scopes++;
 	vector<VarExpression*> *putsArgs = new vector<VarExpression*>;
 	putsArgs->push_back(new VarExpression("str"));
 	vector<Expression*> *putsStmts = new vector<Expression*>;
 	putsStmts->push_back(new PrintExpression(new OpExpression((*putsArgs)[0], '+', new StrExpression("\n"))));
 	Expression::scopes--;
-	Value *puts = new Value(new Function(putsArgs, putsStmts));
+	Variable *puts = new Variable("puts", new Value(new Function(putsArgs, putsStmts)));
 	
-	// IO.print
+	// print
 	Expression::scopes++;
 	vector<VarExpression*> *printArgs = new vector<VarExpression*>;
 	printArgs->push_back(new VarExpression("str"));
 	vector<Expression*> *printStmts = new vector<Expression*>;
 	printStmts->push_back(new PrintExpression((*printArgs)[0]));
 	Expression::scopes--;
-	Value *print = new Value(new Function(printArgs, printStmts));
+	Variable *print = new Variable("print", new Value(new Function(printArgs, printStmts)));
 	
-	// IO.gets
+	// gets
 	beginScope(stFUNC);
 	vector<VarExpression*> *getsArgs = new vector<VarExpression*>;
 	vector<Expression*> *getsStmts = new vector<Expression*>;
 	getsStmts->push_back(new ReturnExpression(new GetsExpression()));
 	endScope();
-	Value *gets = new Value(new Function(getsArgs, getsStmts));
-	
-	IO_elements.insert(IO_elements.end(), pair<string, Value*>("puts", puts));
-	IO_elements.insert(IO_elements.end(), pair<string, Value*>("print", print));
-	IO_elements.insert(IO_elements.end(), pair<string, Value*>("gets", gets));
-	
-	Variable *IO = new Variable("IO", new Value(IO_elements));
+	Variable *gets = new Variable("gets", new Value(new Function(getsArgs, getsStmts)));
 }
 

@@ -38,5 +38,5 @@ Op = {
 };
 
 test = Op.new(5, 3);
-IO.print(test:add() + "\n");
+print(test:add() + "\n");
 

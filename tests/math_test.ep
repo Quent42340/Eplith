@@ -17,9 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-a = {5, 14, 85, 35};
-b = {0, 1, 2, 3};
-print(a[b[3]] + "\n");
-a[0]--;
-print(--a[1] + " - " + a[0] + "\n");
+// NOTE: Trigonometric functions takes a value in radians
+a = Math.cos(60 * Math.pi/180); // 0.5
+b = Math.sin(30 * Math.pi/180); // 0.5
+c = Math.tan(45 * Math.pi/180); // 1
 

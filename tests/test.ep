@@ -25,48 +25,48 @@ var4 = var < var2;
 str2 = "I found a " + str + "!";
 bool = true;
 var5 = 5 - (2 + 3) + 1 * (4 - 2);
-IO.print("\ttest: " + str2 + " and var3 = " + var3 + "; That's " + bool + "\n");
+print("\ttest: " + str2 + " and var3 = " + var3 + "; That's " + bool + "\n");
 
 if(var4) {
 	if(bool) {
-		IO.print("Okay, that's not normal.\n");
+		print("Okay, that's not normal.\n");
 	} else {
-		IO.print("Whoa! WTF?!\n");
+		print("Whoa! WTF?!\n");
 	}
 } else {
 	if(!bool) {
-		IO.print("Err, there is something wrong.\n");
+		print("Err, there is something wrong.\n");
 	} else {
-		IO.print("Yeah, it's normal!\n");
+		print("Yeah, it's normal!\n");
 	}
 }
 
 if(5 < 1) {
-	IO.print("Are you kidding me?\n");
+	print("Are you kidding me?\n");
 } 
 else if(4 > 2) {
-	IO.print("Okay that's good.\n");
+	print("Okay that's good.\n");
 } else {
-	IO.print("But what the fuck?\n");
+	print("But what the fuck?\n");
 }
 
 x = 0;
 while(x < 3) {
-	IO.print(x + "\n");
+	print(x + "\n");
 	x = x + 1;
 }
 
 do {
-	IO.print(x + "\n");
+	print(x + "\n");
 	x = x - 1;
 } while(x > -1);
 
 for(i = 0->2) {
-	IO.print(i + "\n");
+	print(i + "\n");
 }
 
 b = a = 0x5F;
-IO.print("a = " + (hex)a + " b = " + b + "\n");
+print("a = " + (hex)a + " b = " + b + "\n");
 
 f = 0x50;
 h = a + f;

@@ -22,11 +22,11 @@ b = 1/2;
 c = 1/3;
 d = b + c;
 
-IO.print("b + c = " + (sci)d + "\n");
+print("b + c = " + (sci)d + "\n");
 
 if(b > c) {
-	IO.print("Ok.\n");
+	print("Ok.\n");
 } else {
-	IO.print("Oh no..\n");
+	print("Oh no..\n");
 }
 

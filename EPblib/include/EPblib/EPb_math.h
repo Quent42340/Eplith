@@ -20,6 +20,6 @@
 #ifndef EPBLIB_MATH_H
 #define EPBLIB_MATH_H
 
-void EPblib_initMath() {}
+void EPblib_initMath();
 
 #endif // EPBLIB_MATH_H

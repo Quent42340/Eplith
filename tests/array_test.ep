@@ -18,25 +18,25 @@
 
 ---------------------------------------------------------------------------------*/
 a = {"String Test", 123, 12 + 38, {"Test", 56}, "", {{"12345"}}};
-IO.print("The array is defined like that: " + a + "\n");
-IO.print(a[0] + "\n");
-IO.print(a[3][0] + "\n");
-IO.print(a[5][0][0] + "\n");
+print("The array is defined like that: " + a + "\n");
+print(a[0] + "\n");
+print(a[3][0] + "\n");
+print(a[5][0][0] + "\n");
 a[3][0] = {5, 2, 3, "Fuck!"};
-IO.print(a[3][0][3] + "\n");
+print(a[3][0][3] + "\n");
 
 b = {thing = "TEST", t24 = 24, table = {"New", "Table"}, "OMG..."};
-IO.print(b.thing + "\n");
-IO.print(b.t24 + "\n");
-IO.print(b.table[1] + "\n");
-IO.print(b[0] + "\n");
+print(b.thing + "\n");
+print(b.t24 + "\n");
+print(b.table[1] + "\n");
+print(b[0] + "\n");
 b["element"] = "Wah.";
-IO.print(b.element + "\n");
+print(b.element + "\n");
 b.thing = "THING";
-IO.print(b["thing"] + "\n");
+print(b["thing"] + "\n");
 
 c = {puts = function(str) {
-		IO.print(str + "\n");
+		print(str + "\n");
 	} };
 
 c.puts("Truc");
