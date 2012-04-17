@@ -32,7 +32,7 @@ Variable::Variable(string name, Value *value, bool tmp) {
 	m_scope = Expression::scopes;
 	
 	if(!tmp) {
-		if(vars.size() < m_scope + 1) vars.push_back(vector<Variable*>());
+		while(vars.size() < m_scope + 1) vars.push_back(vector<Variable*>());
 		
 		m_id = vars[m_scope].size();
 		
