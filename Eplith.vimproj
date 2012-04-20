@@ -37,11 +37,13 @@ Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l
    EPblib=EPblib {
     EPb_io.h
     EPb_math.h
+    EPb_tools.h
    }
   }
   source=source {
    io.cpp
    math.cpp
+   tools.cpp
   }
  }
  sample=sample {

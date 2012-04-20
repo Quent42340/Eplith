@@ -18,53 +18,76 @@
 
 ---------------------------------------------------------------------------------*/
 #include <EPlib.h>
+#include "EPb_tools.h"
 #include "EPb_io.h"
 
 using namespace std;
 
-class GetsExpression : public Expression {
+template<class T>
+class IOExpression : public Expression {
 	public:
-		GetsExpression() { m_str = new char; }
-		~GetsExpression() {}
+		IOExpression(Expression *exp = 0) { if(!exp) m_str = new char; m_exp = exp; }
+		~IOExpression() {}
 		
-		void doExp() {
-			gets(m_str);
-		}
-		
-		Value *evaluate() {
-			doExp();
-			return new Value(m_str);
-		}
+		Value *evaluate() {	return T::eval(m_str); }
+		void doExp() { T::exec(m_exp); }
 		
 	private:
 		char *m_str;
+		Expression *m_exp;
 };
 
+struct Print {
+	static vector<VarExpression*> *args;
+	static vector<Expression*> *stmts;
+	static inline void exec(Expression *exp) { exp->evaluate()->print(); }
+	static inline Value *eval(...) { return new Value(); }
+	static void init() {
+		beginScope(stFUNC);
+		args = EPblib_args(1, "str");
+		stmts = EPblib_stmts(1, new IOExpression<Print>((*args)[0]));
+		endScope();
+	}
+};
+
+struct Puts {
+	static vector<VarExpression*> *args;
+	static vector<Expression*> *stmts;
+	static inline void exec(Expression *exp) { exp->evaluate()->print(); cout << endl; }
+	static inline Value *eval(...) { return new Value(); }
+	static void init() {
+		beginScope(stFUNC);
+		args = EPblib_args(1, "str");
+		stmts = EPblib_stmts(1, new IOExpression<Puts>((*args)[0]));
+		endScope();
+	}
+};
+
+struct Gets {
+	static vector<VarExpression*> *args;
+	static vector<Expression*> *stmts;
+	static inline void exec(...) {}
+	static inline Value *eval(char *str) { return new Value(gets(str)); }
+	static void init() {
+		beginScope(stFUNC);
+		args = EPblib_args(0);
+		stmts = EPblib_stmts(1, new ReturnExpression(new IOExpression<Gets>));
+		endScope();
+	}
+};
+
+initSSM(Print);
+initSSM(Puts);
+initSSM(Gets)
+
 void EPblib_initIO() {
-	// puts
-	Expression::scopes++;
-	vector<VarExpression*> *putsArgs = new vector<VarExpression*>;
-	putsArgs->push_back(new VarExpression("str"));
-	vector<Expression*> *putsStmts = new vector<Expression*>;
-	putsStmts->push_back(new PrintExpression(new OpExpression((*putsArgs)[0], '+', new StrExpression("\n"))));
-	Expression::scopes--;
-	Variable *puts = new Variable("puts", new Value(new Function(putsArgs, putsStmts)));
-	
 	// print
-	Expression::scopes++;
-	vector<VarExpression*> *printArgs = new vector<VarExpression*>;
-	printArgs->push_back(new VarExpression("str"));
-	vector<Expression*> *printStmts = new vector<Expression*>;
-	printStmts->push_back(new PrintExpression((*printArgs)[0]));
-	Expression::scopes--;
-	Variable *print = new Variable("print", new Value(new Function(printArgs, printStmts)));
+	initFunc(Print, print);
+	
+	// puts
+	initFunc(Puts, puts);
 	
 	// gets
-	beginScope(stFUNC);
-	vector<VarExpression*> *getsArgs = new vector<VarExpression*>;
-	vector<Expression*> *getsStmts = new vector<Expression*>;
-	getsStmts->push_back(new ReturnExpression(new GetsExpression()));
-	endScope();
-	Variable *gets = new Variable("gets", new Value(new Function(getsArgs, getsStmts)));
+	initFunc(Gets, gets);
 }
 

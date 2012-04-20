@@ -50,7 +50,7 @@ typedef enum {
 class MathExpression : public Expression {
 	public:
 		MathExpression(Expression *exp, MathFunc func) { m_exp = exp; m_exp2 = 0; m_func = func; }
-		MathExpression(Expression *exp, Expression *exp2, MathFunc func) { m_exp = exp; m_exp2 = exp2 m_func = func; }
+		MathExpression(Expression *exp, Expression *exp2, MathFunc func) { m_exp = exp; m_exp2 = exp2; m_func = func; }
 		~MathExpression() { delete m_exp; if(m_exp2) delete m_exp2; }
 		
 		Value *evaluate() {
@@ -112,7 +112,7 @@ class MathExpression : public Expression {
 };
 
 void EPblib_initMath() {
-	map<string, Value*> Math_elements;
+	/*map<string, Value*> Math_elements;
 	
 	// Math.cos
 	beginScope(stFUNC);
@@ -218,5 +218,6 @@ void EPblib_initMath() {
 	Math_elements.insert(Math_elements.end(), pair<string, Value*>("pi", new Value(PI)));
 	
 	Variable *Math = new Variable("Math", new Value(Math_elements));
+	*/
 }
 
