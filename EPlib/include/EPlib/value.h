@@ -98,6 +98,8 @@ class Value {
 		
 		Value *intToBool() { return (m_value.type() == typeid(int)) ? new Value((bool)value<int>()) : new Value(value<bool>()); }
 		
+		std::string typeToStr();
+		
 	protected:
 		Type m_type;
 		boost::any m_value;

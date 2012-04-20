@@ -19,7 +19,7 @@
 ---------------------------------------------------------------------------------*/
 #include <EPlib.h>
 #include "EPb_tools.h"
-#include "EPb_io.h"
+#include "EPb_base.h"
 
 using namespace std;
 
@@ -76,9 +76,23 @@ struct Gets {
 	}
 };
 
+struct TypeF {
+	static vector<VarExpression*> *args;
+	static vector<Expression*> *stmts;
+	static inline void exec(...) {}
+	static inline Value *eval(...) { return new Value((*args)[0]->evaluate()->typeToStr()); }
+	static void init() {
+		beginScope(stFUNC);
+		args = EPblib_args(1, "var");
+		stmts = EPblib_stmts(1, new ReturnExpression(new IOExpression<TypeF>));
+		endScope();
+	}
+};
+
 initSSM(Print);
 initSSM(Puts);
-initSSM(Gets)
+initSSM(Gets);
+initSSM(TypeF);
 
 void EPblib_initIO() {
 	// print
@@ -89,5 +103,8 @@ void EPblib_initIO() {
 	
 	// gets
 	initFunc(Gets, gets);
+	
+	// type
+	initFunc(TypeF, type);
 }
 

@@ -207,3 +207,26 @@ void Value::element(ElementExpression *element, Value *newValue) {
 	}
 }
 
+string Value::typeToStr() {
+	switch(m_type) {
+		case typeInt:
+			if(int *pi = valuePtr<int>()) {
+				return "int";
+			} else {
+				return "bool";
+			}
+		case typeFloat:
+			return "float";
+		case typeStr:
+			return "str";
+		case typeArray:
+			return "array";
+		case typeFunc:
+			return "function";
+		case typeVoid:
+			return "void";
+		default:
+			yyerror("Unexpected error");
+	}
+}
+

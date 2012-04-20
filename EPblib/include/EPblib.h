@@ -21,6 +21,6 @@
 #define EPBLIB_H
 
 #include "EPblib/EPb_math.h"
-#include "EPblib/EPb_io.h"
+#include "EPblib/EPb_base.h"
 
 #endif // EPBLIB_H

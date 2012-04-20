@@ -29,4 +29,8 @@ std::vector<Expression*> *EPblib_stmts(int nbStmts, ...);
 #define initFunc(Struct, name) Struct::init(); \
 							   Variable *name = new Variable(#name, new Value(new Function(Struct::args, Struct::stmts)));
 
+#define initElemFunc(table, Struct, name) Struct::init(); \
+										  Value *name = new Value(new Function(Struct::args, Struct::stmts)); \
+										  table.insert(table.end(), pair<string, Value*>(#name, name));
+
 #endif // EPBLIB_TOOLS_H

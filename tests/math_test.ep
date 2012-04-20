@@ -18,7 +18,7 @@
 
 ---------------------------------------------------------------------------------*/
 // NOTE: Trigonometric functions takes a value in radians
-a = Math.cos(60 * Math.pi/180); // 0.5
-b = Math.sin(30 * Math.pi/180); // 0.5
-c = Math.tan(45 * Math.pi/180); // 1
+a = Math.cos(Math.rad(60)); // 0.5
+b = Math.sin(Math.rad(30)); // 0.5
+c = Math.tan(Math.rad(45)); // 1
 
