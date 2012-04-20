@@ -89,22 +89,17 @@ struct TypeF {
 	}
 };
 
-initSSM(Print);
-initSSM(Puts);
-initSSM(Gets);
-initSSM(TypeF);
+EPb_initSSM(Print);
+EPb_initSSM(Puts);
+EPb_initSSM(Gets);
+EPb_initSSM(TypeF);
 
-void EPblib_initIO() {
-	// print
-	initFunc(Print, print);
+void EPblib_initBase() {
+	EPb_initFunc(Print, print);
+	EPb_initFunc(Puts, puts);
+	EPb_initFunc(Gets, gets);
+	EPb_initFunc(TypeF, type);
 	
-	// puts
-	initFunc(Puts, puts);
-	
-	// gets
-	initFunc(Gets, gets);
-	
-	// type
-	initFunc(TypeF, type);
+	Variable *version = new Variable("_VERSION", new Value("0.1a"));
 }
 

@@ -17,51 +17,39 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef EPBLIB_MATH_H
-#define EPBLIB_MATH_H
+#ifndef EPBLIB_STRING_H
+#define EPBLIB_STRING_H
 
-#define EPb_initMathStruct0(Struct, name) \
+#define EPb_initStringStruct(Struct, val) \
 	struct Struct { \
 		static vector<VarExpression*> *args; \
 		static vector<Expression*> *stmts; \
-		static inline Value *eval(...) { return new Value(name()); } \
+		static inline void exec(...) {} \
+		static inline Value *eval(Expression *exp, ...) { return new Value(val); } \
 		static void init() { \
 			beginScope(stFUNC); \
-			args = EPblib_args(0); \
-			stmts = EPblib_stmts(1, new ReturnExpression(new MathExpression<Struct>())); \
+			args = EPblib_args(1, "str"); \
+			stmts = EPblib_stmts(1, new ReturnExpression(new StringExpression<Struct>((*args)[0]))); \
 			endScope(); \
 		} \
 	}; \
 	EPb_initSSM(Struct);
 
-#define EPb_initMathStruct(Struct, name) \
+#define EPb_initStringStruct2(Struct, val) \
 	struct Struct { \
 		static vector<VarExpression*> *args; \
 		static vector<Expression*> *stmts; \
-		static inline Value *eval(Expression *exp_, ...) { return new Value(name(getNumVal(exp_->evaluate()))); } \
+		static inline void exec(...) {} \
+		static inline Value *eval(Expression *exp, Expression *exp2) { return new Value(val); } \
 		static void init() { \
 			beginScope(stFUNC); \
-			args = EPblib_args(1, "x"); \
-			stmts = EPblib_stmts(1, new ReturnExpression(new MathExpression<Struct>((*args)[0]))); \
+			args = EPblib_args(2, "str", "n"); \
+			stmts = EPblib_stmts(1, new ReturnExpression(new StringExpression<Struct>((*args)[0], (*args)[1]))); \
 			endScope(); \
 		} \
 	}; \
 	EPb_initSSM(Struct);
 
-#define EPb_initMathStruct2(Struct, name) \
-	struct Struct { \
-		static vector<VarExpression*> *args; \
-		static vector<Expression*> *stmts; \
-		static inline Value *eval(Expression *exp1, Expression *exp2) { return new Value(name(getNumVal(exp1->evaluate()), getNumVal(exp2->evaluate()))); } \
-		static void init() { \
-			beginScope(stFUNC); \
-			args = EPblib_args(2, "m", "n"); \
-			stmts = EPblib_stmts(1, new ReturnExpression(new MathExpression<Struct>((*args)[0], (*args)[1]))); \
-			endScope(); \
-		} \
-	}; \
-	EPb_initSSM(Struct);
+void EPblib_initString();
 
-void EPblib_initMath();
-
-#endif // EPBLIB_MATH_H
+#endif // EPBLIB_STRING_H

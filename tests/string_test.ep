@@ -17,19 +17,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef EPBLIB_H
-#define EPBLIB_H
+str = "I'm A StrIng";
+puts(String.len(str)); // 12
+puts(String.upper(str));
+puts(String.lower(str));
+puts(String.reverse(str));
+puts(String.rep("Five", 5));
+puts(String.sub(str, -3)); // "Ing"
+puts(String.sub(str, 6)); // "StrIng"
 
-#include "EPblib/EPb_base.h"
-#include "EPblib/EPb_math.h"
-#include "EPblib/EPb_string.h"
-#include "EPblib/EPb_array.h"
-
-void EPblib_init() {
-	EPblib_initBase();
-	EPblib_initMath();
-	EPblib_initString();
-	EPblib_initArray();
-}
-
-#endif // EPBLIB_H

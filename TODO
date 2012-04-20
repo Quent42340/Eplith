@@ -3,17 +3,21 @@
 	* Tables
 	* Files
 	* System
+- Improve error messages
 => Version 0.1a
+- Constants
+- Optional parameters in func
+- Multi-return in func
+- Add missing functions in EPblib
+=> Version 0.2a
 - Operator ':' in function declaration
 - Switch
 - Vim syntax coloration file
-- Improve C++ implementation
 - Inline interpreter
-=> Version 0.2a
+=> Version 0.3a
 - Labels and Goto
 - oct and bin casts (TODOs in lexer.l)
-- Constants
-=> Version 0.3a
+=> Version 0.4a
 - Operations on tables
 - Lot of tests
 - Complete documentation
@@ -21,7 +25,7 @@
 => Version 1.0
 ? Function overloading
 ? Classes (C++)
-=>? Version 2.0
+=>? Version 1.1
 ? Enums
 ? Structs
-=>? Version 2.1
+=>? Version 1.2

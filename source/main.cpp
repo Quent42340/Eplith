@@ -41,8 +41,7 @@ int main(int argc, char* argv[]) {
 	EP_filename = argv[1];
 	
 	Variable::initNullVar();
-	EPblib_initIO();
-	EPblib_initMath();
+	EPblib_init();
 	
 	yyparse();
 	

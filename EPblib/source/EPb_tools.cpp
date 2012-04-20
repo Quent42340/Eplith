@@ -53,3 +53,9 @@ vector<Expression*> *EPblib_stmts(int nbStmts, ...) {
 	return stmts;
 }
 
+string EPb_valToStr(Value *v) {
+	stringstream out;
+	v->print(out);
+	return out.str();
+}
+

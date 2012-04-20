@@ -23,13 +23,23 @@
 std::vector<VarExpression*> *EPblib_args(int nbArgs, ...);
 std::vector<Expression*> *EPblib_stmts(int nbStmts, ...);
 
-#define initSSM(Struct) std::vector<VarExpression*> *Struct::args = 0; \
+std::string EPb_valToStr(Value *v);
+
+#define EPb_getValStr(val) val->value<string>()
+
+#define EPb_getInt(exp) (int)getNumVal(exp->evaluate())
+#define EPb_getStr(exp) exp->evaluate()->value<string>()
+#define EPb_getArray(exp) exp->evaluate()->value< map<string, Value*> >()
+
+#define EPb_getArrayPtr(exp) exp->evaluate()->valuePtr< map<string, Value*> >()
+
+#define EPb_initSSM(Struct) std::vector<VarExpression*> *Struct::args = 0; \
 						std::vector<Expression*> *Struct::stmts = 0;
 
-#define initFunc(Struct, name) Struct::init(); \
+#define EPb_initFunc(Struct, name) Struct::init(); \
 							   Variable *name = new Variable(#name, new Value(new Function(Struct::args, Struct::stmts)));
 
-#define initElemFunc(table, Struct, name) Struct::init(); \
+#define EPb_initElemFunc(table, Struct, name) Struct::init(); \
 										  Value *name = new Value(new Function(Struct::args, Struct::stmts)); \
 										  table.insert(table.end(), pair<string, Value*>(#name, name));
 

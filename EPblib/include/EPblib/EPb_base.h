@@ -17,9 +17,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef EPBLIB_IO_H
-#define EPBLIB_IO_H
+#ifndef EPBLIB_BASE_H
+#define EPBLIB_BASE_H
 
-void EPblib_initIO();
+void EPblib_initBase();
 
-#endif // EPBLIB_IO_H
+#endif // EPBLIB_BASE_H
