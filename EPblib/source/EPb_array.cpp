@@ -46,12 +46,14 @@ string Array_concat(map<string, Value*> t, string sep) {
 	return r;
 }
 
-void Array_insert(map<string, Value*> *t, Value *v, int pos = -1) {
+map<string, Value*> Array_insert(map<string, Value*> *t, Value *v, int pos = -1) {
 	if(pos == -1) {
 		int count = 0;
 		for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
 			if(stoi(it->first.c_str())) count++;
-		} t->insert(t->end(), pair<string, Value*>(itos(count), v));
+		} count++;
+		t->insert(t->end(), pair<string, Value*>(itos(count), v));
+		return *t;
 	}
 }
 

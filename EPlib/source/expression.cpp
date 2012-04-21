@@ -74,6 +74,7 @@ ArrayExpression::ArrayExpression(multimap<string, Expression*> *elements) {
 }
 
 ArrayExpression::~ArrayExpression() {
+	delete m_elements;
 }
 
 Value* ArrayExpression::evaluate() {
@@ -125,7 +126,6 @@ Value* OpExpression::evaluate() {
 	Value *val2 = (m_exp2) ? m_exp2->evaluate() : 0;
 	if(val->type() == typeStr) {
 		int i = stoi(val->value<string>().c_str());
-		if(i) val = new Value(i);
 	}
 	if(val2) {
 		if(val2->type() == typeStr) {

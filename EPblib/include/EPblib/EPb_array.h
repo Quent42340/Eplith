@@ -56,7 +56,7 @@
 		static vector<VarExpression*> *args; \
 		static vector<Expression*> *stmts; \
 		static inline void exec(Expression *exp, Expression *exp2) { action; } \
-		static inline Value *eval(...) { return new Value(); } \
+		static inline Value *eval(Expression *exp, Expression *exp2) { exec(exp, exp2); return new Value(); } \
 		static void init() { \
 			beginScope(stFUNC); \
 			args = EPblib_args(2, "t", "n"); \

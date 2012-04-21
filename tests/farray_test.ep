@@ -19,5 +19,6 @@
 ---------------------------------------------------------------------------------*/
 array = {"Hello,", "my", "name", "is", "Eplith."};
 puts(Array.concat(array, " "));
-Array.push_back(array, "R u OK?");
+Array.push_back(array, "Are you OK");
+Array.push_back(array, "sir?");
 puts(Array.concat(array, " "));

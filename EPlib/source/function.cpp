@@ -50,7 +50,6 @@ void Function::doFunc(vector<Expression*> *args) {
 		}
 	} else {
 		if(m_args->size() != args->size()) {
-			cdbg(m_args->size() << " - " << args->size());
 			yyerror("Unexpected number of arguments given");
 		}
 	}
@@ -58,9 +57,9 @@ void Function::doFunc(vector<Expression*> *args) {
 	for(unsigned int i = 0 ; i < m_args->size() ; i++) {
 		if(m_colon && (*m_args)[i]->varName() == "self") {
 			if(!m_mainElement) yyerror("Unexpected error");
-			else m_vars.push_back(new Variable((*m_args)[i]->varName(), new Value(*m_mainElement)));
+			else m_vars.push_back(new Variable((*m_args)[i]->varName(), m_mainElement));
 		} else {
-			m_vars.push_back(new Variable((*m_args)[i]->varName(), new Value(*(*args)[i]->evaluate())));
+			m_vars.push_back(new Variable((*m_args)[i]->varName(), (*args)[i]->evaluate()));
 		}
 	}
 	
@@ -77,7 +76,6 @@ void Function::doFunc(vector<Expression*> *args) {
 	
 	yylineno = oldlineno;
 	for(unsigned int i = m_vars.size() - 1 ; m_vars.size() != 0 ; i--) {
-		delete m_vars[i];
 		m_vars.pop_back();
 	}
 }
