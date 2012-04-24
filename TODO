@@ -1,6 +1,8 @@
+- Test Lua Design Patterns:
+	* Fix the segfault
+- Improve Makefiles
+	* And put the *.o in build directories
 - Base library for Eplith:
-	* Strings
-	* Tables
 	* Files
 	* System
 - Arguments verif

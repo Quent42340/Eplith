@@ -155,7 +155,7 @@ void Value::print(ostream &out, Mode mode) {
 		out << "}";
 	}
 	else if(Function **func = valuePtr<Function*>()) {
-		out << (*func)->address();
+		out << getPtrAddr((void*)this);
 	}
 }
 

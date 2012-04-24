@@ -1,15 +1,13 @@
 #---------------------------------------------------------------------------------
 # Name of the shared library
 #---------------------------------------------------------------------------------
-VERSION	:= 1
-SO_NAME	:= libepb.so.$(VERSION)
-UL_NAME	:= libepb.so
+UL_NAME	:= libepb.a
 
 #---------------------------------------------------------------------------------
 # Compiler executables
 #---------------------------------------------------------------------------------
 CXX 	:=	g++
-CXXFLAGS:=	-g -Wno-write-strings -fpermissive -fPIC
+CXXFLAGS:=	-g -Wno-write-strings -fpermissive
 
 #---------------------------------------------------------------------------------
 # Any extra libraries you wish to link with your project
@@ -25,7 +23,7 @@ LIBDIRS :=
 #---------------------------------------------------------------------------------
 # Source folders and executable name
 #---------------------------------------------------------------------------------
-TARGET	:=	$(SO_NAME)
+TARGET	:=	$(UL_NAME)
 BUILD	:=	build
 SOURCES :=	source
 INCLUDES:=	source include include/EPblib build
@@ -62,8 +60,7 @@ clean:
 
 #---------------------------------------------------------------------------------
 install:
-	@cp -u $(TARGET) /usr/lib/$(SO_NAME)
-	@cp -u -f -s /usr/lib/$(SO_NAME) /usr/lib/$(UL_NAME)
+	@cp -u $(TARGET) /usr/lib/$(UL_NAME)
 	@cp -u include/EPblib.h /usr/include/EPblib.h
 	@mkdir -p /usr/include/EPblib
 	@cp -u include/EPblib/*.h /usr/include/EPblib/
@@ -71,7 +68,6 @@ install:
 
 #---------------------------------------------------------------------------------
 uninstall:
-	@rm -f /usr/lib/$(SO_NAME)
 	@rm -f /usr/lib/$(UL_NAME)
 	@rm -f /usr/include/EPblib.h
 	@rm -fr /usr/include/EPblib
@@ -86,7 +82,7 @@ all: $(OUTPUT)
 
 #---------------------------------------------------------------------------------
 $(OUTPUT): $(OFILES)
-	@$(CXX) $(CXXFLAGS) -shared $(OFILES) $(INCLUDE) $(LIBS) -o $@
+	@ar rcu $@ $(OFILES)
 	@echo built ... $(notdir $@)
 
 #---------------------------------------------------------------------------------

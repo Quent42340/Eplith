@@ -39,7 +39,6 @@
 
 #define WARNINGS
 
-#define FUNC_DEBUG
 #define VAR_DEBUG
 #define TYPES_DEBUG
 //#define CALL_DEBUG

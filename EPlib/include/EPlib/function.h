@@ -29,10 +29,9 @@ class VarExpression;
 
 class Function {
 	public:
+		Function(const Function &f);
 		Function(std::vector<VarExpression*> *args, std::vector<Expression*> *stmts, boost::any returnValue = -1);
 		~Function();
-		
-		std::string address() const { return m_address; }
 		
 		Value *ret() { return m_ret; }
 		
@@ -42,9 +41,8 @@ class Function {
 		void doFunc(std::vector<Expression*> *args);
 		
 	private:
-		std::string m_address;
 		std::vector<VarExpression*> *m_args;
-		std::vector<Variable*> m_vars;
+		std::vector<Variable*> *m_vars;
 		std::vector<Expression*> *m_stmts;
 		Value *m_ret;
 		bool m_colon;

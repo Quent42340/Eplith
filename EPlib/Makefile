@@ -1,15 +1,13 @@
 #---------------------------------------------------------------------------------
 # Name of the shared library
 #---------------------------------------------------------------------------------
-VERSION	:= 1
-SO_NAME	:= libep.so.$(VERSION)
-UL_NAME	:= libep.so
+UL_NAME	:= libep.a
 
 #---------------------------------------------------------------------------------
 # Compiler executables
 #---------------------------------------------------------------------------------
 CXX 	:=	g++
-CXXFLAGS:=	-g -Wno-write-strings -fpermissive -fPIC
+CXXFLAGS:=	-g -Wno-write-strings -fpermissive
 
 #---------------------------------------------------------------------------------
 # Any extra libraries you wish to link with your project
@@ -25,7 +23,7 @@ LIBDIRS :=
 #---------------------------------------------------------------------------------
 # Source folders and executable name
 #---------------------------------------------------------------------------------
-TARGET	:=	$(SO_NAME)
+TARGET	:=	$(UL_NAME)
 BUILD	:=	build
 SOURCES :=	source
 INCLUDES:=	source include include/EPlib build
@@ -64,8 +62,7 @@ clean:
 
 #---------------------------------------------------------------------------------
 install:
-	@cp -u $(TARGET) /usr/lib/$(SO_NAME)
-	@cp -u -f -s /usr/lib/$(SO_NAME) /usr/lib/$(UL_NAME)
+	@cp -u $(TARGET) /usr/lib/$(UL_NAME)
 	@cp -u include/EPlib.h /usr/include/EPlib.h
 	@mkdir -p /usr/include/EPlib
 	@cp -u include/EPlib/*.h /usr/include/EPlib/
@@ -73,7 +70,6 @@ install:
 
 #---------------------------------------------------------------------------------
 uninstall:
-	@rm -f /usr/lib/$(SO_NAME)
 	@rm -f /usr/lib/$(UL_NAME)
 	@rm -f /usr/include/EPlib.h
 	@rm -fr /usr/include/EPlib
@@ -87,21 +83,23 @@ else
 all: $(OUTPUT)
 
 #---------------------------------------------------------------------------------
-$(OUTPUT): parser.tab.cpp lex.yy.cpp $(OFILES)
-	@$(CXX) $(CXXFLAGS) -shared parser.tab.cpp lex.yy.cpp $(OFILES) $(INCLUDE) $(LIBS) -o $@
+$(OUTPUT): parser.tab.o lex.yy.o $(OFILES)
+	@ar rcu $@ parser.tab.o lex.yy.o $(OFILES)
 	@echo built ... $(notdir $@)
 
 #---------------------------------------------------------------------------------
-lex.yy.cpp: $(ADIR)/$(SOURCES)/lexer.l
+lex.yy.o: $(ADIR)/$(SOURCES)/lexer.l
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
-	@flex -o $@ $<
+	@flex -o lex.yy.cpp $<
+	@$(CXX) $(CXXFLAGS) $(INCLUDE) -c lex.yy.cpp -o $@
 
 #---------------------------------------------------------------------------------
-parser.tab.cpp: $(ADIR)/$(SOURCES)/parser.y
+parser.tab.o: $(ADIR)/$(SOURCES)/parser.y
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
-	@bison -d -v -o $@ $<
+	@bison -d -v -o parser.tab.cpp $<
+	@$(CXX) $(CXXFLAGS) $(INCLUDE) -c parser.tab.cpp -o $@
 
 #---------------------------------------------------------------------------------
 %.o: %.cpp

@@ -13,7 +13,7 @@ CXXFLAGS:=	-g -Wno-write-strings -fpermissive -fPIC
 #---------------------------------------------------------------------------------
 # Any extra libraries you wish to link with your project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lep -lepb
+LIBS	:=	-lfl -lep -lepb
 
 #---------------------------------------------------------------------------------
 # List of directories containing libraries, this must be the top level containing

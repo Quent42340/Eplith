@@ -51,6 +51,21 @@
 	}; \
 	EPb_initSSM(Struct);
 
+#define EPb_initArrayStructA(Struct, action) \
+	struct Struct { \
+		static vector<VarExpression*> *args; \
+		static vector<Expression*> *stmts; \
+		static inline void exec(Expression *exp, ...) { action; } \
+		static inline Value *eval(Expression *exp, ...) { exec(exp, exp2); return new Value(); } \
+		static void init() { \
+			beginScope(stFUNC); \
+			args = EPblib_args(1, "t"); \
+			stmts = EPblib_stmts(1, new ReturnExpression(new ArrayFExpression<Struct>((*args)[0]))); \
+			endScope(); \
+		} \
+	}; \
+	EPb_initSSM(Struct);
+
 #define EPb_initArrayStructA2(Struct, action) \
 	struct Struct { \
 		static vector<VarExpression*> *args; \

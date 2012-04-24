@@ -23,10 +23,20 @@
 
 using namespace std;
 
+Function::Function(const Function &f) {
+	m_args = f.m_args;
+	m_vars = f.m_vars;
+	m_stmts = f.m_stmts;
+	m_ret = f.m_ret;
+	m_colon = f.m_colon;
+	m_mainElement = f.m_mainElement;
+	m_vars = f.m_vars;
+}
+
 Function::Function(vector<VarExpression*> *args, vector<Expression*> *stmts, boost::any returnValue) {
-	m_address = getPtrAddr((void*)this);
 	m_args = args;
 	m_stmts = new vector<Expression*>;
+	m_vars = new vector<Variable*>;
 	
 	for(unsigned int i = 0 ; i < stmts->size() ; i++) {
 		m_stmts->push_back((*stmts)[i]);
@@ -39,6 +49,7 @@ Function::Function(vector<VarExpression*> *args, vector<Expression*> *stmts, boo
 
 Function::~Function() {
 	delete m_args;
+	delete m_vars;
 	delete m_stmts;
 	delete m_ret;
 }
@@ -57,9 +68,9 @@ void Function::doFunc(vector<Expression*> *args) {
 	for(unsigned int i = 0 ; i < m_args->size() ; i++) {
 		if(m_colon && (*m_args)[i]->varName() == "self") {
 			if(!m_mainElement) yyerror("Unexpected error");
-			else m_vars.push_back(new Variable((*m_args)[i]->varName(), m_mainElement));
+			else m_vars->push_back(new Variable((*m_args)[i]->varName(), m_mainElement));
 		} else {
-			m_vars.push_back(new Variable((*m_args)[i]->varName(), (*args)[i]->evaluate()));
+			m_vars->push_back(new Variable((*m_args)[i]->varName(), (*args)[i]->evaluate()));
 		}
 	}
 	
@@ -69,14 +80,14 @@ void Function::doFunc(vector<Expression*> *args) {
 		(*m_stmts)[i]->doExp();
 		if(Expression::signal == sRETURN) {
 			Expression::signal = sNONE;
-			m_ret = (*m_stmts)[i]->evaluate();
+			m_ret = new Value(*(*m_stmts)[i]->evaluate());
 			break;
 		}
 	}
 	
 	yylineno = oldlineno;
-	for(unsigned int i = m_vars.size() - 1 ; m_vars.size() != 0 ; i--) {
-		m_vars.pop_back();
+	for(unsigned int i = m_vars->size() - 1 ; m_vars->size() != 0 ; i--) {
+		m_vars->pop_back();
 	}
 }
 

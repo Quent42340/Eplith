@@ -22,3 +22,8 @@ puts(Array.concat(array, " "));
 Array.push_back(array, "Are you OK");
 Array.push_back(array, "sir?");
 puts(Array.concat(array, " "));
+Array.pop_back(array);
+Array.pop_back(array);
+Array.push_back(array, "And you?");
+puts(Array.concat(array, " "));
+puts(Array.maxn(array));

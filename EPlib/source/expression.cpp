@@ -484,7 +484,6 @@ CallExpression::CallExpression(string funcName, vector<Expression*> *args) {
 	m_funcName = funcName;
 	m_element = 0;
 	m_args = args;
-	m_init = false;
 }
 
 CallExpression::CallExpression(ElementExpression *element, vector<Expression*> *args) {
@@ -492,7 +491,6 @@ CallExpression::CallExpression(ElementExpression *element, vector<Expression*> *
 	m_funcName = "<<unamed>>";
 	m_element = element;
 	m_args = args;
-	m_init = false;
 }
 
 CallExpression::~CallExpression() {
@@ -507,7 +505,6 @@ void CallExpression::initFunc() {
 		m_funcs.push_back(new Function(*m_element->evaluate()->value<Function*>()));
 	}
 	if(m_funcs.back() == 0) yyerror(string("Function '") + m_funcName + "' undefined");
-	m_init = true;
 }
 
 Value* CallExpression::evaluate() {

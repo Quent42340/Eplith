@@ -57,14 +57,37 @@ map<string, Value*> Array_insert(map<string, Value*> *t, Value *v, int pos = -1)
 	}
 }
 
+map<string, Value*> Array_remove(map<string, Value*> *t, int pos = -1) {
+	if(pos == -1) {
+		int count = 0;
+		for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
+			if(stoi(it->first.c_str())) count++;
+		}
+		if(!t->erase(itos(count))) yyerror("Trying to clean a void array");
+		return *t;
+	}
+}
+
+int Array_maxn(map<string, Value*> *t) {
+	int count = 0;
+	for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
+		if(stoi(it->first.c_str())) count++;
+	}
+	return count;
+}
+
 EPb_initArrayStruct2(Concat, Array_concat(EPb_getArray(exp), EPb_getStr(exp2)));
 EPb_initArrayStructA2(Insert, Array_insert(EPb_getArrayPtr(exp), exp2->evaluate()));
+EPb_initArrayStructA(Remove, Array_remove(EPb_getArrayPtr(exp)));
+EPb_initArrayStruct(Maxn, Array_maxn(EPb_getArrayPtr(exp)));
 
 void EPblib_initArray() {
 	map<string, Value*> Array_elements;
 	
 	EPb_initElemFunc(Array_elements, Concat, concat);
 	EPb_initElemFunc(Array_elements, Insert, push_back);
+	EPb_initElemFunc(Array_elements, Remove, pop_back);
+	EPb_initElemFunc(Array_elements, Maxn, maxn);
 	
 	Variable *Array = new Variable("Array", new Value(Array_elements));
 }
