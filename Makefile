@@ -19,7 +19,7 @@ LIBS	:=	-lfl -lep -lepb
 # List of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:=	
+LIBDIRS	:=	EPlib EPblib
 
 #---------------------------------------------------------------------------------
 # Source folders and executable name
@@ -40,24 +40,21 @@ export OUTPUT	:=	$(CURDIR)/$(TARGET)
 
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
 
-export CPPFILES :=	$(foreach dir,$(SOURCES),$(wildcard $(CURDIR)/$(dir)/*.cpp))
+export CPPFILES :=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(CURDIR)/$(dir)/*.cpp)))
 
 export OFILES	:=	$(CPPFILES:.cpp=.o)
 
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir))
 
-export LIBPATHS :=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
+export LIBPATHS :=	$(foreach dir,$(LIBDIRS),-L$(CURDIR)/$(dir))
 
 #---------------------------------------------------------------------------------
 .PHONY: $(BUILD) clean install uninstall
 #------------------------------------------------------------------------------
 $(BUILD):
-	@echo Compiling EPlib...
-	@make --no-print-directory -C EPlib
-	@sudo make --no-print-directory -C EPlib install
-	@make --no-print-directory -C EPblib
-	@sudo make --no-print-directory -C EPblib install
 	@[ -d $@ ] || mkdir -p $@
+	@make --no-print-directory -C EPlib
+	@make --no-print-directory -C EPblib
 	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
@@ -65,7 +62,6 @@ clean:
 	@echo clean ...
 	@make --no-print-directory -C EPlib clean
 	@make --no-print-directory -C EPblib clean
-	@rm -f $(SOURCES)/*.o
 	@rm -fr $(BUILD) $(TARGET)
 
 #---------------------------------------------------------------------------------
@@ -92,9 +88,9 @@ else
 all: $(OUTPUT)
 
 #--------------------------------------------------------------------------------
-$(OUTPUT): $(OFILES)
+$(OUTPUT): $(OFILES) ../EPlib/libep.a ../EPblib/libepb.a
 	@echo built ... $(notdir $@)
-	@$(CXX) $(CXXFLAGS) $(OFILES) $(LIBS) -o $@
+	@$(CXX) $(CXXFLAGS) $(OFILES) $(LIBPATHS) $(LIBS) -o $@
 
 #---------------------------------------------------------------------------------
 %.o: %.cpp

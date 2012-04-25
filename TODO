@@ -1,11 +1,11 @@
-- Test Lua Design Patterns:
-	* Fix the segfault
 - Improve Makefiles
 	* And put the *.o in build directories
+- Test Lua Design Patterns:
+	* Fix the segfault
+- Arguments verif
 - Base library for Eplith:
 	* Files
 	* System
-- Arguments verif
 - Improve error messages
 => Version 0.1a
 - Constants

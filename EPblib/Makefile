@@ -10,23 +10,12 @@ CXX 	:=	g++
 CXXFLAGS:=	-g -Wno-write-strings -fpermissive
 
 #---------------------------------------------------------------------------------
-# Any extra libraries you wish to link with your project
-#---------------------------------------------------------------------------------
-LIBS	:=	-lep
-
-#---------------------------------------------------------------------------------
-# List of directories containing libraries, this must be the top level containing
-# include and lib
-#---------------------------------------------------------------------------------
-LIBDIRS :=	
-
-#---------------------------------------------------------------------------------
 # Source folders and executable name
 #---------------------------------------------------------------------------------
 TARGET	:=	$(UL_NAME)
 BUILD	:=	build
 SOURCES :=	source
-INCLUDES:=	source include include/EPblib build
+INCLUDES:=	source include include/EPblib build ../EPlib/include ../EPlib/include/EPlib
 
 #---------------------------------------------------------------------------------
 # Source files
@@ -37,13 +26,11 @@ export OUTPUT	:=	$(CURDIR)/$(TARGET)
 
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
 
-export CPPFILES :=	$(foreach dir,$(SOURCES),$(wildcard $(CURDIR)/$(dir)/*.cpp))
+export CPPFILES :=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(CURDIR)/$(dir)/*.cpp)))
 
 export OFILES	:=	$(CPPFILES:.cpp=.o)
 
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir))
-
-export LIBPATHS :=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
 #---------------------------------------------------------------------------------
 .PHONY: $(BUILD) clean install uninstall
@@ -55,7 +42,6 @@ $(BUILD):
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -f $(SOURCES)/*.o
 	@rm -fr $(BUILD) $(TARGET)
 
 #---------------------------------------------------------------------------------
