@@ -125,58 +125,70 @@ Value* OpExpression::evaluate() {
 	Value *val = m_exp1->evaluate();
 	Value *val2 = (m_exp2) ? m_exp2->evaluate() : 0;
 	if(val->type() == typeStr) {
-		int i = stoi(val->value<string>().c_str());
+		int *r = stoi(val->value<string>().c_str());
+		if(r[1] && r[1] != EOF) val = new Value(r[0]);
 	}
 	if(val2) {
 		if(val2->type() == typeStr) {
-			int i = stoi(val2->value<string>().c_str());
-			if(i) val2 = new Value(i);
+			int *r = stoi(val2->value<string>().c_str());
+			if(r[1] && r[1] != EOF) val2 = new Value(r[0]);
 		}
 	}
-	//cdbg("val type: " << val->type() << " | val2 type: " << val2->type());
-	if(m_oper == '+') {
-		bool pb;
-		if(!isNum(val) || !isNum(val2)) {
-			string tmp, tmp2;
-			stringstream out, out2;
-			val->print(out, m_mode);
-			tmp = out.str();
-			val2->print(out2, m_mode);
-			out2 << ends;
-			tmp2 = out2.str();
-			return new Value(tmp + tmp2);
-		} else {
-			return new Value(getNumVal(val) + getNumVal(val2));
+	if(!val2) {
+		if(m_oper == NOT) {
+			if(isNum(val)) return new Value(!valNumToBool(val));
+			else switch(val->type()) {
+				case typeVoid:	return new Value(true);
+				default:		yyerror(string("Unary operator not available with type \'") + val->typeToStr() + "\'");
+			}
+		}
+		if(!isNum(val)) yyerror(string("Unary operator not available with type \'") + val->typeToStr() + "\'");
+		switch(m_oper) {
+			case NEG:	return new Value(-getNumVal(val));
+			case POS:	return new Value(+getNumVal(val));
+			case BNOT:	return new Value(~(int)getNumVal(val));
+			default:	yyerror("Unexpected operator.");
 		}
 	} else {
-		if(!isNum(val)) yyerror("Operation not available with these type");
 		switch(m_oper) {
-			case NEG:	 return new Value(-getNumVal(val));
-			case POS:	 return new Value(+getNumVal(val));
-			case NOT:	 return new Value(!valNumToBool(val));
-			case BNOT:	 return new Value(~(int)getNumVal(val));
-		}
-		if(!isNum(val) || !isNum(val2)) yyerror("Operation not available with these type");
-		switch(m_oper) {
-			case '-':	 return new Value(getNumVal(val) - getNumVal(val2));
-			case '*':	 return new Value(getNumVal(val) * getNumVal(val2));
-			case '/':	 return new Value(getNumVal(val) / getNumVal(val2));
-			case '^':	 return new Value(valPow(val, val2));
-			case '%':	 return new Value((int)getNumVal(val) % (int)getNumVal(val2));
-			case '<':	 return new Value(getNumVal(val) < getNumVal(val2));
-			case '>':	 return new Value(getNumVal(val) > getNumVal(val2));
-			case GE:	 return new Value(getNumVal(val) >= getNumVal(val2));
-			case LE:	 return new Value(getNumVal(val) <= getNumVal(val2));
-			case EQ:	 return new Value(getNumVal(val) == getNumVal(val2));
-			case NE:	 return new Value(getNumVal(val) != getNumVal(val2));
-			case AND:	 return new Value(valNumToBool(val) && valNumToBool(val2));
-			case OR:	 return new Value(valNumToBool(val) || valNumToBool(val2));
-			case BAND:	 return new Value((int)getNumVal(val) & (int)getNumVal(val2));
-			case BOR:	 return new Value((int)getNumVal(val) | (int)getNumVal(val2));
-			case XOR:	 return new Value((int)getNumVal(val) ^ (int)getNumVal(val2));
-			case LSHIFT: return new Value((int)getNumVal(val) << (int)getNumVal(val2));
-			case RSHIFT: return new Value((int)getNumVal(val) >> (int)getNumVal(val2));
-			default:	 yyerror("Unexpected operator");
+			case '+':
+				if(!isNum(val) || !isNum(val2)) {
+					string tmp, tmp2;
+					stringstream out, out2;
+					val->print(out, m_mode);
+					tmp = out.str();
+					val2->print(out2, m_mode);
+					out2 << ends;
+					tmp2 = out2.str();
+					return new Value(tmp + tmp2);
+				} else return new Value(getNumVal(val) + getNumVal(val2));
+			case EQ:
+				// Here strings and void
+				return new Value(getNumVal(val) == getNumVal(val2));
+			case NE:
+				// Here strings and void
+				return new Value(getNumVal(val) != getNumVal(val2));
+			default:
+				if(!isNum(val) || !isNum(val2)) yyerror(string("Operation not available between '") + val->typeToStr() + "' and '" + val2->typeToStr() + "'");
+				switch(m_oper) {
+					case '-':	 return new Value(getNumVal(val) - getNumVal(val2));
+					case '*':	 return new Value(getNumVal(val) * getNumVal(val2));
+					case '/':	 return new Value(getNumVal(val) / getNumVal(val2));
+					case '^':	 return new Value(valPow(val, val2));
+					case '%':	 return new Value((int)getNumVal(val) % (int)getNumVal(val2));
+					case '<':	 return new Value(getNumVal(val) < getNumVal(val2));
+					case '>':	 return new Value(getNumVal(val) > getNumVal(val2));
+					case GE:	 return new Value(getNumVal(val) >= getNumVal(val2));
+					case LE:	 return new Value(getNumVal(val) <= getNumVal(val2));
+					case AND:	 return new Value(valNumToBool(val) && valNumToBool(val2));
+					case OR:	 return new Value(valNumToBool(val) || valNumToBool(val2));
+					case BAND:	 return new Value((int)getNumVal(val) & (int)getNumVal(val2));
+					case BOR:	 return new Value((int)getNumVal(val) | (int)getNumVal(val2));
+					case XOR:	 return new Value((int)getNumVal(val) ^ (int)getNumVal(val2));
+					case LSHIFT: return new Value((int)getNumVal(val) << (int)getNumVal(val2));
+					case RSHIFT: return new Value((int)getNumVal(val) >> (int)getNumVal(val2));
+					default:	 yyerror("Unexpected operator");
+				}
 		}
 	}
 }
@@ -247,14 +259,14 @@ void AssignExpression::doExp() {
 			Value *val2 = (m_valExp) ? m_valExp->evaluate() : m_val;
 			if(val) {
 				if(val->type() == typeStr) {
-					int i = atoi(val->value<string>().c_str());
-					if(i) val = new Value(i);
+					int *r = stoi(val->value<string>().c_str());
+					if(r[1] && r[1] != EOF) val = new Value(r[0]);
 				}
 			}
 			if(val2) {
 				if(val2->type() == typeStr) {
-					int i = atoi(val2->value<string>().c_str());
-					if(i) val2 = new Value(i);
+					int *r = stoi(val2->value<string>().c_str());
+					if(r[1] && r[1] != EOF) val2 = new Value(r[0]);
 				}
 			}
 			if(m_op == ADD) {

@@ -100,6 +100,24 @@ class Value {
 		
 		std::string typeToStr();
 		
+		Value *toNum() {
+			if(m_type != typeStr && !isNum(this)) yyerror(std::string("tonumber() function not available with type '") + typeToStr() + "'");
+			if(m_type == typeStr) {
+				int *r = stoi(value<std::string>().c_str());
+				if(!r[1] || r[1] == EOF) return new Value();
+				else return new Value(r[0]);
+			} else {
+				return new Value(getNumVal(this));
+			}
+		}
+		
+		Value *toStr() {
+			std::stringstream out;
+			print(out, m_mode);
+			out << std::ends;
+			return new Value(out.str());
+		}
+		
 	protected:
 		Type m_type;
 		boost::any m_value;

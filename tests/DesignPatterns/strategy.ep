@@ -17,19 +17,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef EPBLIB_H
-#define EPBLIB_H
+Happy = { exec = function() puts("I'm smiling"); };
+Angry = { exec = function() puts("Bastard!"); };
 
-#include "EPblib/EPb_base.h"
-#include "EPblib/EPb_math.h"
-#include "EPblib/EPb_string.h"
-#include "EPblib/EPb_array.h"
+Mood = {
+	new = function(mood) {
+		m_mood = mood;
+		
+		m_exec = function(self) {
+			self.mood.exec();
+		};
+		
+		return {
+			mood = m_mood,
+			exec = m_exec
+		};
+	}
+};
 
-void EPblib_init() {
-	EPblib_initBase();
-	EPblib_initMath();
-	EPblib_initString();
-	EPblib_initArray();
-}
+test = Mood.new(Happy);
+test:exec();
 
-#endif // EPBLIB_H

@@ -89,16 +89,46 @@ struct TypeF {
 	}
 };
 
+struct ToNumber {
+	static vector<VarExpression*> *args;
+	static vector<Expression*> *stmts;
+	static inline void exec(...) {}
+	static inline Value *eval(...) { return (*args)[0]->evaluate()->toNum(); }
+	static void init() {
+		beginScope(stFUNC);
+		args = EPblib_args(1, "var");
+		stmts = EPblib_stmts(1, new ReturnExpression(new IOExpression<ToNumber>));
+		endScope();
+	}
+};
+
+struct ToString {
+	static vector<VarExpression*> *args;
+	static vector<Expression*> *stmts;
+	static inline void exec(...) {}
+	static inline Value *eval(...) { return (*args)[0]->evaluate()->toStr(); }
+	static void init() {
+		beginScope(stFUNC);
+		args = EPblib_args(1, "var");
+		stmts = EPblib_stmts(1, new ReturnExpression(new IOExpression<ToString>));
+		endScope();
+	}
+};
+
 EPb_initSSM(Print);
 EPb_initSSM(Puts);
 EPb_initSSM(Gets);
 EPb_initSSM(TypeF);
+EPb_initSSM(ToNumber);
+EPb_initSSM(ToString);
 
 void EPblib_initBase() {
 	EPb_initFunc(Print, print);
 	EPb_initFunc(Puts, puts);
 	EPb_initFunc(Gets, gets);
 	EPb_initFunc(TypeF, type);
+	EPb_initFunc(ToNumber, tonumber);
+	EPb_initFunc(ToString, tostring);
 	
 	Variable *version = new Variable("_VERSION", new Value("0.1a"));
 }

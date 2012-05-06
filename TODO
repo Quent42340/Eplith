@@ -1,7 +1,8 @@
-- Improve Makefiles
-	* And put the *.o in build directories
-- Test Lua Design Patterns:
-	* Fix the segfault
+=> Rewrite OpExpression::evaluate() function
+- Comparison between all types
+	* Strings
+	* Tables
+	* Functions
 - Arguments verif
 - Base library for Eplith:
 	* Files
@@ -15,7 +16,6 @@
 => Version 0.2a
 - Operator ':' in function declaration
 - Switch
-- Vim syntax coloration file
 - Inline interpreter
 => Version 0.3a
 - Labels and Goto

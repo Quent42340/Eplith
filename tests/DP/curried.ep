@@ -1,9 +1,0 @@
-function sum(number) {
-	return function(anothernumber) {
-		return number + anothernumber;
-	};
-}
-
-f = sum(5);
-puts(f(3));
-

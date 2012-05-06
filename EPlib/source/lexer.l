@@ -109,7 +109,7 @@ int popFile();
 (">="|"geq_")				return GE;
 ("<="|"leq_")				return LE;
 ("=="|"eq_")				return EQ;
-("!="|"not_eq")				return NE;
+("!="|"neq_")				return NE;
 "+="						yylval.op = ADD; return ASSIGN_OP;
 "-="						yylval.op = SUB; return ASSIGN_OP;
 "*="						yylval.op = MUL; return ASSIGN_OP;

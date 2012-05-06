@@ -41,10 +41,11 @@ class MathExpression : public Expression {
 		Expression *m_exp2;
 };
 
-double Math_deg(double x) { return x/RADIANS_PER_DEGREE; }
-double Math_rad(double x) { return x*RADIANS_PER_DEGREE; }
-double Math_rand() { return rand() % RAND_MAX / RAND_MAX; }
-double Math_randomseed(double x) { srand(x); rand(); }
+double Math_deg(double x) { return x / RADIANS_PER_DEGREE; }
+double Math_rad(double x) { return x * RADIANS_PER_DEGREE; }
+double Math_rand() { return rand(); }
+double Math_srand(double x) { srand(x); rand(); return x; }
+double Math_time() { return time(NULL); }
 
 EPb_initMathStruct(Cos, cos);
 EPb_initMathStruct(Sin, sin);
@@ -68,7 +69,8 @@ EPb_initMathStruct2(Fmod, fmod);
 EPb_initMathStruct(Deg, Math_deg);
 EPb_initMathStruct(Rad, Math_rad);
 EPb_initMathStruct0(Rand, Math_rand);
-EPb_initMathStruct(Randomseed, Math_randomseed);
+EPb_initMathStruct(Srand, Math_srand);
+EPb_initMathStruct0(Time, Math_time);
 
 void EPblib_initMath() {
 	map<string, Value*> Math_elements;
@@ -95,7 +97,8 @@ void EPblib_initMath() {
 	EPb_initElemFunc(Math_elements, Deg, deg);
 	EPb_initElemFunc(Math_elements, Rad, rad);
 	EPb_initElemFunc(Math_elements, Rand, rand);
-	EPb_initElemFunc(Math_elements, Randomseed, randomseed);
+	EPb_initElemFunc(Math_elements, Srand, srand);
+	EPb_initElemFunc(Math_elements, Time, time);
 	
 	Math_elements.insert(Math_elements.end(), pair<string, Value*>("pi", new Value(PI)));
 	

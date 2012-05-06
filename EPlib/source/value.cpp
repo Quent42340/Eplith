@@ -211,14 +211,14 @@ string Value::typeToStr() {
 	switch(m_type) {
 		case typeInt:
 			if(int *pi = valuePtr<int>()) {
-				return "int";
+				return "integer";
 			} else {
-				return "bool";
+				return "boolean";
 			}
 		case typeFloat:
 			return "float";
 		case typeStr:
-			return "str";
+			return "string";
 		case typeArray:
 			return "array";
 		case typeFunc:
