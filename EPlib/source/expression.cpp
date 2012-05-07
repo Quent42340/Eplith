@@ -163,11 +163,21 @@ Value* OpExpression::evaluate() {
 					return new Value(tmp + tmp2);
 				} else return new Value(getNumVal(val) + getNumVal(val2));
 			case EQ:
-				// Here strings and void
-				return new Value(getNumVal(val) == getNumVal(val2));
+				if(val->type() != val2->type()) return new Value(false);
+				if(isNum(val)) return new Value(getNumVal(val) == getNumVal(val2));
+				switch(val->type()) {
+					case typeStr: return new Value(val->value<string>() == val2->value<string>());
+					case typeVoid: return new Value(true);
+					default: yyerror(string("Operation not available between '") + val->typeToStr() + "' and '" + val2->typeToStr() + "'");
+				}
 			case NE:
-				// Here strings and void
-				return new Value(getNumVal(val) != getNumVal(val2));
+				if(val->type() != val2->type()) return new Value(true);
+				if(isNum(val)) return new Value(getNumVal(val) != getNumVal(val2));
+				switch(val->type()) {
+					case typeStr: return new Value(val->value<string>() != val2->value<string>());
+					case typeVoid: return new Value(false);
+					default: yyerror(string("Operation not available between '") + val->typeToStr() + "' and '" + val2->typeToStr() + "'");
+				}
 			default:
 				if(!isNum(val) || !isNum(val2)) yyerror(string("Operation not available between '") + val->typeToStr() + "' and '" + val2->typeToStr() + "'");
 				switch(m_oper) {

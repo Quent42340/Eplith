@@ -1,6 +1,6 @@
-=> Rewrite OpExpression::evaluate() function
 - Comparison between all types
 	* Strings
+	* Void
 	* Tables
 	* Functions
 - Arguments verif
