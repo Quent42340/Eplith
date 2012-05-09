@@ -1,0 +1,13 @@
+/* ... */
+if("Bonjour" == "Bonjour!")
+	puts("Not ok.");
+
+if("Test" != "Truc")
+	putz("OK.");
+
+if("thing" == "thing")
+	puts("OK.");
+
+if(null)
+	puts("Not OK.");
+
