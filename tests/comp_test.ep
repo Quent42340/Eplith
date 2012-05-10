@@ -3,7 +3,7 @@ if("Bonjour" == "Bonjour!")
 	puts("Not ok.");
 
 if("Test" != "Truc")
-	putz("OK.");
+	puts("OK.");
 
 if("thing" == "thing")
 	puts("OK.");

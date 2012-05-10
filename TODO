@@ -1,3 +1,4 @@
+- Fix null bug
 - Comparison between all types
 	* Strings
 	* Void
@@ -7,10 +8,10 @@
 - Base library for Eplith:
 	* Files
 	* System
-- Improve error messages
-=> Version 0.1a
 - Constants
-- Optional parameters in func
+=> Version 0.1a
+- Improve error messages
+- Optional parameters in funcs
 - Multi-return in func
 - Add missing functions in EPblib
 => Version 0.2a
