@@ -423,7 +423,7 @@ IfExpression::~IfExpression() {
 
 unsigned int n = 0, m = 0;
 Value* IfExpression::evaluate() {
-	if(m_ifExp->evaluate()->intToBool()->value<bool>()) {
+	if(m_ifExp->evaluate()->toBool()->value<bool>()) {
 		return (*m_statements)[n]->evaluate();
 	} else {
 		if(m_elseStatements != 0) {
@@ -436,7 +436,8 @@ Value* IfExpression::evaluate() {
 
 void IfExpression::doExp() {
 	int oldlineno = yylineno;
-	if(m_ifExp->evaluate()->intToBool()->value<bool>()) {
+	cdbg(m_ifExp->evaluate()->toBool()->value<bool>());
+	if(m_ifExp->evaluate()->toBool()->value<bool>()) {
 		for(n = 0 ; n < m_statements->size() ; n++) {
 			yylineno = (*m_statements)[n]->line();
 			(*m_statements)[n]->doExp();
@@ -612,7 +613,7 @@ WhileExpression::~WhileExpression() {
 
 void WhileExpression::doExp() {
 	int oldlineno = yylineno;
-	while(m_whileExp->evaluate()->intToBool()->value<bool>()) {
+	while(m_whileExp->evaluate()->toBool()->value<bool>()) {
 		for(unsigned int i = 0 ; i < m_statements->size() ; i++) {
 			yylineno = (*m_statements)[i]->line();
 			(*m_statements)[i]->doExp();

@@ -230,3 +230,26 @@ string Value::typeToStr() {
 	}
 }
 
+Value *Value::toBool() {
+	switch(m_type) {
+		case typeInt:
+			if(int *pi = valuePtr<int>()) {
+				return new Value((bool)*pi);
+			} else {
+				return new Value(value<bool>());
+			}
+		case typeFloat:
+			return new Value((bool)value<double>());
+		case typeStr:
+			return new Value(true);
+		case typeArray:
+			return new Value(true);
+		case typeFunc:
+			return value<Function*>()->ret()->toBool();
+		case typeVoid:
+			return new Value(false);
+		default:
+			yyerror("Unexpected error");
+	}
+}
+
