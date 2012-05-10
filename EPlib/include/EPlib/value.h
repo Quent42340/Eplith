@@ -98,7 +98,7 @@ class Value {
 		
 		//Value *intToBool() { return (m_value.type() == typeid(int)) ? new Value((bool)value<int>()) : new Value(value<bool>()); }
 		
-		Value *toBool();
+		bool toBool();
 
 		std::string typeToStr();
 		

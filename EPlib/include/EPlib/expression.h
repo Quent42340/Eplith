@@ -35,7 +35,8 @@ typedef enum {
 typedef enum {
 	stLOOP,
 	stSWITCH,
-	stFUNC
+	stFUNC,
+	stOTHER
 } ScopeType;
 
 typedef struct ScopeTypeList ScopeTypeList;
@@ -46,6 +47,7 @@ struct ScopeTypeList {
 };
 
 #define beginScope(st) { Expression::scopes++; \
+						 cdbg("BEGIN"); \
 						 ScopeTypeList *stList = new ScopeTypeList; \
 						 stList->prev = Expression::scopeType; \
 						 stList->type = st; \
