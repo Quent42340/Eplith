@@ -1,4 +1,5 @@
-- Fix null bug
+- Fix If bug
+- Check do block bugs
 - Comparison between all types
 	* Strings
 	* Void
@@ -9,19 +10,18 @@
 	* Files
 	* System
 - Constants
+- Optional parameters in funcs
+- Multi-return in funcs
+- Add missing functions in EPblib
 => Version 0.1a
 - Improve error messages
-- Optional parameters in funcs
-- Multi-return in func
-- Add missing functions in EPblib
-=> Version 0.2a
 - Operator ':' in function declaration
 - Switch
 - Inline interpreter
-=> Version 0.3a
+=> Version 0.2a
 - Labels and Goto
 - oct and bin casts (TODOs in lexer.l)
-=> Version 0.4a
+=> Version 0.3a
 - Operations on tables
 - Lot of tests
 - Complete documentation

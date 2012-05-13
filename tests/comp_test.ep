@@ -17,11 +17,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-puts("Test!");
-
-a = 0;
-while(a++ != 2) puts(a);
-
 if(5 == 2) {
 	puts("Not ok.");
 }

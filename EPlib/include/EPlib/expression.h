@@ -59,10 +59,6 @@ struct ScopeTypeList {
 					 ScopeTypeList *stList = Expression::scopeType; \
 					 Expression::scopeType = stList->prev; \
 					 delete stList; }
-#define endOtherScope() { if(Variable::vars.size() == Expression::scopes + 1) \
-						  Variable::vars.erase(Variable::vars.begin() + Expression::scopes); \
-						  Expression::scopes--; \
-						  cdbg("ENDO"); }
 
 class Expression {
 	public:	

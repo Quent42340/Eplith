@@ -95,7 +95,7 @@ int yywrap() {
 
 %token INCR_A DECR_A INCR_B DECR_B
 
-%token DO WHILE IF PRINT FOR TO
+%token DO WHILE IF FOR TO
 %token TRUE FALSE
 %token FUNCTION
 %nonassoc IFX
@@ -146,11 +146,10 @@ stmt:
 	| RETURN  ';' { $$ = new SignalExpression(sRETURN); }
 	| RETURN exp ';' { $$ = new ReturnExpression($2); }
 	| DELETE var ';' { $$ = new DeleteExpression((VarExpression*)$2); }
-	/*| PRINT '(' exp ')' ';' { $$ = new PrintExpression($3); }
-	*/| WHILE '(' exp ')' stmts { $$ = new WhileExpression($3, $5); }
+	| WHILE '(' exp ')' stmts { $$ = new WhileExpression($3, $5); }
 	| DO stmts WHILE '(' exp ')' ';' { $$ = new WhileExpression($5, $2); }
 	| DO stmts ';' { beginScope(stLOOP); $$ = new DoExpression($2); }
-	| IF '(' exp ')' stmts %prec IFX { $$ = new IfExpression($3, $5); }
+	| IF '(' exp ')' stmts %prec IFX { cdbg("IF"); $$ = new IfExpression($3, $5); }
 	| IF '(' exp ')' stmts ELSE stmts { $$ = new IfExpression($3, $5, $7); }
 	| FOR '(' assign TO exp ';' exp ')' stmts { $$ = new ForExpression($3, $9, $5, $7);  }
 	| FOR '(' assign TO exp ')' stmts { $$ = new ForExpression($3, $7, $5);  }
