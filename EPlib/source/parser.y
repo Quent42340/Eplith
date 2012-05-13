@@ -158,6 +158,7 @@ stmt:
 else_part:
 	  /* optional */ { $$ = 0; }
 	| ELSE stmts { $$ = $2; }
+	;
 
 func:
 	FUNCTION NAME '(' var_list ')' stmts { $$ = new FuncExpression(string($2), $4, $6); }
