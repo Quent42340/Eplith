@@ -411,7 +411,6 @@ IfExpression::IfExpression(Expression *ifExp, vector<Expression*> *statements, v
 	m_ifExp = ifExp;
 	m_statements = statements;
 	m_elseStatements = elseStatements;
-	cdbg("TRUC | " << scopes);
 	doThings(true);
 	endScope();
 }
@@ -437,7 +436,6 @@ Value* IfExpression::evaluate() {
 
 void IfExpression::doExp() {
 	int oldlineno = yylineno;
-	cdbg(m_ifExp->evaluate()->toBool() << " | " << m_ifExp->evaluate()->type());
 	if(m_ifExp->evaluate()->toBool()) {
 		for(n = 0 ; n < m_statements->size() ; n++) {
 			yylineno = (*m_statements)[n]->line();

@@ -63,7 +63,7 @@ int popFile();
 	/* Keywords */
 "while"						beginScope(stLOOP); return WHILE;
 "do"						return DO;
-"if"						cdbg(yylineno); beginScope(stOTHER); return IF;
+"if"						return IF;
 "else"						return ELSE;
 "function"					beginScope(stFUNC); return FUNCTION;
 "for"						beginScope(stLOOP); return FOR;

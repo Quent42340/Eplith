@@ -47,7 +47,6 @@ struct ScopeTypeList {
 };
 
 #define beginScope(st) { Expression::scopes++; \
-						 cdbg("BEGIN"); \
 						 ScopeTypeList *stList = new ScopeTypeList; \
 						 stList->prev = Expression::scopeType; \
 						 stList->type = st; \
@@ -55,7 +54,6 @@ struct ScopeTypeList {
 #define endScope() { if(Variable::vars.size() == Expression::scopes + 1) \
 						Variable::vars.erase(Variable::vars.begin() + Expression::scopes); \
 					 Expression::scopes--; \
-					 cdbg("END"); \
 					 ScopeTypeList *stList = Expression::scopeType; \
 					 Expression::scopeType = stList->prev; \
 					 delete stList; }
