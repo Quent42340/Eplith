@@ -120,7 +120,7 @@ int yywrap() {
 %start program
 
 %type <exp> call exp prevar var assign assignExpVal stmt cast integer func ufunc elemName
-%type <list> exp_list stmt_list stmts assignExp_list elemName_list else_part
+%type <list> exp_list stmt_list stmts assignExp_list elemName_list
 %type <varList> var_list
 %type <strVec> element_index
 %type <element> element
@@ -149,15 +149,11 @@ stmt:
 	| WHILE '(' exp ')' stmts { $$ = new WhileExpression($3, $5); }
 	| DO stmts WHILE '(' exp ')' ';' { $$ = new WhileExpression($5, $2); }
 	| DO stmts ';' { beginScope(stLOOP); $$ = new DoExpression($2); }
-	| IF '(' exp ')' stmts else_part { $$ = new IfExpression($3, $5, $6); }
+	| IF '(' exp ')' stmts { $$ = new IfExpression($3, $5); }
+	| IF '(' exp ')' stmts ELSE stmts { $$ = new IfExpression($3, $5, $7); }
 	| FOR '(' assign TO exp ';' exp ')' stmts { $$ = new ForExpression($3, $9, $5, $7);  }
 	| FOR '(' assign TO exp ')' stmts { $$ = new ForExpression($3, $7, $5);  }
 	| func { $$ = $1; }
-	;
-
-else_part:
-	  /* optional */ { $$ = 0; }
-	| ELSE stmts { $$ = $2; }
 	;
 
 func:
