@@ -160,8 +160,8 @@ void Value::print(ostream &out, Mode mode) {
 }
 
 Value *Value::element(vector<string> indexTable) {
-	bool colon = false;
 	if(indexTable.size() > 0) {
+		bool colon = false;
 		string i = indexTable[indexTable.size() - 1];
 		indexTable.pop_back();
 		if(i[0] == '*') {
@@ -177,6 +177,7 @@ Value *Value::element(vector<string> indexTable) {
 				yyerror("Operator ':' only available with functions");
 			}
 		}
+		cdbg(":" << v->value<Function*>()->args());
 		if(v) return v;
 		else yyerror("Bad element access");
 	} else {

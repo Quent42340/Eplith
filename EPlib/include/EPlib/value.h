@@ -96,8 +96,6 @@ class Value {
 		Value *valIncr() { m_value = value<int>() + 1; return this; }
 		Value *valDecr() { m_value = value<int>() - 1; return this; }
 		
-		//Value *intToBool() { return (m_value.type() == typeid(int)) ? new Value((bool)value<int>()) : new Value(value<bool>()); }
-		
 		bool toBool();
 
 		std::string typeToStr();

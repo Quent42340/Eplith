@@ -28,10 +28,18 @@ int Expression::scopes = 0;
 ScopeTypeList *Expression::scopeType = 0;
 Signal Expression::signal = sNONE;
 
-bool inLoop() {
+Expression::Expression() {
+	m_mode = noMode;
+	m_line = yylineno;
+}
+
+Expression::~Expression() {
+}
+
+bool Expression::inLoop() {
 	ScopeTypeList *st = Expression::scopeType;
 	while(st) {
-		if(st->type == stLOOP) {
+		if(st->type == stLOOP || st->type == stSWITCH) {
 			return true;
 		} else {
 			if(st->prev) st = st->prev;
@@ -40,12 +48,16 @@ bool inLoop() {
 	}
 }
 
-Expression::Expression() {
-	m_mode = noMode;
-	m_line = yylineno;
-}
-
-Expression::~Expression() {
+bool Expression::inFunc() {
+	ScopeTypeList *st = Expression::scopeType;
+	while(st) {
+		if(st->type == stFUNC) {
+			return true;
+		} else {
+			if(st->prev) st = st->prev;
+			else break;
+		}
+	}
 }
 
 IntExpression::IntExpression(int value) {
@@ -162,6 +174,7 @@ Value* OpExpression::evaluate() {
 			default:	yyerror("Unexpected operator.");
 		}
 	} else {
+		//cdbg("val: " << val->type() << " | val2: " << val2->type());
 		switch(m_oper) {
 			case '+':
 				if(!isNum(val) || !isNum(val2)) {
@@ -175,7 +188,7 @@ Value* OpExpression::evaluate() {
 					return new Value(tmp + tmp2);
 				} else return new Value(getNumVal(val) + getNumVal(val2));
 			case EQ:
-				if(val->type() != val2->type()) return new Value(false);
+				if(val->type() != val2->type() && (!isNum(val) && !isNum(val2))) return new Value(false);
 				if(isNum(val)) return new Value(getNumVal(val) == getNumVal(val2));
 				switch(val->type()) {
 					case typeStr: return new Value(val->value<string>() == val2->value<string>());
@@ -183,7 +196,7 @@ Value* OpExpression::evaluate() {
 					default: yyerror(string("Operation not available between '") + val->typeToStr() + "' and '" + val2->typeToStr() + "'");
 				}
 			case NE:
-				if(val->type() != val2->type()) return new Value(true);
+				if(val->type() != val2->type() && (!isNum(val) && !isNum(val2))) return new Value(true);
 				if(isNum(val)) return new Value(getNumVal(val) != getNumVal(val2));
 				switch(val->type()) {
 					case typeStr: return new Value(val->value<string>() != val2->value<string>());
@@ -464,22 +477,32 @@ void IfExpression::doExp() {
 	yylineno = oldlineno;
 }
 
-DoExpression::DoExpression(std::vector<Expression*> *statements) {
-	m_type = "DoExpression";
+ExecExpression::ExecExpression(std::vector<Expression*> *statements) {
+	m_type = "ExecExpression";
 	m_statements = statements;
 	doThings(true);
 	endScope();
 }
 
-DoExpression::~DoExpression() {
+ExecExpression::~ExecExpression() {
 	delete m_statements;
 }
 
-void DoExpression::doExp() {
+void ExecExpression::doExp() {
+	int oldlineno = yylineno;
 	for(int i = 0 ; i < m_statements->size() ; i++) {
 		yylineno = (*m_statements)[i]->line();
 		(*m_statements)[i]->doExp();
+		if(signal == sBREAK) {
+			signal = sNONE;
+			break;
+		}
+		else if(signal == sCONTINUE) {
+			signal = sNONE;
+			continue;
+		}
 	}
+	yylineno = oldlineno;
 }
 
 FuncExpression::FuncExpression(string funcName, vector<VarExpression*> *args, vector<Expression*> *stmts) {
@@ -536,6 +559,7 @@ void CallExpression::initFunc() {
 		Function *func = Variable::findByName(m_funcName)->value()->value<Function*>();
 		m_funcs.push_back(new Function(*func));
 	} else {
+		cdbg("!!! " << (void*)m_element->evaluate()->value<Function*>()->args());
 		m_funcs.push_back(new Function(*m_element->evaluate()->value<Function*>()));
 	}
 	if(m_funcs.back() == 0) yyerror(string("Function '") + m_funcName + "' undefined");
@@ -562,7 +586,7 @@ void CallExpression::doExp() {
 
 ReturnExpression::ReturnExpression(Expression *exp) {
 	if(!Expression::scopeType) yyerror("Signal statement out of a scope");
-	if(Expression::scopeType->type != stFUNC) yyerror("Return statement not within function");
+	if(!inFunc()) yyerror("Return statement not within function");
 	m_type = "ReturnExpression";
 	m_exp = exp;
 }
@@ -598,8 +622,8 @@ void DeleteExpression::doExp() {
 
 SignalExpression::SignalExpression(Signal s) {
 	if(!Expression::scopeType) yyerror("Signal statement out of a scope");
-	if(s == sBREAK && inLoop()) yyerror("Break statement not within a loop or a switch");
-	if(s == sCONTINUE && inLoop()) yyerror("Continue statement not within a loop or a switch");
+	if(s == sBREAK && !inLoop()) yyerror("Break statement not within a loop or a switch");
+	if(s == sCONTINUE && !inLoop()) yyerror("Continue statement not within a loop or a switch");
 	m_type = "SignalExpression";
 	m_signal = s;
 	doThings();

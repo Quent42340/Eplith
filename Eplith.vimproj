@@ -1,4 +1,4 @@
-Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l *.y *.diff AUTHORS ChangeLog COPYING Makefile Notes TODO *.textile *.ep *.cpp" {
+Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l *.y *.diff *.vim AUTHORS ChangeLog COPYING Makefile Notes TODO *.textile *.ep *.cpp" {
  .gitignore
  AUTHORS
  ChangeLog
@@ -71,6 +71,7 @@ Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l
   comp_test.ep
   cond_test.ep
   cr_test.ep
+  exec_test.ep
   factorial.ep
   farray_test.ep
   float_issue.ep
@@ -90,6 +91,9 @@ Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l
   Programs=Programs {
    MoreOrLess.ep
   }
+ }
+ tools=tools {
+  eplith.vim
  }
  wiki=wiki {
   .gitignore

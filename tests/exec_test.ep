@@ -17,26 +17,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-Op = {
-	new = function(_a, _b) {
-		a = _a;
-		b = _b;
-		
-		add = function(self) {
-			return self.a + self.b;
-		};
-		
-		sub = function(self) {
-			return self.a - self.b;
-		};
-		
-		return {a = a,
-				b = b,
-				add = add,
-				sub = sub};
-	}
+a = 5;
+
+exec {
+	b = 9;
+	if(a + b == 14) break;
+	puts(a + b);
 };
 
-test = Op.new(5, 3);
-puts(test:add());
-
+puts("All is ok.");

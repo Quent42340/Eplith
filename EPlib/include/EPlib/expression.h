@@ -63,6 +63,9 @@ class Expression {
 		Expression();
 		~Expression();
 		
+		static bool inLoop();
+		static bool inFunc();
+		
 		virtual Value* evaluate() = 0;
 		virtual void doExp() = 0;
 		
@@ -278,10 +281,10 @@ class IfExpression : public Expression {
 		std::vector<Expression*> *m_elseStatements;
 };
 
-class DoExpression : public Expression {
+class ExecExpression : public Expression {
 	public:
-		DoExpression(std::vector<Expression*> *statements);
-		~DoExpression();
+		ExecExpression(std::vector<Expression*> *statements);
+		~ExecExpression();
 		
 		Value* evaluate() { return new Value(); }
 		void doExp();

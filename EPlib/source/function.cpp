@@ -48,7 +48,6 @@ Function::Function(vector<VarExpression*> *args, vector<Expression*> *stmts, boo
 }
 
 Function::~Function() {
-	delete m_args;
 	delete m_vars;
 	delete m_stmts;
 	delete m_ret;

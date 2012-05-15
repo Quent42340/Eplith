@@ -32,7 +32,7 @@ syn match  epError "}"
 syn match	epExternal		"-include"
 syn keyword epConditional	if else
 syn keyword epFunction		function
-syn keyword epRepeat		while for do
+syn keyword epRepeat		while for do exec
 syn keyword epBranch		break continue
 
 " Block
