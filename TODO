@@ -1,4 +1,5 @@
-- Remake all blocks like if
+- Remake all blocks like if: Done!
+- Make a function inLoop() because if stmt in a loop causes break and continue unusable ( same for funcs )
 - Check do block bugs
 - Comparison between all types
 	* Strings

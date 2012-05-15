@@ -61,12 +61,12 @@ int popFile();
 <str>[^\\\n\"]+				{ char* yPtr = yytext; while(*yPtr) { *stringBufPtr++ = *yPtr++; } }
 
 	/* Keywords */
-"while"						beginScope(stLOOP); return WHILE;
+"while"						return WHILE;
 "do"						return DO;
 "if"						return IF;
 "else"						return ELSE;
-"function"					beginScope(stFUNC); return FUNCTION;
-"for"						beginScope(stLOOP); return FOR;
+"function"					return FUNCTION;
+"for"						return FOR;
 "break"						return BREAK;
 "continue"					return CONTINUE;
 "return"					return RETURN;

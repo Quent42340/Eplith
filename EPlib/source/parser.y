@@ -146,13 +146,13 @@ stmt:
 	| RETURN  ';' { $$ = new SignalExpression(sRETURN); }
 	| RETURN exp ';' { $$ = new ReturnExpression($2); }
 	| DELETE var ';' { $$ = new DeleteExpression((VarExpression*)$2); }
-	| WHILE '(' exp ')' stmts { $$ = new WhileExpression($3, $5); }
-	| DO stmts WHILE '(' exp ')' ';' { $$ = new WhileExpression($5, $2); }
+	| WHILE '(' exp ')' { beginScope(stLOOP); } stmts { $$ = new WhileExpression($3, $6); }
+	| DO stmts WHILE '(' exp ')' ';' { beginScope(stLOOP); $$ = new WhileExpression($5, $2); }
 	| DO stmts ';' { beginScope(stLOOP); $$ = new DoExpression($2); }
 	| if_begin stmts %prec IFX { $$ = new IfExpression($1, $2); }
 	| if_begin stmts ELSE stmts { $$ = new IfExpression($1, $2, $4); }
-	| FOR '(' assign TO exp ';' exp ')' stmts { $$ = new ForExpression($3, $9, $5, $7);  }
-	| FOR '(' assign TO exp ')' stmts { $$ = new ForExpression($3, $7, $5);  }
+	| FOR '(' assign TO exp ';' exp ')'{ beginScope(stLOOP); } stmts { $$ = new ForExpression($3, $10, $5, $7);  }
+	| FOR '(' assign TO exp ')' { beginScope(stLOOP); } stmts { $$ = new ForExpression($3, $8, $5);  }
 	| func { $$ = $1; }
 	;
 
@@ -161,11 +161,11 @@ if_begin:
 	;
 
 func:
-	FUNCTION NAME '(' var_list ')' stmts { $$ = new FuncExpression(string($2), $4, $6); }
+	FUNCTION NAME '(' var_list ')' { beginScope(stFUNC); } stmts { $$ = new FuncExpression(string($2), $4, $7); }
 	;
 
 ufunc:
-	FUNCTION '(' var_list ')' stmts { $$ = new FuncExpression("<<unamed>>", $3, $5); }
+	FUNCTION '(' var_list ')' { beginScope(stFUNC); } stmts { $$ = new FuncExpression("<<unamed>>", $3, $6); }
 	;
 
 stmts:
