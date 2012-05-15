@@ -24,6 +24,7 @@
 using namespace std;
 
 Function::Function(const Function &f) {
+	cdbg("New function c: " << this);
 	m_args = f.m_args;
 	m_vars = f.m_vars;
 	m_stmts = f.m_stmts;
@@ -34,6 +35,7 @@ Function::Function(const Function &f) {
 }
 
 Function::Function(vector<VarExpression*> *args, vector<Expression*> *stmts, boost::any returnValue) {
+	cdbg("New function: " << this);
 	m_args = args;
 	m_stmts = new vector<Expression*>;
 	m_vars = new vector<Variable*>;
@@ -48,6 +50,7 @@ Function::Function(vector<VarExpression*> *args, vector<Expression*> *stmts, boo
 }
 
 Function::~Function() {
+	delete m_args;
 	delete m_vars;
 	delete m_stmts;
 	delete m_ret;

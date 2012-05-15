@@ -63,7 +63,7 @@ int popFile();
 	/* Keywords */
 "while"						return WHILE;
 "do"						return DO;
-"exec"						beginScope(stLOOP); return EXEC;
+"block"						return BLOCK;
 "if"						return IF;
 "else"						return ELSE;
 "function"					return FUNCTION;

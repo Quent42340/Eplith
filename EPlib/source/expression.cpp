@@ -477,18 +477,18 @@ void IfExpression::doExp() {
 	yylineno = oldlineno;
 }
 
-ExecExpression::ExecExpression(std::vector<Expression*> *statements) {
-	m_type = "ExecExpression";
+BlockExpression::BlockExpression(std::vector<Expression*> *statements) {
+	m_type = "BlockExpression";
 	m_statements = statements;
 	doThings(true);
 	endScope();
 }
 
-ExecExpression::~ExecExpression() {
+BlockExpression::~BlockExpression() {
 	delete m_statements;
 }
 
-void ExecExpression::doExp() {
+void BlockExpression::doExp() {
 	int oldlineno = yylineno;
 	for(int i = 0 ; i < m_statements->size() ; i++) {
 		yylineno = (*m_statements)[i]->line();

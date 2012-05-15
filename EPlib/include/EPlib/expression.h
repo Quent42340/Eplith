@@ -281,10 +281,10 @@ class IfExpression : public Expression {
 		std::vector<Expression*> *m_elseStatements;
 };
 
-class ExecExpression : public Expression {
+class BlockExpression : public Expression {
 	public:
-		ExecExpression(std::vector<Expression*> *statements);
-		~ExecExpression();
+		BlockExpression(std::vector<Expression*> *statements);
+		~BlockExpression();
 		
 		Value* evaluate() { return new Value(); }
 		void doExp();

@@ -1,3 +1,5 @@
+- Fix classes bug
+- Fix MoreOrLess bug
 - Comparison between all types
 	* Strings
 	* Void

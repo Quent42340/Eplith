@@ -177,7 +177,7 @@ Value *Value::element(vector<string> indexTable) {
 				yyerror("Operator ':' only available with functions");
 			}
 		}
-		cdbg(":" << v->value<Function*>()->args());
+		cdbg(":" << v->value<Function*>());
 		if(v) return v;
 		else yyerror("Bad element access");
 	} else {

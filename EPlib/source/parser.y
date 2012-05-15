@@ -95,7 +95,7 @@ int yywrap() {
 
 %token INCR_A DECR_A INCR_B DECR_B
 
-%token DO EXEC WHILE IF FOR TO
+%token DO BLOCK WHILE IF FOR TO
 %token TRUE FALSE
 %token FUNCTION
 %nonassoc IFX
@@ -148,7 +148,7 @@ stmt:
 	| DELETE var ';' { $$ = new DeleteExpression((VarExpression*)$2); }
 	| WHILE '(' exp ')' { beginScope(stLOOP); } stmts { $$ = new WhileExpression($3, $6); }
 	| DO stmts WHILE '(' exp ')' ';' { beginScope(stLOOP); $$ = new WhileExpression($5, $2); }
-	| EXEC stmts ';' { $$ = new ExecExpression($2); }
+	| DO BLOCK { beginScope(stLOOP); } stmts ';' { $$ = new BlockExpression($4); }
 	| if_begin stmts %prec IFX { $$ = new IfExpression($1, $2); }
 	| if_begin stmts ELSE stmts { $$ = new IfExpression($1, $2, $4); }
 	| FOR '(' assign TO exp ';' exp ')'{ beginScope(stLOOP); } stmts { $$ = new ForExpression($3, $10, $5, $7);  }
