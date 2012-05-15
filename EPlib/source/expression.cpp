@@ -28,6 +28,18 @@ int Expression::scopes = 0;
 ScopeTypeList *Expression::scopeType = 0;
 Signal Expression::signal = sNONE;
 
+bool inLoop() {
+	ScopeTypeList *st = Expression::scopeType;
+	while(st) {
+		if(st->type == stLOOP) {
+			return true;
+		} else {
+			if(st->prev) st = st->prev;
+			else break;
+		}
+	}
+}
+
 Expression::Expression() {
 	m_mode = noMode;
 	m_line = yylineno;
@@ -586,8 +598,8 @@ void DeleteExpression::doExp() {
 
 SignalExpression::SignalExpression(Signal s) {
 	if(!Expression::scopeType) yyerror("Signal statement out of a scope");
-	if(s == sBREAK && (Expression::scopeType->type != stLOOP && Expression::scopeType->type != stSWITCH)) yyerror("Break statement not within a loop or a switch");
-	if(s == sCONTINUE && (Expression::scopeType->type != stLOOP && Expression::scopeType->type != stSWITCH)) yyerror("Continue statement not within a loop or a switch");
+	if(s == sBREAK && inLoop()) yyerror("Break statement not within a loop or a switch");
+	if(s == sCONTINUE && inLoop()) yyerror("Continue statement not within a loop or a switch");
 	m_type = "SignalExpression";
 	m_signal = s;
 	doThings();
