@@ -56,9 +56,11 @@ static inline std::string itos(int n) {
 	return oss.str();
 }
 
-static int *stoi(const char *c) {
-	int *r = new int[2];
-	r[1] = sscanf(c, "%d", &r[0]);
+static std::vector<int> stoi(const char *c) {
+	std::vector<int> r(2);
+	int chars_read;
+	r[1] = sscanf(c, "%d%n", &r[0], &chars_read);
+	if(chars_read < strlen(c)) r[1] = EOF;
 	return r;
 }
 

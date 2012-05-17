@@ -24,19 +24,16 @@
 using namespace std;
 
 Function::Function(const Function &f) {
-	cdbg("New function c: " << this);
-	m_args = f.m_args;
-	m_vars = f.m_vars;
-	m_stmts = f.m_stmts;
-	m_ret = f.m_ret;
+	m_args = new vector<VarExpression*>(*f.m_args);
+	m_vars = new vector<Variable*>(*f.m_vars);
+	m_stmts = new vector<Expression*>(*f.m_stmts);
+	m_ret = new Value(*f.m_ret);
 	m_colon = f.m_colon;
-	m_mainElement = f.m_mainElement;
-	m_vars = f.m_vars;
+	m_mainElement = (f.m_mainElement) ? new Value(*f.m_mainElement) : 0;
 }
 
 Function::Function(vector<VarExpression*> *args, vector<Expression*> *stmts, boost::any returnValue) {
-	cdbg("New function: " << this);
-	m_args = args;
+	m_args = new vector<VarExpression*>(*args);
 	m_stmts = new vector<Expression*>;
 	m_vars = new vector<Variable*>;
 	
@@ -54,6 +51,7 @@ Function::~Function() {
 	delete m_vars;
 	delete m_stmts;
 	delete m_ret;
+	if(m_mainElement) delete m_mainElement;
 }
 
 void Function::doFunc(vector<Expression*> *args) {

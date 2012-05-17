@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-// NOTE: Trigonometric functions takes a value in radians
+// NOTE: Trigonometric functions take values in radians
 a = Math.cos(Math.rad(60)); // 0.5
 b = Math.sin(Math.rad(30)); // 0.5
 c = Math.tan(Math.rad(45)); // 1

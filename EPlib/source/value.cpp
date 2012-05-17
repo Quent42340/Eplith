@@ -155,7 +155,7 @@ void Value::print(ostream &out, Mode mode) {
 		out << "}";
 	}
 	else if(Function **func = valuePtr<Function*>()) {
-		out << getPtrAddr((void*)this);
+		out << getPtrAddr((void*)*func);
 	}
 }
 
@@ -177,7 +177,6 @@ Value *Value::element(vector<string> indexTable) {
 				yyerror("Operator ':' only available with functions");
 			}
 		}
-		cdbg(":" << v->value<Function*>());
 		if(v) return v;
 		else yyerror("Bad element access");
 	} else {

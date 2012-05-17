@@ -1,0 +1,4 @@
+temp:
+	* All bugs fixed
+	* '?' and '!' possible at end of names
+	* '#' length operator available

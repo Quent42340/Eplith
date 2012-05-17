@@ -149,12 +149,12 @@ Value* OpExpression::evaluate() {
 	Value *val = m_exp1->evaluate();
 	Value *val2 = (m_exp2) ? m_exp2->evaluate() : 0;
 	if(val->type() == typeStr) {
-		int *r = stoi(val->value<string>().c_str());
+		vector<int> r = stoi(val->value<string>().c_str());
 		if(r[1] && r[1] != EOF) val = new Value(r[0]);
 	}
 	if(val2) {
 		if(val2->type() == typeStr) {
-			int *r = stoi(val2->value<string>().c_str());
+			vector<int> r = stoi(val2->value<string>().c_str());
 			if(r[1] && r[1] != EOF) val2 = new Value(r[0]);
 		}
 	}
@@ -166,12 +166,20 @@ Value* OpExpression::evaluate() {
 				default:		yyerror(string("Unary operator not available with type \'") + val->typeToStr() + "\'");
 			}
 		}
-		if(!isNum(val)) yyerror(string("Unary operator not available with type \'") + val->typeToStr() + "\'");
-		switch(m_oper) {
-			case NEG:	return new Value(-getNumVal(val));
-			case POS:	return new Value(+getNumVal(val));
-			case BNOT:	return new Value(~(int)getNumVal(val));
-			default:	yyerror("Unexpected operator.");
+		else if(m_oper == '#') {
+			switch(val->type()) {
+				case typeStr:	return new Value((int)val->value<string>().length());
+				case typeArray:	return new Value((int)val->value< map<string, Value> >().size());
+				default:		yyerror(string("Length operator not available with type \'") + val->typeToStr() + "\'");
+			}
+		} else {
+			if(!isNum(val)) yyerror(string("Unary operator not available with type \'") + val->typeToStr() + "\'");
+			switch(m_oper) {
+				case NEG:	return new Value(-getNumVal(val));
+				case POS:	return new Value(+getNumVal(val));
+				case BNOT:	return new Value(~(int)getNumVal(val));
+				default:	yyerror("Unexpected operator.");
+			}
 		}
 	} else {
 		//cdbg("val: " << val->type() << " | val2: " << val2->type());
@@ -188,19 +196,23 @@ Value* OpExpression::evaluate() {
 					return new Value(tmp + tmp2);
 				} else return new Value(getNumVal(val) + getNumVal(val2));
 			case EQ:
-				if(val->type() != val2->type() && (!isNum(val) && !isNum(val2))) return new Value(false);
-				if(isNum(val)) return new Value(getNumVal(val) == getNumVal(val2));
+				if(isNum(val) && isNum(val2)) return new Value(getNumVal(val) == getNumVal(val2));
+				if(val->type() != val2->type()) return new Value(false);
 				switch(val->type()) {
 					case typeStr: return new Value(val->value<string>() == val2->value<string>());
 					case typeVoid: return new Value(true);
+					case typeArray: return new Value(false);
+					case typeFunc: return new Value(val->value<Function*>() == val2->value<Function*>());
 					default: yyerror(string("Operation not available between '") + val->typeToStr() + "' and '" + val2->typeToStr() + "'");
 				}
 			case NE:
-				if(val->type() != val2->type() && (!isNum(val) && !isNum(val2))) return new Value(true);
-				if(isNum(val)) return new Value(getNumVal(val) != getNumVal(val2));
+				if(isNum(val) && isNum(val2)) return new Value(getNumVal(val) != getNumVal(val2));
+				if(val->type() != val2->type()) return new Value(true);
 				switch(val->type()) {
 					case typeStr: return new Value(val->value<string>() != val2->value<string>());
 					case typeVoid: return new Value(false);
+					case typeArray: return new Value(true);
+					case typeFunc: return new Value(val->value<Function*>() != val2->value<Function*>());
 					default: yyerror(string("Operation not available between '") + val->typeToStr() + "' and '" + val2->typeToStr() + "'");
 				}
 			default:
@@ -294,13 +306,13 @@ void AssignExpression::doExp() {
 			Value *val2 = (m_valExp) ? m_valExp->evaluate() : m_val;
 			if(val) {
 				if(val->type() == typeStr) {
-					int *r = stoi(val->value<string>().c_str());
+					vector<int> r = stoi(val->value<string>().c_str());
 					if(r[1] && r[1] != EOF) val = new Value(r[0]);
 				}
 			}
 			if(val2) {
 				if(val2->type() == typeStr) {
-					int *r = stoi(val2->value<string>().c_str());
+					vector<int> r = stoi(val2->value<string>().c_str());
 					if(r[1] && r[1] != EOF) val2 = new Value(r[0]);
 				}
 			}
@@ -510,6 +522,7 @@ FuncExpression::FuncExpression(string funcName, vector<VarExpression*> *args, ve
 	m_funcName = funcName;
 	m_args = args;
 	m_stmts = stmts;
+	m_func = 0;
 	doThings(true);
 	endScope();
 }
@@ -559,7 +572,6 @@ void CallExpression::initFunc() {
 		Function *func = Variable::findByName(m_funcName)->value()->value<Function*>();
 		m_funcs.push_back(new Function(*func));
 	} else {
-		cdbg("!!! " << (void*)m_element->evaluate()->value<Function*>()->args());
 		m_funcs.push_back(new Function(*m_element->evaluate()->value<Function*>()));
 	}
 	if(m_funcs.back() == 0) yyerror(string("Function '") + m_funcName + "' undefined");

@@ -115,7 +115,7 @@ int yywrap() {
 %left '+' '-'
 %left '*' '/' '%'
 %left '^'
-%right NOT BNOT NEG POS INCR DECR
+%right NOT BNOT NEG POS INCR DECR '#'
 
 %start program
 
@@ -258,6 +258,7 @@ exp:
 	| exp LE exp { $$ = new OpExpression($1, LE, $3); }
 	| exp EQ exp { $$ = new OpExpression($1, EQ, $3); }
 	| exp NE exp { $$ = new OpExpression($1, NE, $3); }
+	| '#' exp { $$ = new OpExpression($2, '#'); }
 	| '(' exp ')' { $$ = $2; }
 	| call { $$ = $1; }
 	| '{' elem_list '}' { $$ = new ArrayExpression($2); }

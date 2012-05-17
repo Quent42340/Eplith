@@ -85,7 +85,7 @@ int popFile();
 "false"						return FALSE;
 
 	/* Variable name */
-[a-zA-Z_][0-9a-zA-Z_]*		yylval.sValue = strdup(yytext); return NAME;
+[a-zA-Z_][0-9a-zA-Z_]*[?!]?	yylval.sValue = strdup(yytext); return NAME;
 
 	/* Integer */
 -?[0-9]+					yylval.iValue = atoi(yytext); return INTEGER;
@@ -96,7 +96,7 @@ int popFile();
 -?[0-9]*("."[0-9]+)?[eE][-+]?[0-9]+ yylval.fValue = atof(yytext); return FLOAT;
 
 	/* Operators */
-[-()<>=+*/%{}.:,;^]|"["|"]"	return *yytext;
+[-()<>=+*/%{}.:,;^#]|"["|"]" return *yytext;
 ("!"|"not")					return NOT;
 ("&&"|"and")				return AND;
 ("||"|"or")					return OR;

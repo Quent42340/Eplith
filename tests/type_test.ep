@@ -22,8 +22,8 @@ b = 5 < 2; // false
 c = true;
 d = "string";
 
-print("a : " + type(a) + "\n");
-print("b : " + type(b) + "\n");
-print("c : " + type(c) + "\n");
-print("d : " + type(d) + "\n");
+puts("a : " + type(a));
+puts("b : " + type(b));
+puts("c : " + type(c));
+puts("d : " + type(d));
 

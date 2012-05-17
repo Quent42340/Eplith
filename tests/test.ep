@@ -25,48 +25,48 @@ var4 = var < var2;
 str2 = "I found a " + str + "!";
 bool = true;
 var5 = 5 - (2 + 3) + 1 * (4 - 2);
-print("\ttest: " + str2 + " and var3 = " + var3 + "; That's " + bool + "\n");
+puts("\ttest: " + str2 + " and var3 = " + var3 + "; That's " + bool);
 
 if(var4) {
 	if(bool) {
-		print("Okay, that's not normal.\n");
+		puts("Okay, that's not normal.");
 	} else {
-		print("Whoa! WTF?!\n");
+		puts("Whoa! WTF?!");
 	}
 } else {
 	if(!bool) {
-		print("Err, there is something wrong.\n");
+		puts("Err, there is something wrong.");
 	} else {
-		print("Yeah, it's normal!\n");
+		puts("Yeah, it's normal!");
 	}
 }
 
 if(5 < 1) {
-	print("Are you kidding me?\n");
+	puts("Are you kidding me?");
 } 
 else if(4 > 2) {
-	print("Okay that's good.\n");
+	puts("Okay that's good.");
 } else {
-	print("But what the fuck?\n");
+	puts("But what the fuck?");
 }
 
 x = 0;
 while(x < 3) {
-	print(x + "\n");
+	puts(x);
 	x = x + 1;
 }
 
 do {
-	print(x + "\n");
+	puts(x);
 	x = x - 1;
 } while(x > -1);
 
 for(i = 0->2) {
-	print(i + "\n");
+	puts(i);
 }
 
 b = a = 0x5F;
-print("a = " + (hex)a + " b = " + b + "\n");
+puts("a = " + (hex)a + " b = " + b);
 
 f = 0x50;
 h = a + f;

@@ -99,7 +99,6 @@ bool Variable::erase(std::string name) {
 }
 
 void Variable::initNullVar() {
-	Value *nullValue = new Value();
-	Variable *nullVar = new Variable("<null>", nullValue);
+	Variable *nullVar = new Variable("<null>", new Value());
 }
 

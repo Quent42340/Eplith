@@ -67,7 +67,7 @@ struct Gets {
 	static vector<VarExpression*> *args;
 	static vector<Expression*> *stmts;
 	static inline void exec(...) {}
-	static inline Value *eval(char *str) { cin >> str; return new Value(str); }
+	static inline Value *eval(char *str) { gets(str); return new Value(str); }
 	static void init() {
 		beginScope(stFUNC);
 		args = EPblib_args(0);

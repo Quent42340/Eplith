@@ -53,7 +53,7 @@ typedef enum {
 
 class Value {
 	public:
-		Value();
+		Value();									// Null
 		Value(int value, Mode mode = noMode);		// Int type
 		Value(double value, Mode mode = noMode);	// Float type
 		Value(std::string value);					// String type
@@ -103,7 +103,7 @@ class Value {
 		Value *toNum() {
 			if(m_type != typeStr && !isNum(this)) yyerror(std::string("tonumber() function not available with type '") + typeToStr() + "'");
 			if(m_type == typeStr) {
-				int *r = stoi(value<std::string>().c_str());
+				std::vector<int> r = stoi(value<std::string>().c_str());
 				if(!r[1] || r[1] == EOF) return new Value();
 				else return new Value(r[0]);
 			} else {

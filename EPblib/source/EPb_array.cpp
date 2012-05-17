@@ -50,7 +50,8 @@ map<string, Value*> Array_insert(map<string, Value*> *t, Value *v, int pos = -1)
 	if(pos == -1) {
 		int count = 0;
 		for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
-			if(stoi(it->first.c_str())) count++;
+			vector<int> r = stoi(it->first.c_str());
+			if(r[1] && r[1] != EOF) count++;
 		} count++;
 		t->insert(t->end(), pair<string, Value*>(itos(count), v));
 		return *t;
@@ -61,7 +62,8 @@ map<string, Value*> Array_remove(map<string, Value*> *t, int pos = -1) {
 	if(pos == -1) {
 		int count = 0;
 		for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
-			if(stoi(it->first.c_str())) count++;
+			vector<int> r = stoi(it->first.c_str());
+			if(r[1] && r[1] != EOF) count++;
 		}
 		if(!t->erase(itos(count))) yyerror("Trying to clean a void array");
 		return *t;
@@ -71,7 +73,8 @@ map<string, Value*> Array_remove(map<string, Value*> *t, int pos = -1) {
 int Array_maxn(map<string, Value*> *t) {
 	int count = 0;
 	for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
-		if(stoi(it->first.c_str())) count++;
+		vector<int> r = stoi(it->first.c_str());
+		if(r[1] && r[1] != EOF) count++;
 	}
 	return count;
 }

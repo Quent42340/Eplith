@@ -22,11 +22,11 @@ b = 1/2;
 c = 1/3;
 d = b + c;
 
-print("b + c = " + (sci)d + "\n");
+puts("b + c = " + (sci)d);
 
 if(b > c) {
-	print("Ok.\n");
+	puts("Ok.");
 } else {
-	print("Oh no..\n");
+	puts("Oh no..");
 }
 
