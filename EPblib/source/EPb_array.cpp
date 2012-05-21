@@ -79,10 +79,10 @@ int Array_maxn(map<string, Value*> *t) {
 	return count;
 }
 
-EPb_initArrayStruct2(Concat, Array_concat(EPb_getArray(exp), EPb_getStr(exp2)));
-EPb_initArrayStructA2(Insert, Array_insert(EPb_getArrayPtr(exp), exp2->evaluate()));
-EPb_initArrayStructA(Remove, Array_remove(EPb_getArrayPtr(exp)));
-EPb_initArrayStruct(Maxn, Array_maxn(EPb_getArrayPtr(exp)));
+EPb_initArrayStruct2(Concat, Array_concat(EPb_getArray(exp), EPb_getStr(exp2)), "array", "string");
+EPb_initArrayStructA2(Insert, Array_insert(EPb_getArrayPtr(exp), exp2->evaluate()), "array", "");
+EPb_initArrayStructA(Remove, Array_remove(EPb_getArrayPtr(exp)), "array");
+EPb_initArrayStruct(Maxn, Array_maxn(EPb_getArrayPtr(exp)), "array");
 
 void EPblib_initArray() {
 	map<string, Value*> Array_elements;

@@ -17,16 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-function size_is_6?(s) {
-	if(#s == 6) return true;
-	else return false;
-}
+t = {5, 4, 3, 2, 1};
 
-s = "sixsix";
-
-if(size_is_6?(s)) {
-	puts("OK.");
-} else {
-	puts("Not OK.");
-}
+Array.maxn(5);
 

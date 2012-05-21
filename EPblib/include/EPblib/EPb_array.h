@@ -21,7 +21,7 @@
 #define EPBLIB_ARRAY_H
 
 
-#define EPb_initArrayStruct(Struct, val) \
+#define EPb_initArrayStruct(Struct, val, ...) \
 	struct Struct { \
 		static vector<VarExpression*> *args; \
 		static vector<Expression*> *stmts; \
