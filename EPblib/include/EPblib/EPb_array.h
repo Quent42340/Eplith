@@ -20,8 +20,24 @@
 #ifndef EPBLIB_ARRAY_H
 #define EPBLIB_ARRAY_H
 
+#define EPb_initArrayStructS(Struct, val) \
+	struct Struct { \
+		static vector<VarExpression*> *args; \
+		static vector<Expression*> *stmts; \
+		static inline void exec(...) {} \
+		static inline Value *eval(Expression *exp, ...) {
+			return new Value(val);
+		} \
+		static void init() { \
+			beginScope(stFUNC); \
+			args = EPblib_args(1, "t"); \
+			stmts = EPblib_stmts(1, new ReturnExpression(new ArrayFExpression<Struct>((*args)[0]))); \
+			endScope(); \
+		} \
+	}; \
+	EPb_initSSM(Struct);
 
-#define EPb_initArrayStruct(Struct, val, ...) \
+#define EPb_initArrayStruct(Struct, val) \
 	struct Struct { \
 		static vector<VarExpression*> *args; \
 		static vector<Expression*> *stmts; \
