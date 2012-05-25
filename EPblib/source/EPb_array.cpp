@@ -26,18 +26,21 @@ using namespace std;
 template<class T>
 class ArrayFExpression : public Expression {
 	public:
-		ArrayFExpression(Expression *exp = 0, Expression *exp2 = 0) { m_exp = exp; m_exp2 = exp2; }
+		ArrayFExpression(vector<VarExpression*> *args) { m_args = args; }
 		~ArrayFExpression();
 		
-		Value *evaluate() { return T::eval(m_exp, m_exp2); }
-		void doExp() { T::exec(m_exp, m_exp2); }
+		Value *evaluate() { return T::eval(m_args); }
+		void doExp() { T::exec(m_args); }
 		
 	private:
-		Expression *m_exp;
-		Expression *m_exp2;
+		vector<VarExpression*> *m_args;
 };
 
-string Array_concat(map<string, Value*> t, string sep) {
+string Array_concat(vector<VarExpression*> *args) {
+	if(args->size() > 2 || args->size() < 2) yyerror("Unexpected number of arguments.");
+	map<string, Value*> t = EPb_getArray((*args)[0]);
+	string sep = EPb_getStr((*args)[1]);
+	
 	string r;
 	for(map<string, Value*>::iterator it = t.begin() ; it != t.end() ; it++) {
 		r += EPb_valToStr(it->second);
@@ -46,7 +49,12 @@ string Array_concat(map<string, Value*> t, string sep) {
 	return r;
 }
 
-map<string, Value*> Array_insert(map<string, Value*> *t, Value *v, int pos = -1) {
+map<string, Value*> Array_insert(vector<VarExpression*> *args, int pos = -1) {
+	if(args->size() > 2 || args->size() < 2) yyerror("Unexpected number of arguments.");
+	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
+	if(!t) yyerror("Bad argument.");
+	Value *v = EPb_getVal((*args)[1]);
+	
 	if(pos == -1) {
 		int count = 0;
 		for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
@@ -58,7 +66,11 @@ map<string, Value*> Array_insert(map<string, Value*> *t, Value *v, int pos = -1)
 	}
 }
 
-map<string, Value*> Array_remove(map<string, Value*> *t, int pos = -1) {
+map<string, Value*> Array_remove(vector<VarExpression*> *args, int pos = -1) {
+	if(args->size() > 1 || args->size() < 1) yyerror("Unexpected number of arguments.");
+	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
+	if(!t) yyerror("Bad argument.");
+	
 	if(pos == -1) {
 		int count = 0;
 		for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
@@ -70,19 +82,23 @@ map<string, Value*> Array_remove(map<string, Value*> *t, int pos = -1) {
 	}
 }
 
-int Array_maxn(map<string, Value*> *t) {
+int Array_maxn(vector<VarExpression*> *args) {
+	if(args->size() > 1 || args->size() < 1) yyerror("Unexpected number of arguments.");
+	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
+	if(!t) yyerror("Bad argument.");
+	
 	int count = 0;
 	for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
 		vector<int> r = stoi(it->first.c_str());
 		if(r[1] && r[1] != EOF) count++;
 	}
-	return count;
+	return --count;
 }
 
-EPb_initArrayStruct2(Concat, Array_concat(EPb_getArray(exp), EPb_getStr(exp2)));
-EPb_initArrayStructA2(Insert, Array_insert(EPb_getArrayPtr(exp), exp2->evaluate()));
-EPb_initArrayStructA(Remove, Array_remove(EPb_getArrayPtr(exp)));
-EPb_initArrayStruct(Maxn, Array_maxn(EPb_getArrayPtr(exp)));
+EPb_initArrayStruct(Concat, Array_concat,, 2, "t", "s");
+EPb_initArrayStruc2(Insert,, Array_insert, 2, "t", "v");
+EPb_initArrayStruct(Remove,, Array_remove, 1, "t");
+EPb_initArrayStruct(Maxn, Array_maxn,, 1, "t");
 
 void EPblib_initArray() {
 	map<string, Value*> Array_elements;

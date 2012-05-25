@@ -20,48 +20,25 @@
 #ifndef EPBLIB_ARRAY_H
 #define EPBLIB_ARRAY_H
 
-#define EPb_initArrayStructS(Struct, val) \
+#define EPb_initArrayStruct(Struct, val, action, nb, ...) \
 	struct Struct { \
 		static vector<VarExpression*> *args; \
 		static vector<Expression*> *stmts; \
-		static inline void exec(...) {} \
-		static inline Value *eval(Expression *exp, ...) {
-			return new Value(val);
+		static inline void exec(vector<VarExpression*> *args) { \
+			if(#action) \
+				action(args); \
+		} \
+		static inline Value *eval(vector<VarExpression*> *args) { \
+			exec(args); \
+			if(#val) \
+				return new Value(val(args)); \
+			else \
+				return new Value(); \
 		} \
 		static void init() { \
 			beginScope(stFUNC); \
-			args = EPblib_args(1, "t"); \
-			stmts = EPblib_stmts(1, new ReturnExpression(new ArrayFExpression<Struct>((*args)[0]))); \
-			endScope(); \
-		} \
-	}; \
-	EPb_initSSM(Struct);
-
-#define EPb_initArrayStruct(Struct, val) \
-	struct Struct { \
-		static vector<VarExpression*> *args; \
-		static vector<Expression*> *stmts; \
-		static inline void exec(...) {} \
-		static inline Value *eval(Expression *exp, ...) { return new Value(val); } \
-		static void init() { \
-			beginScope(stFUNC); \
-			args = EPblib_args(1, "t"); \
-			stmts = EPblib_stmts(1, new ReturnExpression(new ArrayFExpression<Struct>((*args)[0]))); \
-			endScope(); \
-		} \
-	}; \
-	EPb_initSSM(Struct);
-
-#define EPb_initArrayStruct2(Struct, val) \
-	struct Struct { \
-		static vector<VarExpression*> *args; \
-		static vector<Expression*> *stmts; \
-		static inline void exec(...) {} \
-		static inline Value *eval(Expression *exp, Expression *exp2) { return new Value(val); } \
-		static void init() { \
-			beginScope(stFUNC); \
-			args = EPblib_args(2, "t", "n"); \
-			stmts = EPblib_stmts(1, new ReturnExpression(new ArrayFExpression<Struct>((*args)[0], (*args)[1]))); \
+			args = EPblib_args(nb, ##__VA_ARGS__); \
+			stmts = EPblib_stmts(1, new ReturnExpression(new ArrayFExpression<Struct>(args))); \
 			endScope(); \
 		} \
 	}; \

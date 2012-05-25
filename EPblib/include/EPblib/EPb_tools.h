@@ -27,10 +27,13 @@ std::string EPb_valToStr(Value *v);
 
 #define EPb_getValStr(val) val->value<string>()
 
-#define EPb_getInt(exp) (int)getNumVal(exp->evaluate())
-#define EPb_getStr(exp) exp->evaluate()->value<string>()
-#define EPb_getArray(exp) exp->evaluate()->value< map<string, Value*> >()
+#define EPb_getVal(exp) exp->evaluate()
 
+#define EPb_getInt(exp) (int)getNumVal(exp->evaluate())
+
+#define EPb_getStr(exp) exp->evaluate()->value<string>()
+
+#define EPb_getArray(exp) exp->evaluate()->value< map<string, Value*> >()
 #define EPb_getArrayPtr(exp) exp->evaluate()->valuePtr< map<string, Value*> >()
 
 #define EPb_initSSM(Struct) std::vector<VarExpression*> *Struct::args = 0; \
