@@ -83,6 +83,7 @@ std::string EPb_valToStr(Value *v);
 #define EPb_getNum(exp) getNumVal(exp->evaluate())
 #define EPb_getStr(exp) exp->evaluate()->value<string>()
 #define EPb_getArray(exp) exp->evaluate()->value< map<string, Value*> >()
+#define EPb_getFile(exp) exp->evaluate()->value<File*>()
 
 #define EPb_getArrayPtr(exp) exp->evaluate()->valuePtr< map<string, Value*> >()
 

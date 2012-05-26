@@ -33,6 +33,7 @@ typedef enum {
 	typeStr,
 	typeArray,
 	typeFunc,
+	typeFile,
 	typeVoid
 } Type;
 
@@ -41,6 +42,11 @@ typedef enum {
 	modeHex,
 	modeSci
 } Mode;
+
+typedef struct {
+	FILE *f;
+	const char *fname;
+} File;
 
 #define getNumVal(val) ((val->type() == typeInt) ? val->value<int>() : val->value<double>())
 #define setNumVal(val1, val2) { if(val1->type() == typeInt) val1->value<int>(val2); else val1->value<double>(val2); }
@@ -62,6 +68,7 @@ class Value {
 		Value(bool value);							// Bool type
 		Value(std::map<std::string, Value*> array);	// Array
 		Value(Function *func);						// Function
+		Value(File *file);							// File
 		Value(Type type, boost::any value, Mode mode = noMode);
 		Value(boost::any *value, Mode mode = noMode);
 		Value(Variable *var, Mode mode = noMode);

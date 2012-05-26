@@ -17,21 +17,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef EPBLIB_H
-#define EPBLIB_H
+#ifndef EPBLIB_FILE_H
+#define EPBLIB_FILE_H
 
-#include "EPblib/EPb_base.h"
-#include "EPblib/EPb_math.h"
-#include "EPblib/EPb_string.h"
-#include "EPblib/EPb_array.h"
-#include "EPblib/EPb_file.h"
+void EPblib_initFile();
 
-void EPblib_init() {
-	EPblib_initBase();
-	EPblib_initMath();
-	EPblib_initString();
-	EPblib_initArray();
-	EPblib_initFile();
-}
-
-#endif // EPBLIB_H
+#endif // EPBLIB_FILE_H

@@ -1,11 +1,11 @@
 - Base library for Eplith:
-	* Files
 	* System
 - Constants
 - Optional parameters in funcs
 - Multi-return in funcs
 - Add missing functions in EPblib
 => Version 0.1a
+- Add functions to EPblib ( especially to Files )
 - Comparison between tables
 - Improve error messages
 - Operator ':' in function declaration

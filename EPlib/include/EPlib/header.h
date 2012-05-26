@@ -34,13 +34,13 @@
 #include <cstdarg>
 #include <boost/any.hpp>
 
-#define EPLITH_DEBUG
-#define YYERROR_VERBOSE
+//#define EPLITH_DEBUG
+//#define YYERROR_VERBOSE
 
-#define WARNINGS
+//#define WARNINGS
 
-#define VAR_DEBUG
-#define TYPES_DEBUG
+//#define VAR_DEBUG
+//#define TYPES_DEBUG
 //#define CALL_DEBUG
 //#define DELVAR_DEBUG
 //#define SETVAR_DEBUG

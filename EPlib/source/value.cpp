@@ -71,6 +71,11 @@ Value::Value(Function *func) {
 	m_value = func;
 }
 
+Value::Value(File *file) {
+	m_type = typeFile;
+	m_value = file;
+}
+
 Value::Value(Type type, boost::any value, Mode mode) {
 	m_type = type;
 	m_value = value;
@@ -97,6 +102,9 @@ Value::Value(boost::any *value, Mode mode) {
 	}
 	else if(Function **func = valuePtr<Function*>()) {
 		m_type = typeFunc;
+	}
+	else if(File **file = valuePtr<File*>()) {
+		m_type = typeFile;
 	} else {
 		m_type = typeVoid;
 	}
@@ -124,6 +132,9 @@ Value::Value(Variable *var, Mode mode) {
 	}
 	else if(Function **func = valuePtr<Function*>()) {
 		m_type = typeFunc;
+	}
+	else if(File **file = valuePtr<File*>()) {
+		m_type = typeFile;
 	} else {
 		m_type = typeVoid;
 	}
@@ -160,7 +171,10 @@ void Value::print(ostream &out, Mode mode) {
 		out << "}";
 	}
 	else if(Function **func = valuePtr<Function*>()) {
-		out << getPtrAddr((void*)*func);
+		out << "function: " << getPtrAddr((void*)*func);
+	}
+	else if(File **file = valuePtr<File*>()) {
+		out << "file: " << getPtrAddr((void*)*file);
 	}
 }
 
@@ -228,6 +242,8 @@ string Value::typeToStr() {
 			return "array";
 		case typeFunc:
 			return "function";
+		case typeFile:
+			return "file";
 		case typeVoid:
 			return "void";
 		default:

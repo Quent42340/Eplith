@@ -150,10 +150,6 @@ double Math_deg(EPb_args *args) {
 	return x / RADIANS_PER_DEGREE;
 }
 
-double Math_rand() { return rand(); }
-double Math_srand(double x) { srand(x); rand(); return x; }
-double Math_time() { return time(NULL); }
-
 double Math_rad(EPb_args *args) {
 	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);

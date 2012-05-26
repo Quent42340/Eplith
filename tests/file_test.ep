@@ -17,21 +17,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef EPBLIB_H
-#define EPBLIB_H
+file = File.open("tests/file", "r+");
 
-#include "EPblib/EPb_base.h"
-#include "EPblib/EPb_math.h"
-#include "EPblib/EPb_string.h"
-#include "EPblib/EPb_array.h"
-#include "EPblib/EPb_file.h"
+c = File.getc(file);
 
-void EPblib_init() {
-	EPblib_initBase();
-	EPblib_initMath();
-	EPblib_initString();
-	EPblib_initArray();
-	EPblib_initFile();
+while(c != "\n") {
+	print(c);
+	c = File.getc(file);
 }
 
-#endif // EPBLIB_H
+print("\n");
+
+l = File.getline(file);
+
+while(l != File.EOF) {
+	puts(l);
+	l = File.getline(file);
+}
+
+if(!File.close(file)) puts("\nDone!");
+else puts("\nOh no...");
+
