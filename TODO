@@ -1,5 +1,3 @@
-- Base library for Eplith:
-	* System
 - Constants
 - Optional parameters in funcs
 - Multi-return in funcs
