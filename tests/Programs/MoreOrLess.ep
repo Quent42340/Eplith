@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-Math.srand(Math.time());
+Math.srand(System.time());
 randn = Math.rand()%100;
 puts("Randn: " + randn);
 usern = -1;

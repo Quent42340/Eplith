@@ -20,6 +20,6 @@
 #ifndef EPBLIB_SYSTEM_H
 #define EPBLIB_SYSTEM_H
 
-//void EPblib_initSystem();
+void EPblib_initSystem();
 
 #endif // EPBLIB_SYSTEM_H

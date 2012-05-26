@@ -19,7 +19,7 @@
 ---------------------------------------------------------------------------------*/
 #include <EPlib.h>
 #include "EPb_tools.h"
-#include "EPb_array.h"
+#include "EPb_file.h"
 
 using namespace std;
 

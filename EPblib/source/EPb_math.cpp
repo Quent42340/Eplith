@@ -168,11 +168,6 @@ double Math_srand(EPb_args *args) {
 	return x;
 }
 
-double Math_time(EPb_args *args) {
-	EPb_checkArgsNbr(0, 0);
-	return time(NULL);
-}
-
 EPb_initStruct(Cos, Math_cos,, 1, "x");
 EPb_initStruct(Sin, Math_sin,, 1, "x");
 EPb_initStruct(Tan, Math_tan,, 1, "x");
@@ -196,7 +191,6 @@ EPb_initStruct(Deg, Math_deg,, 1, "x");
 EPb_initStruct(Rad, Math_rad,, 1, "x");
 EPb_initStruct(Rand, Math_rand,, 0, "");
 EPb_initStruct(Srand, Math_srand,, 1, "x");
-EPb_initStruct(Time, Math_time,, 0, "");
 
 void EPblib_initMath() {
 	map<string, Value*> Math_elements;
@@ -224,7 +218,6 @@ void EPblib_initMath() {
 	EPb_initElemFunc(Math_elements, Rad, rad);
 	EPb_initElemFunc(Math_elements, Rand, rand);
 	EPb_initElemFunc(Math_elements, Srand, srand);
-	EPb_initElemFunc(Math_elements, Time, time);
 	
 	Math_elements.insert(Math_elements.end(), pair<string, Value*>("pi", new Value(PI)));
 	

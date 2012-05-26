@@ -78,7 +78,6 @@ Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l
   cr_test.ep
   factorial.ep
   farray_test.ep
-  file
   file_test.ep
   float_issue.ep
   float_test.ep
@@ -88,6 +87,7 @@ Eplith=/home/quentin/Bureau/FlexBison/Eplith CD=. filter=".gitignore *.c *.h *.l
   io_test.ep
   math_test.ep
   string_test.ep
+  system_test.ep
   temp_test.ep
   test.ep
   type_test.ep
