@@ -23,21 +23,8 @@
 
 using namespace std;
 
-template<class T>
-class ArrayFExpression : public Expression {
-	public:
-		ArrayFExpression(vector<VarExpression*> *args) { m_args = args; }
-		~ArrayFExpression();
-		
-		Value *evaluate() { return T::eval(m_args); }
-		void doExp() { T::exec(m_args); }
-		
-	private:
-		vector<VarExpression*> *m_args;
-};
-
-string Array_concat(vector<VarExpression*> *args) {
-	if(args->size() > 2 || args->size() < 2) yyerror("Unexpected number of arguments.");
+string Array_concat(EPb_args *args) {
+	EPb_checkArgsNbr(2, 2);
 	map<string, Value*> t = EPb_getArray((*args)[0]);
 	string sep = EPb_getStr((*args)[1]);
 	
@@ -49,11 +36,12 @@ string Array_concat(vector<VarExpression*> *args) {
 	return r;
 }
 
-map<string, Value*> Array_insert(vector<VarExpression*> *args, int pos = -1) {
-	if(args->size() > 2 || args->size() < 2) yyerror("Unexpected number of arguments.");
+map<string, Value*> Array_insert(EPb_args *args) {
+	EPb_checkArgsNbr(2, 2);
 	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
 	if(!t) yyerror("Bad argument.");
 	Value *v = EPb_getVal((*args)[1]);
+	int pos = -1;
 	
 	if(pos == -1) {
 		int count = 0;
@@ -66,10 +54,11 @@ map<string, Value*> Array_insert(vector<VarExpression*> *args, int pos = -1) {
 	}
 }
 
-map<string, Value*> Array_remove(vector<VarExpression*> *args, int pos = -1) {
-	if(args->size() > 1 || args->size() < 1) yyerror("Unexpected number of arguments.");
+map<string, Value*> Array_remove(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
 	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
 	if(!t) yyerror("Bad argument.");
+	int pos = -1;
 	
 	if(pos == -1) {
 		int count = 0;
@@ -82,8 +71,8 @@ map<string, Value*> Array_remove(vector<VarExpression*> *args, int pos = -1) {
 	}
 }
 
-int Array_maxn(vector<VarExpression*> *args) {
-	if(args->size() > 1 || args->size() < 1) yyerror("Unexpected number of arguments.");
+int Array_maxn(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
 	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
 	if(!t) yyerror("Bad argument.");
 	
@@ -95,10 +84,10 @@ int Array_maxn(vector<VarExpression*> *args) {
 	return --count;
 }
 
-EPb_initArrayStruct(Concat, Array_concat,, 2, "t", "s");
-EPb_initArrayStruc2(Insert,, Array_insert, 2, "t", "v");
-EPb_initArrayStruct(Remove,, Array_remove, 1, "t");
-EPb_initArrayStruct(Maxn, Array_maxn,, 1, "t");
+EPb_initStruct(Concat, Array_concat,, 2, "t", "s");
+EPb_initStruct(Insert,, Array_insert, 2, "t", "v");
+EPb_initStruct(Remove,, Array_remove, 1, "t");
+EPb_initStruct(Maxn, Array_maxn,, 1, "t");
 
 void EPblib_initArray() {
 	map<string, Value*> Array_elements;

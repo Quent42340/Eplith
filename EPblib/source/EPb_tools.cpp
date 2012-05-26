@@ -21,7 +21,7 @@
 
 using namespace std;
 
-vector<VarExpression*> *EPblib_args(int nbArgs, ...) {
+vector<VarExpression*> *EPb_arguments(int nbArgs, ...) {
 	vector<VarExpression*> *args = new vector<VarExpression*>;
 	if(!nbArgs) return args;
 	
@@ -37,7 +37,7 @@ vector<VarExpression*> *EPblib_args(int nbArgs, ...) {
 	return args;
 }
 
-vector<Expression*> *EPblib_stmts(int nbStmts, ...) {
+vector<Expression*> *EPb_statements(int nbStmts, ...) {
 	vector<Expression*> *stmts = new vector<Expression*>;
 	if(!nbStmts) return stmts;
 	

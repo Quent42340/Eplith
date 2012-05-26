@@ -20,8 +20,57 @@
 #ifndef EPBLIB_TOOLS_H
 #define EPBLIB_TOOLS_H
 
-std::vector<VarExpression*> *EPblib_args(int nbArgs, ...);
-std::vector<Expression*> *EPblib_stmts(int nbStmts, ...);
+typedef std::vector<VarExpression*> EPb_args;
+typedef std::vector<Expression*> EPb_stmts;
+
+template<class T>
+class EPbExpression : public Expression {
+	public:
+		EPbExpression(EPb_args *args) { m_args = args; }
+		~EPbExpression() { delete T::args; delete T::stmts; delete T::value; delete m_args; }
+		
+		Value *evaluate() { return T::eval(m_args); }
+		void doExp() { T::exec(m_args); }
+		
+	private:
+		EPb_args *m_args;
+};
+
+EPb_args *EPb_arguments(int nbArgs, ...);
+EPb_stmts *EPb_statements(int nbStmts, ...);
+
+#define EPb_checkArgsNbr(min, max) if(args->size() > max || args->size() < min) yyerror("Unexpected number of arguments");
+
+#define EPb_initStruct(Struct, val, action, nb, ...) \
+	struct Struct { \
+		static EPb_args *args; \
+		static EPb_stmts *stmts; \
+		static Value *ret; \
+		static inline void exec(EPb_args *args) { \
+			if(#action) { \
+				ret = new Value(action(args)); \
+			} \
+		} \
+		static inline Value *eval(EPb_args *args) { \
+			exec(args); \
+			if(#val) { \
+				return new Value(val(args)); \
+			} else { \
+				if(ret) { \
+					return new Value(ret); \
+				} else { \
+					return new Value(); \
+				} \
+			} \
+		} \
+		static void init() { \
+			beginScope(stFUNC); \
+			args = EPb_arguments(nb, ##__VA_ARGS__); \
+			stmts = EPb_statements(1, new ReturnExpression(new EPbExpression<Struct>(args))); \
+			endScope(); \
+		} \
+	}; \
+	EPb_initSSM(Struct);
 
 std::string EPb_valToStr(Value *v);
 
@@ -29,21 +78,23 @@ std::string EPb_valToStr(Value *v);
 
 #define EPb_getVal(exp) exp->evaluate()
 
+// getInt is like that because of the float bug...
 #define EPb_getInt(exp) (int)getNumVal(exp->evaluate())
-
+#define EPb_getNum(exp) getNumVal(exp->evaluate())
 #define EPb_getStr(exp) exp->evaluate()->value<string>()
-
 #define EPb_getArray(exp) exp->evaluate()->value< map<string, Value*> >()
+
 #define EPb_getArrayPtr(exp) exp->evaluate()->valuePtr< map<string, Value*> >()
 
-#define EPb_initSSM(Struct) std::vector<VarExpression*> *Struct::args = 0; \
-						std::vector<Expression*> *Struct::stmts = 0;
+#define EPb_initSSM(Struct) EPb_args *Struct::args = 0; \
+							EPb_stmts *Struct::stmts = 0; \
+							Value *Struct::ret = 0;
 
 #define EPb_initFunc(Struct, name) Struct::init(); \
-							   Variable *name = new Variable(#name, new Value(new Function(Struct::args, Struct::stmts)));
+								   Variable *name = new Variable(#name, new Value(new Function(Struct::args, Struct::stmts)));
 
 #define EPb_initElemFunc(table, Struct, name) Struct::init(); \
-										  Value *name = new Value(new Function(Struct::args, Struct::stmts)); \
-										  table.insert(table.end(), pair<string, Value*>(#name, name));
+											  Value *name = new Value(new Function(Struct::args, Struct::stmts)); \
+											  table.insert(table.end(), pair<string, Value*>(#name, name));
 
 #endif // EPBLIB_TOOLS_H

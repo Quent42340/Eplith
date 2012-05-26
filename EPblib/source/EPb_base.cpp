@@ -23,110 +23,58 @@
 
 using namespace std;
 
-template<class T>
-class IOExpression : public Expression {
-	public:
-		IOExpression(Expression *exp = 0) { if(!exp) m_str = new char; m_exp = exp; }
-		~IOExpression() {}
-		
-		Value *evaluate() {	return T::eval(m_str); }
-		void doExp() { T::exec(m_exp); }
-		
-	private:
-		char *m_str;
-		Expression *m_exp;
-};
+void *Base_print(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	Value *out = EPb_getVal((*args)[0]);
+	out->print();
+	return NULL;
+}
 
-struct Print {
-	static vector<VarExpression*> *args;
-	static vector<Expression*> *stmts;
-	static inline void exec(Expression *exp) { exp->evaluate()->print(); }
-	static inline Value *eval(...) { return new Value(); }
-	static void init() {
-		beginScope(stFUNC);
-		args = EPblib_args(1, "str");
-		stmts = EPblib_stmts(1, new IOExpression<Print>((*args)[0]));
-		endScope();
-	}
-};
+void *Base_puts(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	Value *out = EPb_getVal((*args)[0]);
+	out->print();
+	cout << endl;
+	return NULL;
+}
 
-struct Puts {
-	static vector<VarExpression*> *args;
-	static vector<Expression*> *stmts;
-	static inline void exec(Expression *exp) { exp->evaluate()->print(); cout << endl; }
-	static inline Value *eval(...) { return new Value(); }
-	static void init() {
-		beginScope(stFUNC);
-		args = EPblib_args(1, "str");
-		stmts = EPblib_stmts(1, new IOExpression<Puts>((*args)[0]));
-		endScope();
-	}
-};
+string Base_gets(EPb_args *args) {
+	EPb_checkArgsNbr(0, 0);
+	char *str = new char;
+	gets(str);
+	return str;
+}
 
-struct Gets {
-	static vector<VarExpression*> *args;
-	static vector<Expression*> *stmts;
-	static inline void exec(...) {}
-	static inline Value *eval(char *str) { gets(str); return new Value(str); }
-	static void init() {
-		beginScope(stFUNC);
-		args = EPblib_args(0);
-		stmts = EPblib_stmts(1, new ReturnExpression(new IOExpression<Gets>));
-		endScope();
-	}
-};
+string Base_type(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	Value *val = EPb_getVal((*args)[0]);
+	return val->typeToStr();
+}
 
-struct TypeF {
-	static vector<VarExpression*> *args;
-	static vector<Expression*> *stmts;
-	static inline void exec(...) {}
-	static inline Value *eval(...) { return new Value((*args)[0]->evaluate()->typeToStr()); }
-	static void init() {
-		beginScope(stFUNC);
-		args = EPblib_args(1, "var");
-		stmts = EPblib_stmts(1, new ReturnExpression(new IOExpression<TypeF>));
-		endScope();
-	}
-};
+Value *Base_toNumber(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	Value *val = EPb_getVal((*args)[0]);
+	return val->toNum();
+}
 
-struct ToNumber {
-	static vector<VarExpression*> *args;
-	static vector<Expression*> *stmts;
-	static inline void exec(...) {}
-	static inline Value *eval(...) { return (*args)[0]->evaluate()->toNum(); }
-	static void init() {
-		beginScope(stFUNC);
-		args = EPblib_args(1, "var");
-		stmts = EPblib_stmts(1, new ReturnExpression(new IOExpression<ToNumber>));
-		endScope();
-	}
-};
+Value *Base_toString(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	Value *val = EPb_getVal((*args)[0]);
+	return val->toStr();
+}
 
-struct ToString {
-	static vector<VarExpression*> *args;
-	static vector<Expression*> *stmts;
-	static inline void exec(...) {}
-	static inline Value *eval(...) { return (*args)[0]->evaluate()->toStr(); }
-	static void init() {
-		beginScope(stFUNC);
-		args = EPblib_args(1, "var");
-		stmts = EPblib_stmts(1, new ReturnExpression(new IOExpression<ToString>));
-		endScope();
-	}
-};
-
-EPb_initSSM(Print);
-EPb_initSSM(Puts);
-EPb_initSSM(Gets);
-EPb_initSSM(TypeF);
-EPb_initSSM(ToNumber);
-EPb_initSSM(ToString);
+EPb_initStruct(Print,, Base_print, 1, "out");
+EPb_initStruct(Puts,, Base_puts, 1, "out");
+EPb_initStruct(Gets,, Base_gets, 0, "");
+EPb_initStruct(BType, Base_type,, 1, "val")
+EPb_initStruct(ToNumber, Base_toNumber,, 1, "val")
+EPb_initStruct(ToString, Base_toString,, 1, "val")
 
 void EPblib_initBase() {
 	EPb_initFunc(Print, print);
 	EPb_initFunc(Puts, puts);
 	EPb_initFunc(Gets, gets);
-	EPb_initFunc(TypeF, type);
+	EPb_initFunc(BType, type);
 	EPb_initFunc(ToNumber, tonumber);
 	EPb_initFunc(ToString, tostring);
 	

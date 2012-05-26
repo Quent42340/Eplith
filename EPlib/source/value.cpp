@@ -29,6 +29,11 @@ Value::Value() {
 	m_value = string("(null)");
 }
 
+Value::Value(void*) {
+	m_type = typeVoid;
+	m_value = string("(null)");
+}
+
 Value::Value(int value, Mode mode) {
 	m_type = typeInt;
 	m_value = value;

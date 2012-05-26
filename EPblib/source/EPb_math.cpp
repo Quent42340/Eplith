@@ -27,50 +27,180 @@
 
 using namespace std;
 
-template<class T>
-class MathExpression : public Expression {
-	public:
-		MathExpression(Expression *exp = 0, Expression *exp2 = 0) { m_exp = exp; m_exp2 = exp2; }
-		~MathExpression() { delete m_exp; if(m_exp2) delete m_exp2; }
-		
-		Value *evaluate() { return T::eval(m_exp, m_exp2); }
-		void doExp() {}
-		
-	private:
-		Expression *m_exp;
-		Expression *m_exp2;
-};
+double Math_cos(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return cos(x);
+}
 
-double Math_deg(double x) { return x / RADIANS_PER_DEGREE; }
-double Math_rad(double x) { return x * RADIANS_PER_DEGREE; }
+double Math_sin(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return sin(x);
+}
+
+double Math_tan(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return tan(x);
+}
+
+double Math_acos(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return acos(x);
+}
+
+double Math_asin(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return asin(x);
+}
+
+double Math_atan(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return atan(x);
+}
+
+double Math_atan2(EPb_args *args) {
+	EPb_checkArgsNbr(2, 2);
+	double y = EPb_getNum((*args)[0]);
+	double x = EPb_getNum((*args)[1]);
+	return atan2(y, x);
+}
+
+double Math_cosh(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return cosh(x);
+}
+
+double Math_sinh(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return sinh(x);
+}
+
+double Math_tanh(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return tanh(x);
+}
+
+double Math_sqrt(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return sqrt(x);
+}
+
+double Math_exp(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return exp(x);
+}
+
+double Math_ldexp(EPb_args *args) {
+	EPb_checkArgsNbr(2, 2);
+	double x = EPb_getNum((*args)[0]);
+	int exp = EPb_getInt((*args)[1]);
+	return ldexp(x, exp);
+}
+
+double Math_log(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return log(x);
+}
+
+double Math_log10(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return log10(x);
+}
+
+double Math_ceil(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return ceil(x);
+}
+
+double Math_floor(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return floor(x);
+}
+
+double Math_fabs(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return fabs(x);
+}
+
+double Math_fmod(EPb_args *args) {
+	EPb_checkArgsNbr(2, 2);
+	double numerator = EPb_getNum((*args)[0]);
+	double denominator = EPb_getNum((*args)[1]);
+	return fmod(numerator, denominator);
+}
+
+double Math_deg(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return x / RADIANS_PER_DEGREE;
+}
+
 double Math_rand() { return rand(); }
 double Math_srand(double x) { srand(x); rand(); return x; }
 double Math_time() { return time(NULL); }
 
-EPb_initMathStruct(Cos, cos);
-EPb_initMathStruct(Sin, sin);
-EPb_initMathStruct(Tan, tan);
-EPb_initMathStruct(aCos, acos);
-EPb_initMathStruct(aSin, asin);
-EPb_initMathStruct(aTan, atan);
-EPb_initMathStruct2(aTan2, atan2);
-EPb_initMathStruct(Cosh, cosh);
-EPb_initMathStruct(Sinh, sinh);
-EPb_initMathStruct(Tanh, tanh);
-EPb_initMathStruct(Sqrt, sqrt);
-EPb_initMathStruct(Exp, exp);
-EPb_initMathStruct2(Ldexp, ldexp);
-EPb_initMathStruct(Log, log);
-EPb_initMathStruct(Log10, log10);
-EPb_initMathStruct(Ceil, ceil);
-EPb_initMathStruct(Floor, floor);
-EPb_initMathStruct(Abs, fabs);
-EPb_initMathStruct2(Fmod, fmod);
-EPb_initMathStruct(Deg, Math_deg);
-EPb_initMathStruct(Rad, Math_rad);
-EPb_initMathStruct0(Rand, Math_rand);
-EPb_initMathStruct(Srand, Math_srand);
-EPb_initMathStruct0(Time, Math_time);
+double Math_rad(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	return x * RADIANS_PER_DEGREE;
+}
+
+double Math_rand(EPb_args *args) {
+	EPb_checkArgsNbr(0, 0);
+	return rand();
+}
+
+double Math_srand(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	double x = EPb_getNum((*args)[0]);
+	srand(x); rand();
+	return x;
+}
+
+double Math_time(EPb_args *args) {
+	EPb_checkArgsNbr(0, 0);
+	return time(NULL);
+}
+
+EPb_initStruct(Cos, Math_cos,, 1, "x");
+EPb_initStruct(Sin, Math_sin,, 1, "x");
+EPb_initStruct(Tan, Math_tan,, 1, "x");
+EPb_initStruct(aCos, Math_acos,, 1, "x");
+EPb_initStruct(aSin, Math_asin,, 1, "x");
+EPb_initStruct(aTan, Math_atan,, 1, "x");
+EPb_initStruct(aTan2, Math_atan2,, 2, "y", "x");
+EPb_initStruct(Cosh, Math_cosh,, 1, "x");
+EPb_initStruct(Sinh, Math_sinh,, 1, "x");
+EPb_initStruct(Tanh, Math_tanh,, 1, "x");
+EPb_initStruct(Sqrt, Math_sqrt,, 1, "x");
+EPb_initStruct(Exp, Math_exp,, 1, "x");
+EPb_initStruct(Ldexp, Math_ldexp,, 2, "x", "exp");
+EPb_initStruct(Log, Math_log,, 1, "x");
+EPb_initStruct(Log10, Math_log10,, 1, "x");
+EPb_initStruct(Ceil, Math_ceil,, 1, "x");
+EPb_initStruct(Floor, Math_floor,, 1, "x");
+EPb_initStruct(Abs, Math_fabs,, 1, "x");
+EPb_initStruct(Fmod, Math_fmod,, 2, "numerator", "denominator");
+EPb_initStruct(Deg, Math_deg,, 1, "x");
+EPb_initStruct(Rad, Math_rad,, 1, "x");
+EPb_initStruct(Rand, Math_rand,, 0, "");
+EPb_initStruct(Srand, Math_srand,, 1, "x");
+EPb_initStruct(Time, Math_time,, 0, "");
 
 void EPblib_initMath() {
 	map<string, Value*> Math_elements;

@@ -54,6 +54,7 @@ typedef enum {
 class Value {
 	public:
 		Value();									// Null
+		Value(void*);								// Null
 		Value(int value, Mode mode = noMode);		// Int type
 		Value(double value, Mode mode = noMode);	// Float type
 		Value(std::string value);					// String type

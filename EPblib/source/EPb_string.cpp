@@ -25,32 +25,46 @@
 
 using namespace std;
 
-template<class T>
-class StringExpression : public Expression {
-	public:
-		StringExpression(Expression *exp, Expression *exp2 = 0) { m_exp = exp; m_exp2 = exp2; }
-		~StringExpression() {}
-		
-		Value *evaluate() { return T::eval(m_exp, m_exp2); }
-		void doExp() { T::exec(m_exp, m_exp2); }
-		
-	private:
-		Expression *m_exp;
-		Expression *m_exp2;
-};
+int String_len(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	string s = EPb_getStr((*args)[0]);
+	return (int)s.length();
+}
 
-string String_reverse(string s) {
+string String_upper(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	string s = EPb_getStr((*args)[0]);
+	return boost::to_upper_copy(s);
+}
+
+string String_lower(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	string s = EPb_getStr((*args)[0]);
+	return boost::to_lower_copy(s);
+}
+
+string String_reverse(EPb_args *args) {
+	EPb_checkArgsNbr(1, 1);
+	string s = EPb_getStr((*args)[0]);
 	reverse(s.begin(), s.end());
 	return s;
 }
 
-string String_rep(string s, int n) {
+string String_rep(EPb_args *args) {
+	EPb_checkArgsNbr(2, 2);
+	string s = EPb_getStr((*args)[0]);
+	int n = EPb_getInt((*args)[1]);
 	string r;
 	for(int i = 0 ; i < n ; i++) r += s;
 	return r;
 }
 
-string String_sub(string s, int i, int j = -1) {
+string String_sub(EPb_args *args) {
+	EPb_checkArgsNbr(2, 2);
+	string s = EPb_getStr((*args)[0]);
+	int i = EPb_getInt((*args)[1]);
+	int j = -1;
+	
 	if(i >= 0) {
 		return s.substr(i, j);
 	} else {
@@ -58,12 +72,12 @@ string String_sub(string s, int i, int j = -1) {
 	}
 }
 
-EPb_initStringStruct(Len, (int)EPb_getStr(exp).length());
-EPb_initStringStruct(Upper, boost::to_upper_copy(EPb_getStr(exp)));
-EPb_initStringStruct(Lower, boost::to_lower_copy(EPb_getStr(exp)));
-EPb_initStringStruct(Reverse, String_reverse(EPb_getStr(exp)));
-EPb_initStringStruct2(Rep, String_rep(EPb_getStr(exp), EPb_getInt(exp2)));
-EPb_initStringStruct2(Sub, String_sub(EPb_getStr(exp), EPb_getInt(exp2)));
+EPb_initStruct(Len, String_len,, 1, "s");
+EPb_initStruct(Upper, String_upper,, 1, "s");
+EPb_initStruct(Lower, String_lower,, 1, "s");
+EPb_initStruct(Reverse, String_reverse,, 1, "s");
+EPb_initStruct(Rep, String_rep,, 2, "s", "n");
+EPb_initStruct(Sub, String_sub,, 2, "s", "i");
 
 void EPblib_initString() {
 	map<string, Value*> String_elements;
