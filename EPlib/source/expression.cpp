@@ -169,7 +169,7 @@ Value* OpExpression::evaluate() {
 		else if(m_oper == '#') {
 			switch(val->type()) {
 				case typeStr:	return new Value((int)val->value<string>().length());
-				case typeArray:	return new Value((int)val->value< map<string, Value> >().size());
+				case typeArray:	return new Value((int)val->value< map<string, Value*> >().size());
 				default:		yyerror(string("Length operator not available with type \'") + val->typeToStr() + "\'");
 			}
 		} else {

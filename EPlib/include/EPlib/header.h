@@ -34,21 +34,22 @@
 #include <cstdarg>
 #include <boost/any.hpp>
 
-//#define EPLITH_DEBUG
-//#define YYERROR_VERBOSE
+#define YYERROR_VERBOSE
 
-//#define WARNINGS
+#define EPLITH_DEBUG
 
-//#define VAR_DEBUG
-//#define TYPES_DEBUG
+#define WARNINGS
+
+#define VAR_DEBUG
+#define TYPES_DEBUG
 //#define CALL_DEBUG
 //#define DELVAR_DEBUG
 //#define SETVAR_DEBUG
 
-#define edbg(str) cout << "\33[0;36;01m" << str << "\33[0m" << endl;
-#define edbg2(str, other, str2) cout << "\33[0;36;01m" << str; other; cout << str2 << "\33[0m" << endl;
-#define cdbg(str) cout << "\33[0;35;01m" << str << "\t\t\t" << __FILE__ << ":" << __LINE__ << "\33[0m" << endl;
-#define cdbg2(str, other, str2) cout << "\33[0;35;01m" << str; other; cout << str2 << "\t\t\t" << __FILE__ << ":" << __LINE__ << "\33[0m" << endl;
+#define edbg(str) std::cout << "\33[0;36;01m" << str << "\33[0m" << std::endl;
+#define edbg2(str, other, str2) std::cout << "\33[0;36;01m" << str; other; std::cout << str2 << "\33[0m" << std::endl;
+#define cdbg(str) std::cout << "\33[0;35;01m" << str << "\t\t\t" << __FILE__ << ":" << __LINE__ << "\33[0m" << std::endl;
+#define cdbg2(str, other, str2) std::cout << "\33[0;35;01m" << str; other; std::cout << str2 << "\t\t\t" << __FILE__ << ":" << __LINE__ << "\33[0m" << std::endl;
 
 static inline std::string itos(int n) {
 	std::ostringstream oss;

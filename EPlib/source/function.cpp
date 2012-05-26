@@ -57,11 +57,11 @@ Function::~Function() {
 void Function::doFunc(vector<Expression*> *args) {
 	if(m_colon) {
 		if(m_args->size() != args->size() + 1) {
-			yyerror("Unexpected number of arguments given");
+			yyerror(string("Unexpected number of arguments: ") + itos(args->size() + 1) + " given but " + itos(m_args->size()) + " required");
 		}
 	} else {
 		if(m_args->size() != args->size()) {
-			yyerror("Unexpected number of arguments given");
+			yyerror(string("Unexpected number of arguments: ") + itos(args->size()) + " given but " + itos(m_args->size()) + " required");
 		}
 	}
 	

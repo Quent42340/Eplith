@@ -24,6 +24,16 @@
 
 using namespace std;
 
+DEFINE_TYPE_NAME(void, "void");
+DEFINE_TYPE_NAME(void*, "void");
+DEFINE_TYPE_NAME(int, "integer");
+DEFINE_TYPE_NAME(double, "number");
+DEFINE_TYPE_NAME(string, "string");
+DEFINE_TYPE_NAME(bool, "boolean");
+DEFINE_TYPE_NAME(_W(map<string, Value*>), "array");
+DEFINE_TYPE_NAME(Function*, "function");
+DEFINE_TYPE_NAME(File*, "file");
+
 Value::Value() {
 	m_type = typeVoid;
 	m_value = string("(null)");
@@ -197,7 +207,7 @@ Value *Value::element(vector<string> indexTable) {
 			}
 		}
 		if(v) return v;
-		else yyerror("Bad element access");
+		else yyerror(string("Element '") + i + "' unrecognized");
 	} else {
 		return this;
 	}

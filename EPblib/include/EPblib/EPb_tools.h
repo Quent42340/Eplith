@@ -47,17 +47,17 @@ EPb_stmts *EPb_statements(int nbStmts, ...);
 		static EPb_stmts *stmts; \
 		static Value *ret; \
 		static inline void exec(EPb_args *args) { \
-			if(#action) { \
+			if(string(#action) != "") { \
 				ret = new Value(action(args)); \
 			} \
 		} \
 		static inline Value *eval(EPb_args *args) { \
 			exec(args); \
-			if(#val) { \
+			if(string(#val) != "") { \
 				return new Value(val(args)); \
 			} else { \
 				if(ret) { \
-					return new Value(ret); \
+					return new Value(*ret); \
 				} else { \
 					return new Value(); \
 				} \

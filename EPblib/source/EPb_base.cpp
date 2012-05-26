@@ -42,7 +42,7 @@ string Base_gets(EPb_args *args) {
 	EPb_checkArgsNbr(0, 0);
 	char *str = new char;
 	gets(str);
-	return str;
+	return string(str);
 }
 
 string Base_type(EPb_args *args) {

@@ -189,8 +189,8 @@ EPb_initStruct(Abs, Math_fabs,, 1, "x");
 EPb_initStruct(Fmod, Math_fmod,, 2, "numerator", "denominator");
 EPb_initStruct(Deg, Math_deg,, 1, "x");
 EPb_initStruct(Rad, Math_rad,, 1, "x");
-EPb_initStruct(Rand, Math_rand,, 0, "");
-EPb_initStruct(Srand, Math_srand,, 1, "x");
+EPb_initStruct(Rand,, Math_rand, 0, "");
+EPb_initStruct(Srand,, Math_srand, 1, "x");
 
 void EPblib_initMath() {
 	map<string, Value*> Math_elements;

@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 	}
 	
 #ifdef TYPES_DEBUG
-	edbg("Types: Int: " << typeInt << " | Float: " << typeFloat << " | String: " << typeStr << " | Array: " << typeArray << " | Function: " << typeFunc << " | Void: " << typeVoid);
+	edbg("Types: Int: " << typeInt << " | Float: " << typeFloat << " | String: " << typeStr << " | Array: " << typeArray << " | Function: " << typeFunc << " | File: " << typeFile << " | Void: " << typeVoid);
 #endif
 	
 	newFile(argv[1]);

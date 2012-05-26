@@ -23,6 +23,7 @@ puts("Randn: " + randn);
 usern = -1;
 while(usern != randn) {
 	print("Enter a number between 0 and 100: "); usern = tonumber(gets()); print("\n");
+	puts(type(usern));
 	if(usern == null) {
 		puts("Please enter a number.");
 		continue;

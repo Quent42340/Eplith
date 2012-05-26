@@ -57,6 +57,22 @@ typedef struct {
 #define getIndexVal(val) ((val->type() == typeInt) ? itos(val->value<int>()) : val->value<std::string>())
 #define valToStr(val) ((isIndex(val) ? ((val->type() == typeInt) ? new std::string(itos(val->value<int>())) : new string(val->value<std::string>())) : 0))
 
+class Value;
+
+template<typename T> const std::string GetTypeName();
+#define DEFINE_TYPE_NAME(type, name) template<>const std::string GetTypeName<type>() { return std::string(name); }
+#define _W(...) __VA_ARGS__
+
+template<>const std::string GetTypeName<void>();
+template<>const std::string GetTypeName<void*>();
+template<>const std::string GetTypeName<int>();
+template<>const std::string GetTypeName<double>();
+template<>const std::string GetTypeName<std::string>();
+template<>const std::string GetTypeName<bool>();
+template<>const std::string GetTypeName<std::map<std::string, Value*> >();
+template<>const std::string GetTypeName<Function*>();
+template<>const std::string GetTypeName<File*>();
+
 class Value {
 	public:
 		Value();									// Null
@@ -79,7 +95,7 @@ class Value {
 		template <typename T>
 			T* valuePtr() { T *c = boost::any_cast<T>(&m_value); return (c) ? c : 0; }
 		template <typename T>
-			T value() { T *c = valuePtr<T>(); if(c) return *c; else yyerror("Out of memory value access"); }
+			T value() { T *c = valuePtr<T>(); if(c) return *c; else yyerror(std::string("Value is of type '") + typeToStr() + "' but a '" + GetTypeName<T>() + "' is required"); }
 		template <typename T>
 			T value(T value) { m_value = value; }
 		
@@ -113,7 +129,7 @@ class Value {
 			if(m_type == typeStr) {
 				std::vector<int> r = stoi(value<std::string>().c_str());
 				if(!r[1] || r[1] == EOF) return new Value();
-				else return new Value(r[0]);
+				else return new Value((int)r[0]);
 			} else {
 				return new Value(getNumVal(this));
 			}
