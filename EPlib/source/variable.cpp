@@ -25,25 +25,22 @@ using namespace std;
 
 vector< vector<Variable*> > Variable::vars;
 
-Variable::Variable(string name, Value *value, bool tmp) {
+Variable::Variable(string name, Value *value, bool isConstant) {
 	m_address = getPtrAddr((void*)this);
 	m_name = name;
 	m_value = value;
 	m_scope = Expression::scopes;
+	m_isConstant = isConstant;
 	
-	if(!tmp) {
-		while(vars.size() < m_scope + 1) vars.push_back(vector<Variable*>());
-		
-		m_id = vars[m_scope].size();
-		
-		vars[m_scope].push_back(this);
-		
+	while(vars.size() < m_scope + 1) vars.push_back(vector<Variable*>());
+	
+	m_id = vars[m_scope].size();
+	
+	vars[m_scope].push_back(this);
+	
 #ifdef VAR_DEBUG
-		edbg2("Var name: " << m_name << " | Type: " << m_value->type() << " | Value: ", m_value->print(), " | ID: " << m_id << " | Scope: " << m_scope);
+	edbg2("Var name: " << m_name << " | Type: " << m_value->type() << " | Value: ", m_value->print(), " | Const: " << m_isConstant << " | ID: " << m_id << " | Scope: " << m_scope);
 #endif
-	} else {
-		m_id = -1;
-	}
 }
 
 Variable::~Variable() {
@@ -57,11 +54,15 @@ Variable::~Variable() {
 }
 
 void Variable::value(Value *value) {
-	m_value = value;
-	
+	if(!m_isConstant) {
+		m_value = value;
+		
 #ifdef SETVAR_DEBUG
-	edbg2("Variable \"" << m_name << "\" has a new value: ", m_value->print(), "");
+		edbg2("Variable \"" << m_name << "\" has a new value: ", m_value->print(), "");
 #endif
+	} else {
+		yyerror(string("\"") + m_name + "\" is a constant");
+	}
 }
 
 Variable* Variable::findByName(std::string name) {

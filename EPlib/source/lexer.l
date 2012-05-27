@@ -74,6 +74,7 @@ int popFile();
 "delete"					return DELETE;
 "null"						return vNULL;
 "global"					return GLOBAL;
+"const"						return CONST;
 ("->"|"to")					return TO;
 "hex"						return HEX;
 	/* TODO: "oct"						return OCT;*/

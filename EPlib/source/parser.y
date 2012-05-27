@@ -75,7 +75,7 @@ int yywrap() {
 %token OCT BIN
 %token SCI
 
-%token GLOBAL
+%token GLOBAL CONST
 
 %token ADD SUB
 %token MUL DIV
@@ -288,11 +288,6 @@ member:
 	| ':' NAME { $$ = new string(string("*") + $2); }
 
 index:
-	/*INTEGER { $$ = new string(itos($1)); }
-	| STRING { $$ = new string($1); }
-	| var { VarExpression *v = (VarExpression*)$1;
-			if(isIndex(v->evaluate())) $$ = new string(getIndexVal(v->evaluate())); else yyerror("Requires an integer or string expression here."); }
-	*/
 	exp { string *s = valToStr($1->evaluate()); if(s) $$ = s; else yyerror("Indexes are only integers and strings"); }
 	;
 
@@ -311,13 +306,31 @@ integer:
 
 assign:
 	  NAME '=' assignExpVal { $$ = new AssignExpression(string($1), $3); }
-	| GLOBAL NAME '=' assignExpVal { AssignExpression *exp = new AssignExpression(string($2), $4);
+	| GLOBAL NAME '=' assignExpVal { beginScope(stOTHER);
+									 AssignExpression *exp = new AssignExpression(string($2), $4);
+									 endScope();
 									 exp->global(true);
+									 exp->doThings();
 									 $$ = exp; }
+	| CONST NAME '=' assignExpVal {	beginScope(stOTHER);
+									AssignExpression *exp = new AssignExpression(string($2), $4);
+									endScope();
+									exp->isConstant(true);
+									exp->doThings();
+									$$ = exp; }
 	| NAME ASSIGN_OP assignExpVal { $$ = new AssignExpression(string($1), $3, $2); }
-	| GLOBAL NAME ASSIGN_OP assignExpVal { AssignExpression *exp = new AssignExpression(string($2), $4, $3);
+	| GLOBAL NAME ASSIGN_OP assignExpVal { beginScope(stOTHER);
+										   AssignExpression *exp = new AssignExpression(string($2), $4, $3);
+										   endScope();
 										   exp->global(true);
+										   exp->doThings();
 										   $$ = exp; }
+	| CONST NAME ASSIGN_OP assignExpVal { beginScope(stOTHER);
+										  AssignExpression *exp = new AssignExpression(string($2), $4, $3);
+										  endScope();
+										  exp->isConstant(true);
+										  exp->doThings();
+										  $$ = exp; }
 	| element '=' assignExpVal { $$ = new AssignExpression($1, $3); }
 	| elemName_list '=' assignExp_list { $$ = new AssignExpressionList($1, $3); }
 	;

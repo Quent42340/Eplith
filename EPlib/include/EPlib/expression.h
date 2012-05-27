@@ -226,6 +226,8 @@ class AssignExpression : public Expression {
 		
 		void global(bool global) { m_global = global; }
 		
+		void isConstant(bool isConstant) { m_isConstant = isConstant; }
+		
 		void value(Value *v) { m_val = v; }
 		
 	private:
@@ -236,6 +238,7 @@ class AssignExpression : public Expression {
 		ElementExpression *m_element;
 		bool m_global;
 		Value *m_val;
+		bool m_isConstant;
 };
 
 class AssignExpressionList : public Expression {
@@ -334,18 +337,6 @@ class ReturnExpression : public Expression {
 		Value* evaluate() { return m_exp->evaluate(); }
 		void doExp() { signal = sRETURN; };
 		
-	private:
-		Expression *m_exp;
-};
-
-class PrintExpression : public Expression {
-	public:
-		PrintExpression(Expression *exp);
-		~PrintExpression();
-
-		Value* evaluate() { Value *v = m_exp->evaluate(); v->mode(m_exp->mode()); return v; }
-		void doExp() { this->evaluate()->print(); }
-
 	private:
 		Expression *m_exp;
 };

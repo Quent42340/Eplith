@@ -17,44 +17,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-#ifndef EPLIB_VARIABLE_H
-#define EPLIB_VARIABLE_H
+const var = "5";
+puts(var);
+//var = "x";
+//puts(var);
 
-#include <vector>
-#include "value.h"
+const t = {5, "6", function() return 7;};
+puts(t);
+puts(t);
 
-class Variable {
-	public:
-		Variable(std::string name, Value *value, bool isConstant = false);
-		~Variable();
-		
-		void print() { m_value->print(); }
-		
-		Value* value() { return m_value; }
-		void value(Value *value);
-		
-		std::string name() const { return m_name; }
-		std::string address() const { return m_address; }
-		
-		bool isConstant() const { return m_isConstant; }
-		
-		void setElement();
-		
-		static Variable* findByName(std::string name);
-		static bool exists(std::string name);
-		static bool erase(std::string name);
-		
-		static void initNullVar();
-		
-		static std::vector< std::vector<Variable*> > vars;
-		
-	private:
-		std::string m_name;
-		std::string m_address;
-		Value* m_value;
-		int m_id;
-		int m_scope;
-		bool m_isConstant;
-};
-
-#endif // EPLIB_VARIABLE_H

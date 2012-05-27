@@ -270,6 +270,7 @@ AssignExpression::AssignExpression(string varName, Expression *valExp, int op) {
 	m_op = op;
 	m_element = 0;
 	m_global = false;
+	m_isConstant = false;
 	doThings();
 }
 
@@ -279,6 +280,7 @@ AssignExpression::AssignExpression(ElementExpression *element, Expression *valEx
 	m_op = op;
 	m_element = element;
 	m_global = false;
+	m_isConstant = false;
 	doThings();
 }
 
@@ -296,8 +298,10 @@ void AssignExpression::doExp() {
 	bool array = (m_element == 0) ? false : true;
 	if(Variable::exists(m_varName) || array) {
 		if(m_global) yyerror("Can't use global keyword on variables already defined");
+		if(m_isConstant) yyerror("Can't use const keyword on variables already defined");
 		if(!array) m_var = Variable::findByName(m_varName);
 		else m_var = Variable::findByName(m_element->arrayName());
+		if(m_var->isConstant()) yyerror(string("\"") + m_var->name() + "\" is a constant");
 		if(m_op == -1) {
 			if(!array) m_var->value((m_valExp) ? m_valExp->evaluate() : m_val);
 			else m_var->value()->element(m_element, (m_valExp) ? m_valExp->evaluate() : m_val);
@@ -348,7 +352,7 @@ void AssignExpression::doExp() {
 		if(m_op != -1) yyerror("Variable undeclared");
 		int oldScopes = scopes;
 		if(m_global) scopes = 0;
-		m_var = new Variable(m_varName, (m_valExp) ? m_valExp->evaluate() : m_val);
+		m_var = new Variable(m_varName, (m_valExp) ? m_valExp->evaluate() : m_val, m_isConstant);
 		scopes = oldScopes;
 	}
 }
@@ -415,6 +419,7 @@ CrExpression::~CrExpression() {
 
 void CrExpression::doExp() {
 	Variable *var = (m_varExp) ? m_varExp->getVar() : Variable::findByName(m_elemExp->arrayName());
+	if(var->isConstant()) yyerror(string("\"") + var->name() + "\" is a constant");
 	Value *val = (m_varExp) ? var->value() : var->value()->element(*m_elemExp->index());
 	if(val->type() != typeInt) yyerror("Incrementation / decrementation unavailable with these type");
 	m_valB = new Value(*val);
@@ -604,16 +609,6 @@ ReturnExpression::ReturnExpression(Expression *exp) {
 }
 
 ReturnExpression::~ReturnExpression() {
-	delete m_exp;
-}
-
-PrintExpression::PrintExpression(Expression *exp) {
-	m_type = "PrintExpression";
-	m_exp = exp;
-	doThings();
-}
-
-PrintExpression::~PrintExpression() {
 	delete m_exp;
 }
 

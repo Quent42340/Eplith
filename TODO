@@ -1,5 +1,3 @@
-- Fix type error in MoreOrLess.ep and check all tests
-- Constants
 - Optional parameters in funcs
 - Multi-return in funcs
 - Add missing functions in EPblib
