@@ -66,9 +66,9 @@ Value *Base_toString(EPb_args *args) {
 EPb_initStruct(Print,, Base_print, 1, "out");
 EPb_initStruct(Puts,, Base_puts, 1, "out");
 EPb_initStruct(Gets,, Base_gets, 0, "");
-EPb_initStruct(BType, Base_type,, 1, "val")
-EPb_initStruct(ToNumber, Base_toNumber,, 1, "val")
-EPb_initStruct(ToString, Base_toString,, 1, "val")
+EPb_initStruct(BType, Base_type,, 1, "val");
+EPb_initStruct(ToNumber, *Base_toNumber,, 1, "val");
+EPb_initStruct(ToString, *Base_toString,, 1, "val");
 
 void EPblib_initBase() {
 	EPb_initFunc(Print, print);

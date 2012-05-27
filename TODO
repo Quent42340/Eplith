@@ -4,6 +4,7 @@
 - Multi-return in funcs
 - Add missing functions in EPblib
 => Version 0.1a
+- Fix delete problems if they are
 - Add functions to EPblib ( especially to Files )
 - Comparison between tables
 - Improve error messages
