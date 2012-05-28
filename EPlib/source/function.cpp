@@ -61,7 +61,13 @@ void Function::doFunc(vector<Expression*> *args) {
 		}
 	} else {
 		if(m_args->size() != args->size()) {
-			yyerror(string("Unexpected number of arguments: ") + itos(args->size()) + " given but " + itos(m_args->size()) + " required");
+			if(m_args->size() > args->size()) {
+				for(unsigned int i = args->size() ; i < m_args->size() ; i++) {
+					if(!(*m_args)[i]->value()) yyerror(string("Unexpected number of arguments: ") + itos(args->size()) + " given but " + itos(m_args->size()) + " required");
+				}
+			} else {
+				yyerror(string("Unexpected number of arguments: ") + itos(args->size()) + " given but " + itos(m_args->size()) + " required");
+			}
 		}
 	}
 	
@@ -70,7 +76,7 @@ void Function::doFunc(vector<Expression*> *args) {
 			if(!m_mainElement) yyerror("Unexpected error");
 			else m_vars->push_back(new Variable((*m_args)[i]->varName(), m_mainElement));
 		} else {
-			m_vars->push_back(new Variable((*m_args)[i]->varName(), (*args)[i]->evaluate()));
+			m_vars->push_back(new Variable((*m_args)[i]->varName(), (i < args->size()) ? (*args)[i]->evaluate() : (*m_args)[i]->value()));
 		}
 	}
 	

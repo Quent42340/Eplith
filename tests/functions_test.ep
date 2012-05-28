@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-function try() {
+/*function try() {
 	puts("Try");
 }
 
@@ -26,19 +26,19 @@ try();
 str = "Ohohoh";
 puts(str);
 
-function puts(str) {
+function putss(str) {
 	puts(str);
 }
 
-puts("That");
-puts("is");
-puts("four");
-puts("lines.");
+putss("That");
+putss("is");
+putss("four");
+putss("lines.");
 
-puts(str);
+putss(str);
 
 function putsStr(str1, str2, str3) {
-	puts(str1 + " " + str2 + " " + str3);
+	putss(str1 + " " + str2 + " " + str3);
 }
 
 putsStr("That", "is", "done.");
@@ -48,4 +48,18 @@ function add(a, b) {
 }
 
 puts(add(5,2));
+
+defpar = function(a, b = 5, c = 10) {
+	puts(a + " - " + b + " / " + c);
+};
+
+defpar(4);
+defpar(2, 7);
+defpar(1, 2, 3);*/
+
+multiret = function(a, b) {
+	return a, b;
+};
+
+a, b = multiret(2, 6);
 

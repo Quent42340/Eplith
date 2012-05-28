@@ -192,8 +192,15 @@ var_list:
 	| var { vector<VarExpression*> *v = new vector<VarExpression*>;
 			v->push_back((VarExpression*)$1);
 			$$ = v; }
+	| var '=' exp { vector<VarExpression*> *v = new vector<VarExpression*>;
+					((VarExpression*)$1)->value($3->evaluate());
+					v->push_back((VarExpression*)$1);
+					$$ = v; }
 	| var_list ',' var { $1->push_back((VarExpression*)$3);
 						 $$ = $1; }
+	| var_list ',' var '=' exp { ((VarExpression*)$3)->value($5->evaluate());
+								 $1->push_back((VarExpression*)$3);
+								 $$ = $1; }
 	;
 
 exp_list:

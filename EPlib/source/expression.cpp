@@ -243,6 +243,7 @@ Value* OpExpression::evaluate() {
 VarExpression::VarExpression(string varName) {
 	m_type = "VarExpression";
 	m_varName = varName;
+	m_value = 0;
 	//doThings();
 }
 
@@ -252,7 +253,7 @@ VarExpression::~VarExpression() {
 
 Value* VarExpression::evaluate() {
 	doExp();
-	return m_var->value();
+	return (m_value) ? m_value : m_var->value();
 }
 
 void VarExpression::doExp() {
