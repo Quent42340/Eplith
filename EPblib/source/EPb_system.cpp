@@ -24,18 +24,15 @@
 using namespace std;
 
 double System_time(EPb_args *args) {
-	EPb_checkArgsNbr(0, 0);
 	return time(NULL);
 }
 
 int System_execute(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	string cmd = EPb_getStr((*args)[0]);
 	return system(cmd.c_str());
 }
 
 void *System_exit(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	int status = EPb_getInt((*args)[0]);
 	exit(status);
 	return NULL;

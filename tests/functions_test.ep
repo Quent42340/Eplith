@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-/*function try() {
+function try() {
 	puts("Try");
 }
 
@@ -55,11 +55,11 @@ defpar = function(a, b = 5, c = 10) {
 
 defpar(4);
 defpar(2, 7);
-defpar(1, 2, 3);*/
+defpar(1, 2, 3);
 
-multiret = function(a, b) {
+/*multiret = function(a, b) {
 	return a, b;
 };
 
-a, b = multiret(2, 6);
+a, b = multiret(2, 6);*/
 

@@ -24,13 +24,11 @@
 using namespace std;
 
 int File_close(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	File *f = EPb_getFile((*args)[0]);
 	return (int)fclose(f->f);
 }
 
 File *File_open(EPb_args *args) {
-	EPb_checkArgsNbr(2, 2);
 	string filename = EPb_getStr((*args)[0]);
 	string mode = EPb_getStr((*args)[1]);
 	File *f = new File;
@@ -40,7 +38,6 @@ File *File_open(EPb_args *args) {
 }
 
 string File_getc(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	File *f = EPb_getFile((*args)[0]);
 	std::ostringstream oss;
 	oss << (char)fgetc(f->f);
@@ -54,7 +51,6 @@ string File_EOF() {
 }
 
 string File_getline(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	File *f = EPb_getFile((*args)[0]);
 	std::ostringstream oss;
 	char c = fgetc(f->f);

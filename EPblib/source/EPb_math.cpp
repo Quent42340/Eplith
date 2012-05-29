@@ -28,141 +28,129 @@
 using namespace std;
 
 double Math_cos(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return cos(x);
 }
 
 double Math_sin(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return sin(x);
 }
 
 double Math_tan(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return tan(x);
 }
 
 double Math_acos(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return acos(x);
 }
 
 double Math_asin(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return asin(x);
 }
 
 double Math_atan(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return atan(x);
 }
 
 double Math_atan2(EPb_args *args) {
-	EPb_checkArgsNbr(2, 2);
 	double y = EPb_getNum((*args)[0]);
 	double x = EPb_getNum((*args)[1]);
 	return atan2(y, x);
 }
 
 double Math_cosh(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return cosh(x);
 }
 
 double Math_sinh(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return sinh(x);
 }
 
 double Math_tanh(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return tanh(x);
 }
 
 double Math_sqrt(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return sqrt(x);
 }
 
 double Math_exp(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return exp(x);
 }
 
 double Math_ldexp(EPb_args *args) {
-	EPb_checkArgsNbr(2, 2);
 	double x = EPb_getNum((*args)[0]);
 	int exp = EPb_getInt((*args)[1]);
 	return ldexp(x, exp);
 }
 
 double Math_log(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return log(x);
 }
 
 double Math_log10(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return log10(x);
 }
 
 double Math_ceil(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return ceil(x);
 }
 
 double Math_floor(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return floor(x);
 }
 
 double Math_fabs(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return fabs(x);
 }
 
 double Math_fmod(EPb_args *args) {
-	EPb_checkArgsNbr(2, 2);
 	double numerator = EPb_getNum((*args)[0]);
 	double denominator = EPb_getNum((*args)[1]);
 	return fmod(numerator, denominator);
 }
 
 double Math_deg(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return x / RADIANS_PER_DEGREE;
 }
 
 double Math_rad(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	return x * RADIANS_PER_DEGREE;
 }
 
 double Math_rand(EPb_args *args) {
-	EPb_checkArgsNbr(0, 0);
-	return rand();
+	if(EPb_argsNbr(args) == 0) {
+		return rand();
+	}
+	else if(EPb_argsNbr(args) == 1) {
+		int m = EPb_getInt((*args)[0]);
+		return rand()%m;
+	} else {
+		int m = EPb_getInt((*args)[0]);
+		int n = EPb_getInt((*args)[1]);
+		if(m > n) return n+(rand()%(m-n));
+		else return m+(rand()%(n-m));
+	}
 }
 
 double Math_srand(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	double x = EPb_getNum((*args)[0]);
 	srand(x); rand();
 	return x;
@@ -189,7 +177,7 @@ EPb_initStruct(Abs, Math_fabs,, 1, "x");
 EPb_initStruct(Fmod, Math_fmod,, 2, "numerator", "denominator");
 EPb_initStruct(Deg, Math_deg,, 1, "x");
 EPb_initStruct(Rad, Math_rad,, 1, "x");
-EPb_initStruct(Rand,, Math_rand, 0, "");
+EPb_initStruct(Rand,, Math_rand, 2, "m=-1", "n=-1");
 EPb_initStruct(Srand,, Math_srand, 1, "x");
 
 void EPblib_initMath() {

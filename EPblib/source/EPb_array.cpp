@@ -24,7 +24,6 @@
 using namespace std;
 
 string Array_concat(EPb_args *args) {
-	EPb_checkArgsNbr(2, 2);
 	map<string, Value*> t = EPb_getArray((*args)[0]);
 	string sep = EPb_getStr((*args)[1]);
 	
@@ -37,11 +36,17 @@ string Array_concat(EPb_args *args) {
 }
 
 map<string, Value*> Array_insert(EPb_args *args) {
-	EPb_checkArgsNbr(2, 2);
 	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
 	if(!t) yyerror("Bad argument.");
-	Value *v = EPb_getVal((*args)[1]);
-	int pos = -1;
+	int pos; Value *v;
+	
+	if(EPb_argsNbr(args) == 2) {
+		Value *v = EPb_getVal((*args)[1]);
+		int pos = -1;
+	} else {
+		int pos = EPb_getInt((*args)[1]);
+		Value *v = EPb_getVal((*args)[2]);
+	}
 	
 	if(pos == -1) {
 		int count = 0;
@@ -50,12 +55,18 @@ map<string, Value*> Array_insert(EPb_args *args) {
 			if(r[1] && r[1] != EOF) count++;
 		} count++;
 		t->insert(t->end(), pair<string, Value*>(itos(count), v));
-		return *t;
+	} else {
+		int count = 0;
+		for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
+			vector<int> r = stoi(it->first.c_str());
+			if(r[1] && r[1] != EOF) count++;
+		} count++;
+		t->insert(t->end(), pair<string, Value*>(itos(count), v));
 	}
+	return *t;
 }
 
 map<string, Value*> Array_remove(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
 	if(!t) yyerror("Bad argument.");
 	int pos = -1;
@@ -72,7 +83,6 @@ map<string, Value*> Array_remove(EPb_args *args) {
 }
 
 int Array_maxn(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
 	if(!t) yyerror("Bad argument.");
 	
@@ -85,7 +95,7 @@ int Array_maxn(EPb_args *args) {
 }
 
 EPb_initStruct(Concat, Array_concat,, 2, "t", "s");
-EPb_initStruct(Insert,, Array_insert, 2, "t", "v");
+EPb_initStruct(Insert,, Array_insert, 2, "t", "a", "b=-1");
 EPb_initStruct(Remove,, Array_remove, 1, "t");
 EPb_initStruct(Maxn, Array_maxn,, 1, "t");
 
@@ -93,7 +103,7 @@ void EPblib_initArray() {
 	map<string, Value*> Array_elements;
 	
 	EPb_initElemFunc(Array_elements, Concat, concat);
-	EPb_initElemFunc(Array_elements, Insert, push_back);
+	EPb_initElemFunc(Array_elements, Insert, insert);
 	EPb_initElemFunc(Array_elements, Remove, pop_back);
 	EPb_initElemFunc(Array_elements, Maxn, maxn);
 	

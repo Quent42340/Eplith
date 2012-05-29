@@ -30,7 +30,16 @@ vector<VarExpression*> *EPb_arguments(int nbArgs, ...) {
 	char *s;
 	for(int i = 0 ; i < nbArgs ; i++) {
 		s = va_arg(vargs, char*);
-		args->push_back(new VarExpression(s));
+		string str = string(s);
+		if(str.find('=') != -1) {
+			str = str.substr(str.find('=') + 1);
+			args->push_back(new VarExpression(string(s).substr(0, string(s).find('='))));
+			vector<int> r = stoi(str.c_str());
+			if(r[1] && r[1] != EOF) args->back()->value(new Value(r[0]));
+			else args->back()->value(new Value(str));
+		} else {
+			args->push_back(new VarExpression(s));
+		}
 	}
 	va_end(vargs);
 	
@@ -57,5 +66,14 @@ string EPb_valToStr(Value *v) {
 	stringstream out;
 	v->print(out);
 	return out.str();
+}
+
+// Apparently it doesn't work...
+int EPb_argsNbr(vector<VarExpression*> *args) {
+	int j = 0;
+	for(int i = 0 ; i < args->size() ; i++) {
+		if((*args)[i]->value() == 0) j++;
+	}
+	return j;
 }
 

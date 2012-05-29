@@ -24,14 +24,12 @@
 using namespace std;
 
 void *Base_print(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	Value *out = EPb_getVal((*args)[0]);
 	out->print();
 	return NULL;
 }
 
 void *Base_puts(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	Value *out = EPb_getVal((*args)[0]);
 	out->print();
 	cout << endl;
@@ -39,26 +37,22 @@ void *Base_puts(EPb_args *args) {
 }
 
 string Base_gets(EPb_args *args) {
-	EPb_checkArgsNbr(0, 0);
 	char *str = new char;
 	gets(str);
 	return string(str);
 }
 
 string Base_type(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	Value *val = EPb_getVal((*args)[0]);
 	return val->typeToStr();
 }
 
 Value *Base_toNumber(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	Value *val = EPb_getVal((*args)[0]);
 	return val->toNum();
 }
 
 Value *Base_toString(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	Value *val = EPb_getVal((*args)[0]);
 	return val->toStr();
 }

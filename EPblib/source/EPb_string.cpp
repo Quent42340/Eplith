@@ -26,32 +26,27 @@
 using namespace std;
 
 int String_len(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	string s = EPb_getStr((*args)[0]);
 	return (int)s.length();
 }
 
 string String_upper(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	string s = EPb_getStr((*args)[0]);
 	return boost::to_upper_copy(s);
 }
 
 string String_lower(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	string s = EPb_getStr((*args)[0]);
 	return boost::to_lower_copy(s);
 }
 
 string String_reverse(EPb_args *args) {
-	EPb_checkArgsNbr(1, 1);
 	string s = EPb_getStr((*args)[0]);
 	reverse(s.begin(), s.end());
 	return s;
 }
 
 string String_rep(EPb_args *args) {
-	EPb_checkArgsNbr(2, 2);
 	string s = EPb_getStr((*args)[0]);
 	int n = EPb_getInt((*args)[1]);
 	string r;
@@ -60,10 +55,15 @@ string String_rep(EPb_args *args) {
 }
 
 string String_sub(EPb_args *args) {
-	EPb_checkArgsNbr(2, 2);
 	string s = EPb_getStr((*args)[0]);
 	int i = EPb_getInt((*args)[1]);
-	int j = -1;
+	int j;
+	
+	if(EPb_argsNbr(args) == 3) {
+		int j = EPb_getInt((*args)[2]);
+	} else {
+		int j = -1;
+	}
 	
 	if(i >= 0) {
 		return s.substr(i, j);
@@ -77,7 +77,7 @@ EPb_initStruct(Upper, String_upper,, 1, "s");
 EPb_initStruct(Lower, String_lower,, 1, "s");
 EPb_initStruct(Reverse, String_reverse,, 1, "s");
 EPb_initStruct(Rep, String_rep,, 2, "s", "n");
-EPb_initStruct(Sub, String_sub,, 2, "s", "i");
+EPb_initStruct(Sub, String_sub,, 2, "s", "i", "j=-1");
 
 void EPblib_initString() {
 	map<string, Value*> String_elements;

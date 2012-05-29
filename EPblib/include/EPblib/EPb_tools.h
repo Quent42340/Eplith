@@ -39,7 +39,7 @@ class EPbExpression : public Expression {
 EPb_args *EPb_arguments(int nbArgs, ...);
 EPb_stmts *EPb_statements(int nbStmts, ...);
 
-#define EPb_checkArgsNbr(min, max) if(args->size() > max || args->size() < min) yyerror("Unexpected number of arguments");
+int EPb_argsNbr(std::vector<VarExpression*> *args);
 
 #define EPb_initStruct(Struct, val, action, nb, ...) \
 	struct Struct { \
