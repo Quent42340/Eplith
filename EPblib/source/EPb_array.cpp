@@ -40,29 +40,24 @@ map<string, Value*> Array_insert(EPb_args *args) {
 	if(!t) yyerror("Bad argument.");
 	int pos; Value *v;
 	
+	cdbg(EPb_argsNbr(args));
 	if(EPb_argsNbr(args) == 2) {
-		Value *v = EPb_getVal((*args)[1]);
-		int pos = -1;
+		v = EPb_getVal((*args)[1]);
+		pos = -1;
 	} else {
-		int pos = EPb_getInt((*args)[1]);
-		Value *v = EPb_getVal((*args)[2]);
+		pos = EPb_getInt((*args)[1]);
+		v = EPb_getVal((*args)[2]);
+		cdbg(v->type());
 	}
 	
-	if(pos == -1) {
-		int count = 0;
-		for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
-			vector<int> r = stoi(it->first.c_str());
-			if(r[1] && r[1] != EOF) count++;
-		} count++;
-		t->insert(t->end(), pair<string, Value*>(itos(count), v));
-	} else {
-		int count = 0;
-		for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
-			vector<int> r = stoi(it->first.c_str());
-			if(r[1] && r[1] != EOF) count++;
-		} count++;
-		t->insert(t->end(), pair<string, Value*>(itos(count), v));
-	}
+	int count = 0;
+	for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
+		if((count - 1) == pos && pos != -1) break;
+		vector<int> r = stoi(it->first.c_str());
+		if(r[1] && r[1] != EOF) count++;
+	} count++;
+	cdbg2("Look: " << count << " - ", v->print(), "");
+	t->insert(t->end(), pair<string, Value*>(itos(count), v));
 	return *t;
 }
 
@@ -95,7 +90,7 @@ int Array_maxn(EPb_args *args) {
 }
 
 EPb_initStruct(Concat, Array_concat,, 2, "t", "s");
-EPb_initStruct(Insert,, Array_insert, 2, "t", "a", "b=-1");
+EPb_initStruct(Insert,, Array_insert, 3, "t", "a", "b=-1");
 EPb_initStruct(Remove,, Array_remove, 1, "t");
 EPb_initStruct(Maxn, Array_maxn,, 1, "t");
 
