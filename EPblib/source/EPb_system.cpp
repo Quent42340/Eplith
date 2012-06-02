@@ -28,19 +28,29 @@ double System_time(EPb_args *args) {
 }
 
 int System_execute(EPb_args *args) {
-	string cmd = EPb_getStr((*args)[0]);
+	string cmd;
+	if(EPb_argsNbr(args) == 1) {
+		cmd = EPb_getStr((*args)[0]);
+	} else {
+		cmd = "";
+	}
 	return system(cmd.c_str());
 }
 
 void *System_exit(EPb_args *args) {
-	int status = EPb_getInt((*args)[0]);
+	int status;
+	if(EPb_argsNbr(args) == 1) {
+		status = EPb_getInt((*args)[0]);
+	} else {
+		status = 0;
+	}
 	exit(status);
 	return NULL;
 }
 
 EPb_initStruct(Time, System_time,, 0, "");
-EPb_initStruct(Execute,, System_execute, 1, "cmd");
-EPb_initStruct(Exit,, System_exit, 1, "status");
+EPb_initStruct(Execute,, System_execute, 1, "cmd=-1");
+EPb_initStruct(Exit,, System_exit, 1, "status=-1");
 
 void EPblib_initSystem() {
 	map<string, Value*> System_elements;

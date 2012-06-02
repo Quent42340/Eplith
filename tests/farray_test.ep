@@ -20,10 +20,10 @@
 array = {"Hello,", "my", "name", "is", "Eplith."};
 puts(Array.concat(array, " "));
 Array.insert(array, "sir?");
-Array.insert(array, #array - 2, "Are you OK");
+Array.insert(array, #array - 1, "Are you OK");
 puts(Array.concat(array, " "));
-Array.pop_back(array);
-Array.pop_back(array);
+Array.remove(array);
+Array.remove(array);
 Array.insert(array, "And you?");
 puts(Array.concat(array, " "));
 puts(Array.maxn(array));

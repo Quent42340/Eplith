@@ -57,7 +57,14 @@ Function::~Function() {
 void Function::doFunc(vector<Expression*> *args) {
 	if(m_colon) {
 		if(m_args->size() != args->size() + 1) {
-			yyerror(string("Unexpected number of arguments: ") + itos(args->size() + 1) + " given but " + itos(m_args->size()) + " required");
+//			yyerror(string("Unexpected number of arguments: ") + itos(args->size() + 1) + " given but " + itos(m_args->size()) + " required");
+			if(m_args->size() > args->size() + 1) {
+				for(unsigned int i = args->size() + 1 ; i < m_args->size() ; i++) {
+					if(!(*m_args)[i]->value()) yyerror(string("Unexpected number of arguments: ") + itos(args->size() + 1) + " given but " + itos(m_args->size()) + " required");
+				}
+			} else {
+				yyerror(string("Unexpected number of arguments: ") + itos(args->size() + 1) + " given but " + itos(m_args->size()) + " required");
+			}
 		}
 	} else {
 		if(m_args->size() != args->size()) {
@@ -71,12 +78,22 @@ void Function::doFunc(vector<Expression*> *args) {
 		}
 	}
 	
+	vector<VarExpression*> *m_argsCopy = new vector<VarExpression*>(*m_args);
 	for(unsigned int i = 0 ; i < m_args->size() ; i++) {
 		if(m_colon && (*m_args)[i]->varName() == "self") {
 			if(!m_mainElement) yyerror("Unexpected error");
 			else m_vars->push_back(new Variable((*m_args)[i]->varName(), m_mainElement));
 		} else {
-			m_vars->push_back(new Variable((*m_args)[i]->varName(), (i < args->size()) ? (*args)[i]->evaluate() : (*m_args)[i]->value()));
+			if(i < args->size()) {
+				if((*m_args)[i]->value() != 0) {
+					(*m_argsCopy)[i] = new VarExpression(*(*m_args)[i]);
+					(*m_argsCopy)[i]->value(new Value(*(*m_args)[i]->value()));
+					(*m_args)[i]->value(0);
+				}
+				m_vars->push_back(new Variable((*m_args)[i]->varName(), (*args)[i]->evaluate()));
+			} else {
+				m_vars->push_back(new Variable((*m_args)[i]->varName(), (*m_args)[i]->value()));
+			}
 		}
 	}
 	
@@ -95,5 +112,10 @@ void Function::doFunc(vector<Expression*> *args) {
 	for(unsigned int i = m_vars->size() - 1 ; m_vars->size() != 0 ; i--) {
 		m_vars->pop_back();
 	}
+	
+	for(unsigned int i = 0 ; i < m_args->size() ; i++) {
+		(*m_args)[i]->value((*m_argsCopy)[i]->value());
+	}
+	delete m_argsCopy;
 }
 

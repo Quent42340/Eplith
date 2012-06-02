@@ -37,49 +37,73 @@ string Array_concat(EPb_args *args) {
 
 map<string, Value*> Array_insert(EPb_args *args) {
 	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
-	if(!t) yyerror("Bad argument.");
+	if(!t) yyerror("Bad argument");
 	int pos; Value *v;
 	
-	cdbg(EPb_argsNbr(args));
 	if(EPb_argsNbr(args) == 2) {
 		v = EPb_getVal((*args)[1]);
 		pos = -1;
 	} else {
 		pos = EPb_getInt((*args)[1]);
+		if(pos < 0 || pos > t->size()) yyerror("Bad position");
 		v = EPb_getVal((*args)[2]);
-		cdbg(v->type());
 	}
 	
 	int count = 0;
 	for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
-		if((count - 1) == pos && pos != -1) break;
+		if(count == pos && pos != -1) {
+			map<string, Value*>::reverse_iterator rit(it);
+			for(map<string, Value*>::reverse_iterator itt = t->rbegin() ; itt != rit ; itt++) {
+				vector<int> r = stoi(itt->first.c_str());
+				if(!r[1] || r[1] == EOF) continue;
+				Value *v = itt->second;
+				t->erase(itt->first);
+				t->insert(pair<string, Value*>(itos(r[0] + 1), v));
+			}
+			break;
+		}
 		vector<int> r = stoi(it->first.c_str());
 		if(r[1] && r[1] != EOF) count++;
-	} count++;
-	cdbg2("Look: " << count << " - ", v->print(), "");
+	}
 	t->insert(t->end(), pair<string, Value*>(itos(count), v));
 	return *t;
 }
 
 map<string, Value*> Array_remove(EPb_args *args) {
 	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
-	if(!t) yyerror("Bad argument.");
-	int pos = -1;
+	if(!t) yyerror("Bad argument");
+	int pos; Value *v;
 	
-	if(pos == -1) {
-		int count = 0;
-		for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
-			vector<int> r = stoi(it->first.c_str());
-			if(r[1] && r[1] != EOF) count++;
-		}
-		if(!t->erase(itos(count))) yyerror("Trying to clean a void array");
-		return *t;
+	if(EPb_argsNbr(args) == 1) {
+		pos = -1;
+	} else {
+		pos = EPb_getInt((*args)[1]);
+		if(pos < 0 || pos > t->size()) yyerror("Bad position");
 	}
+	
+	int count = 0;
+	for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
+		if((count - 1) == pos && pos != -1) {
+			map<string, Value*>::reverse_iterator rit(it);
+			for(map<string, Value*>::reverse_iterator itt = t->rbegin() ; itt != rit ; itt++) {
+				vector<int> r = stoi(itt->first.c_str());
+				if(!r[1] || r[1] == EOF) continue;
+				Value *v = itt->second;
+				t->erase(itt->first);
+				t->insert(pair<string, Value*>(itos(r[0] + 1), v));
+			}
+			break;
+		}
+		vector<int> r = stoi(it->first.c_str());
+		if(r[1] && r[1] != EOF) count++;
+	} count--;
+	if(!t->erase(itos(count))) yyerror("Trying to clean a void array");
+	return *t;
 }
 
 int Array_maxn(EPb_args *args) {
 	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
-	if(!t) yyerror("Bad argument.");
+	if(!t) yyerror("Bad argument");
 	
 	int count = 0;
 	for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
@@ -91,7 +115,7 @@ int Array_maxn(EPb_args *args) {
 
 EPb_initStruct(Concat, Array_concat,, 2, "t", "s");
 EPb_initStruct(Insert,, Array_insert, 3, "t", "a", "b=-1");
-EPb_initStruct(Remove,, Array_remove, 1, "t");
+EPb_initStruct(Remove,, Array_remove, 2, "t", "pos=-1");
 EPb_initStruct(Maxn, Array_maxn,, 1, "t");
 
 void EPblib_initArray() {
@@ -99,7 +123,7 @@ void EPblib_initArray() {
 	
 	EPb_initElemFunc(Array_elements, Concat, concat);
 	EPb_initElemFunc(Array_elements, Insert, insert);
-	EPb_initElemFunc(Array_elements, Remove, pop_back);
+	EPb_initElemFunc(Array_elements, Remove, remove);
 	EPb_initElemFunc(Array_elements, Maxn, maxn);
 	
 	Variable *Array = new Variable("Array", new Value(Array_elements));

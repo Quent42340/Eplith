@@ -60,9 +60,9 @@ string String_sub(EPb_args *args) {
 	int j;
 	
 	if(EPb_argsNbr(args) == 3) {
-		int j = EPb_getInt((*args)[2]);
+		j = EPb_getInt((*args)[2]);
 	} else {
-		int j = -1;
+		j = -1;
 	}
 	
 	if(i >= 0) {
@@ -77,7 +77,7 @@ EPb_initStruct(Upper, String_upper,, 1, "s");
 EPb_initStruct(Lower, String_lower,, 1, "s");
 EPb_initStruct(Reverse, String_reverse,, 1, "s");
 EPb_initStruct(Rep, String_rep,, 2, "s", "n");
-EPb_initStruct(Sub, String_sub,, 2, "s", "i", "j=-1");
+EPb_initStruct(Sub, String_sub,, 3, "s", "i", "j=-1");
 
 void EPblib_initString() {
 	map<string, Value*> String_elements;

@@ -85,8 +85,8 @@ syn match epFunc /\<String\.reverse\>/
 syn match epFunc /\<Array\.maxn\>/
 syn match epFunc /\<Array\.unpack\>/
 syn match epFunc /\<Array\.concat\>/
-syn match epFunc /\<Array\.push_back\>/
-syn match epFunc /\<Array\.pop_back\>/
+syn match epFunc /\<Array\.insert\>/
+syn match epFunc /\<Array\.remove\>/
 syn match epFunc /\<Math\.abs\>/
 syn match epFunc /\<Math\.acos\>/
 syn match epFunc /\<Math\.asin\>/

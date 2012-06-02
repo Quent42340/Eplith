@@ -207,6 +207,8 @@ class VarExpression : public Expression {
 		virtual void value(Value *value) { m_value = value; }
 		virtual Value *value() const { return m_value; }
 		
+		virtual Variable *var() const { return m_var; }
+		
 		std::string varName() { return m_varName; }
 		
 		virtual Variable* getVar() { doExp(); return m_var; }

@@ -25,4 +25,5 @@ puts(String.reverse(str)); // gnIrtS A m'I
 puts(String.rep("Five", 5)); // FiveFiveFiveFiveFive
 puts(String.sub(str, -3)); // "Ing"
 puts(String.sub(str, 6)); // "StrIng"
+puts(String.sub(str, 0, 5) + " MAN! :D");
 
