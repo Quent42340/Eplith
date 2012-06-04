@@ -68,7 +68,6 @@ string EPb_valToStr(Value *v) {
 	return out.str();
 }
 
-// Apparently it doesn't work...
 int EPb_argsNbr(vector<VarExpression*> *args) {
 	int j = 0;
 	for(int i = 0 ; i < args->size() ; i++) {
