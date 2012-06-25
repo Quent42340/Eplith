@@ -8,7 +8,7 @@ LK_NAME :=	ep
 # Compiler executables
 #---------------------------------------------------------------------------------
 CXX		:=	g++
-CXXFLAGS:=	-g -Wno-write-strings -fpermissive -fPIC
+CXXFLAGS:=	-g -Wno-write-strings -fpermissive
 
 #---------------------------------------------------------------------------------
 # Any extra libraries you wish to link with your project

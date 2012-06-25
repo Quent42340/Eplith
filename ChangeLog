@@ -1,0 +1,5 @@
+0.1:
+	* Initial release.
+
+0.2:
+	* Exec time available ( see header.h to turn it on )

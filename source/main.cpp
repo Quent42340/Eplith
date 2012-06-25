@@ -19,6 +19,7 @@
 ---------------------------------------------------------------------------------*/
 #include <EPlib.h>
 #include <EPblib.h>
+#include <ctime>
 
 using namespace std;
 
@@ -43,7 +44,15 @@ int main(int argc, char* argv[]) {
 	Variable::initNullVar();
 	EPblib_init();
 	
+	clock_t beginTime = clock();
+	
 	yyparse();
+	
+	clock_t endTime = clock();
+	
+#ifdef EXEC_TIME
+	edbg("Exec time: " << (float(endTime - beginTime)) / CLOCKS_PER_SEC << "s.");
+#endif
 	
 	return 0;
 } 

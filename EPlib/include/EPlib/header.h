@@ -40,6 +40,8 @@
 
 #define WARNINGS
 
+#define EXEC_TIME
+
 #define VAR_DEBUG
 #define TYPES_DEBUG
 //#define CALL_DEBUG
