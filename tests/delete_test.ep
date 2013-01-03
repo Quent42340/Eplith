@@ -17,29 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-a = {"String Test", 123, 12 + 38, {"Test", 56}, "", {{"12345"}}};
-puts("The array is defined like that: " + a);
-puts(a[0]);
-puts(a[3][0]);
-puts(a[5][0][0]);
-a[3][0] = {5, 2, 3, "Fuck!"};
-puts(a[3][0][3]);
-
-b = {thing = "TEST", t24 = 24, table = {"New", "Table"}, "OMG..."};
-puts(b.thing);
-puts(b.t24);
-puts(b.table[1]);
-puts(b[0]);
-b["element"] = "Wah.";
-puts(b.element);
-b.thing = "THING";
-puts(b["thing"]);
-
-c = {puts = function(str) {
-		puts(str);
-	} };
-
-c.puts("Truc");
-
-puts(a == b);
-
+var = "truc";
+delete var;
+delete tonumber;
+delete tostring;
+puts(var);

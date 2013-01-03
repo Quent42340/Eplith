@@ -39,15 +39,13 @@ Variable::Variable(string name, Value *value, bool isConstant) {
 	vars[m_scope].push_back(this);
 	
 #ifdef VAR_DEBUG
-	edbg2("Var name: " << m_name << " | Type: " << m_value->type() << " | Value: ", m_value->print(), " | Const: " << m_isConstant << " | ID: " << m_id << " | Scope: " << m_scope);
+	edbg2("Var name: " << m_name << " | Type: " << m_value->type() << " | Value: ", m_value->print(), " | Const: " << m_isConstant << " | ID: " << m_id << " | Scope: " << m_scope << " | Nb vars: " << vars[m_scope].size());
 #endif
 }
 
 Variable::~Variable() {
-	vars[m_scope].erase(vars[m_scope].begin() + m_id);
-	
 #ifdef DELVAR_DEBUG
-	edbg("Variable \"" << m_name << "\" with ID: " << m_id << " deleted. | vars.size: " << vars.size());
+	edbg("Variable \"" << m_name << "\" with ID: " << m_id << " deleted. | vars[m_scope].size: " << vars[m_scope].size());
 #endif
 	
 	delete m_value;

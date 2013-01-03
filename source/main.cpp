@@ -51,6 +51,7 @@ int main(int argc, char* argv[]) {
 	clock_t endTime = clock();
 	
 #ifdef EXEC_TIME
+	edbg(endTime << " - " << beginTime);
 	edbg("Exec time: " << (float(endTime - beginTime)) / CLOCKS_PER_SEC << "s.");
 #endif
 	

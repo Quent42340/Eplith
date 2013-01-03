@@ -1,26 +1,25 @@
 // Comment a lot
-- Fix delete problems if they are
-- Comparison between tables
+- Fix clock issue ( exec time )
 - Operator ':' in function declaration
+- Inline interpreter
+- "continue"
 - Add functions to EPblib ( especially to Files )
 - Improve error messages
-- Switch
-- Inline interpreter
 => Version 0.2a
 - Variable number of arguments
 - Multi-return in funcs
 - Add missing functions in EPblib
-- Labels and Goto
 - oct and bin casts (TODOs in lexer.l)
-=> Version 0.3a
-- Metatables
 - Lot of tests
 - Complete documentation
 - Eplith website
 => Version 1.0
-? Function overloading
-? Classes (C++)
-=>? Version 1.1
-? Enums
-? Structs
-=>? Version 1.2
+- Labels and Goto
+- Switch
+- Metatables
+=> Version 1.1
+- Function overloading
+- Classes (C++)
+- Enums
+- Structs
+=> Version 1.2
