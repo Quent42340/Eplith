@@ -19,6 +19,4 @@
 ---------------------------------------------------------------------------------*/
 var = "truc";
 delete var;
-delete tonumber;
-delete tostring;
 puts(var);

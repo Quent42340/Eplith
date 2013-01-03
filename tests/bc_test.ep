@@ -20,17 +20,18 @@
 break; // Error: Normal.
 
 if(true) {
-	break;
+	break; // Error: Normal.
 }
 
 function f() {
-	break;
+	break; // Error: Normal.
 }
 
 f();
 
 a = 0;
 while(++a) {
+	if(a == 3) continue;
 	if(a == 5) break;
 	puts(a);
 }

@@ -1,15 +1,12 @@
 // Comment a lot
-- Fix clock issue ( exec time )
-- Operator ':' in function declaration
 - Inline interpreter
-- "continue"
 - Add functions to EPblib ( especially to Files )
-- Improve error messages
 => Version 0.2a
 - Variable number of arguments
 - Multi-return in funcs
 - Add missing functions in EPblib
 - oct and bin casts (TODOs in lexer.l)
+- Improve error messages
 - Lot of tests
 - Complete documentation
 - Eplith website
@@ -20,6 +17,7 @@
 => Version 1.1
 - Function overloading
 - Classes (C++)
+- Operator ':' in function declaration
 - Enums
 - Structs
 => Version 1.2

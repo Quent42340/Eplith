@@ -24,8 +24,10 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
+	// Set default filename to "Eplith" to make the error messages before launching a script much more pretty
 	EP_filename = "Eplith";
 	
+	// Verify the arguments
 	if(argc < 2) {
 		yyerror("Filename not given");
 	}
@@ -33,25 +35,26 @@ int main(int argc, char* argv[]) {
 		yyerror("Too much arguments");
 	}
 	
-#ifdef TYPES_DEBUG
+#ifdef TYPES_DEBUG // Debug information of types enum
 	edbg("Types: Int: " << typeInt << " | Float: " << typeFloat << " | String: " << typeStr << " | Array: " << typeArray << " | Function: " << typeFunc << " | File: " << typeFile << " | Void: " << typeVoid);
 #endif
 	
+	// Initialize the file
 	newFile(argv[1]);
-	
 	EP_filename = argv[1];
 	
+	// Initalize Eplith libs and default variables
 	Variable::initNullVar();
 	EPblib_init();
 	
 	clock_t beginTime = clock();
 	
+	// Run the script
 	yyparse();
 	
 	clock_t endTime = clock();
 	
-#ifdef EXEC_TIME
-	edbg(endTime << " - " << beginTime);
+#ifdef EXEC_TIME // Display execution time of the script
 	edbg("Exec time: " << (float(endTime - beginTime)) / CLOCKS_PER_SEC << "s.");
 #endif
 	
