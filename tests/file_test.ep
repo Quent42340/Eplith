@@ -17,24 +17,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---------------------------------------------------------------------------------*/
-file = File.open("tests/file", "r+");
+file = IO.open("tests/file", "r+");
 
-c = File.getc(file);
+c = IO.getc(file);
 
 while(c != "\n") {
 	print(c);
-	c = File.getc(file);
+	c = IO.getc(file);
 }
 
 print("\n");
 
-l = File.getline(file);
+l = IO.getline(file);
 
-while(l != File.EOF) {
+while(l != IO.EOF) {
 	puts(l);
-	l = File.getline(file);
+	l = IO.getline(file);
 }
 
-if(!File.close(file)) puts("\nDone!");
+if(!IO.close(file)) puts("\nDone!");
 else puts("\nOh no...");
 

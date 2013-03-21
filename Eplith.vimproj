@@ -37,7 +37,7 @@ Eplith=/home/quentin/Bureau/Projets/FlexBison/Eplith CD=. filter=".gitignore *.c
    EPblib=EPblib {
     EPb_array.h
     EPb_base.h
-    EPb_file.h
+    EPb_io.h
     EPb_math.h
     EPb_string.h
     EPb_system.h
@@ -47,7 +47,7 @@ Eplith=/home/quentin/Bureau/Projets/FlexBison/Eplith CD=. filter=".gitignore *.c
   source=source {
    EPb_array.cpp
    EPb_base.cpp
-   EPb_file.cpp
+   EPb_io.cpp
    EPb_math.cpp
    EPb_string.cpp
    EPb_system.cpp

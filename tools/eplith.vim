@@ -113,11 +113,11 @@ syn match epFunc /\<Math\.sqrt\>/
 syn match epFunc /\<Math\.rand\>/
 syn match epFunc /\<Math\.srand\>/
 syn match epFunc /\<Math\.pi\>/
-syn match epFunc /\<File\.open\>/
-syn match epFunc /\<File\.close\>/
-syn match epFunc /\<File\.getc\>/
-syn match epFunc /\<File\.getline\>/
-syn match epFunc /\<File\.EOF\>/
+syn match epFunc /\<IO\.open\>/
+syn match epFunc /\<IO\.close\>/
+syn match epFunc /\<IO\.getc\>/
+syn match epFunc /\<IO\.getline\>/
+syn match epFunc /\<IO\.EOF\>/
 syn match epFunc /\<System\.time\>/
 syn match epFunc /\<System\.execute\>/
 syn match epFunc /\<System\.exit\>/

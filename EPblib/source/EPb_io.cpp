@@ -19,16 +19,16 @@
 ---------------------------------------------------------------------------------*/
 #include <EPlib.h>
 #include "EPb_tools.h"
-#include "EPb_file.h"
+#include "EPb_io.h"
 
 using namespace std;
 
-int File_close(EPb_args *args) {
+int IO_close(EPb_args *args) {
 	File *f = EPb_getFile((*args)[0]);
 	return (int)fclose(f->f);
 }
 
-File *File_open(EPb_args *args) {
+File *IO_open(EPb_args *args) {
 	string filename = EPb_getStr((*args)[0]);
 	string mode = EPb_getStr((*args)[1]);
 	File *f = new File;
@@ -37,24 +37,24 @@ File *File_open(EPb_args *args) {
 	return f;
 }
 
-string File_getc(EPb_args *args) {
+string IO_getc(EPb_args *args) {
 	File *f = EPb_getFile((*args)[0]);
 	std::ostringstream oss;
 	oss << (char)fgetc(f->f);
 	return oss.str();
 }
 
-string File_EOF() {
+string IO_EOF() {
 	std::ostringstream oss;
 	oss << (char)EOF;
 	return oss.str();
 }
 
-string File_getline(EPb_args *args) {
+string IO_getline(EPb_args *args) {
 	File *f = EPb_getFile((*args)[0]);
 	std::ostringstream oss;
 	char c = fgetc(f->f);
-	if(c == EOF) { return File_EOF(); }
+	if(c == EOF) return IO_EOF();
 	while(c != '\n') {
 		oss << c;
 		c = fgetc(f->f);
@@ -62,21 +62,27 @@ string File_getline(EPb_args *args) {
 	return oss.str();
 }
 
-EPb_initStruct(Close,, File_close, 1, "f");
-EPb_initStruct(Open, File_open,, 2, "filename", "mode");
-EPb_initStruct(Getc, File_getc,, 1, "f");
-EPb_initStruct(Getline, File_getline,, 1, "f");
+void *IO_flush() {
+	std::cout.flush();
+	return NULL;
+}
 
-void EPblib_initFile() {
-	map<string, Value*> File_elements;
+EPb_initStruct(Close,, IO_close, 1, "f");
+EPb_initStruct(Open, IO_open,, 2, "filename", "mode");
+EPb_initStruct(Getc, IO_getc,, 1, "f");
+EPb_initStruct(Getline, IO_getline,, 1, "f");
+EPb_initStruct(Flush,, IO_flush, 0, "");
+
+void EPblib_initIO() {
+	map<string, Value*> IO_elements;
 	
-	EPb_initElemFunc(File_elements, Close, close);
-	EPb_initElemFunc(File_elements, Open, open);
-	EPb_initElemFunc(File_elements, Getc, getc);
-	EPb_initElemFunc(File_elements, Getline, getline);
+	EPb_initElemFunc(IO_elements, Close, close);
+	EPb_initElemFunc(IO_elements, Open, open);
+	EPb_initElemFunc(IO_elements, Getc, getc);
+	EPb_initElemFunc(IO_elements, Getline, getline);
 	
-	File_elements.insert(File_elements.end(), pair<string, Value*>("EOF", new Value(File_EOF())));
+	IO_elements.insert(IO_elements.end(), pair<string, Value*>("EOF", new Value(IO_EOF())));
 	
-	Variable *File = new Variable("File", new Value(File_elements));
+	Variable *IO = new Variable("IO", new Value(IO_elements));
 }
 

@@ -24,7 +24,7 @@
 #include "EPblib/EPb_math.h"
 #include "EPblib/EPb_string.h"
 #include "EPblib/EPb_array.h"
-#include "EPblib/EPb_file.h"
+#include "EPblib/EPb_io.h"
 #include "EPblib/EPb_system.h"
 
 void EPblib_init() {
@@ -32,7 +32,7 @@ void EPblib_init() {
 	EPblib_initMath();
 	EPblib_initString();
 	EPblib_initArray();
-	EPblib_initFile();
+	EPblib_initIO();
 	EPblib_initSystem();
 }
 
