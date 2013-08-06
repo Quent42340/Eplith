@@ -1,7 +1,3 @@
-// Comment a lot
-- Inline interpreter
-- Add functions to EPblib ( especially to Files )
-=> Version 0.2a
 - Variable number of arguments
 - Multi-return in funcs
 - Add missing functions in EPblib

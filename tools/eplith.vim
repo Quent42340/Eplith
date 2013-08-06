@@ -30,7 +30,7 @@ syn match  epParenError ")"
 syn match  epError "}"
 
 syn match	epExternal		"-include"
-syn keyword epConditional	if else
+syn keyword epConditional	if else set
 syn keyword epFunction		function
 syn keyword epRepeat		while for do block
 syn keyword epBranch		break continue
@@ -44,6 +44,7 @@ syn region epBlock	start="{" end="}" transparent fold
 " Operators
 syn keyword epOperator return global
 syn keyword epOperator delete self
+syn keyword epOperator default same
 syn keyword epOperator and or not
 syn keyword epOperator to not and or
 syn keyword epOperator bitand bitor xor bitnot compl lshift rshift

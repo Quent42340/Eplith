@@ -1,0 +1,9 @@
+Keyword "set"
+Like that:
+
+set(variable) {
+	(condition):(value)
+	(condition2):(value2)
+	(condition3):(value3)
+};
+

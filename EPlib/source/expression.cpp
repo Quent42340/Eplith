@@ -718,3 +718,12 @@ void ForExpression::doExp() {
 	delete vi;
 }
 
+SetExpression::SetExpression() {
+}
+
+SetExpression::~SetExpression() {
+}
+
+void SetExpression::doExp() {
+}
+

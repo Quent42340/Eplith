@@ -26,12 +26,14 @@ using namespace std;
 
 extern FILE* yyin;
 string EP_filename;
+bool EP_inlineInterpreter;
 
 void error(string str, const char* file, unsigned int line) {
 	cerr << "\33[0;31;01m" << EP_filename << ":" << yylineno << ": Error: " << str << "\33[0m" << endl;
 #ifdef EPLITH_DEBUG
 	edbg(file << ":" << line);
 #endif
+	
 	exit(1);
 }
 
@@ -90,6 +92,8 @@ int yywrap() {
 %token RETURN
 %token DELETE
 
+%token SET DEFAULT SAME
+
 %token STRA
 %token EQI EQS
 
@@ -119,8 +123,8 @@ int yywrap() {
 
 %start program
 
-%type <exp> call exp prevar var assign assignExpVal stmt cast integer func ufunc elemName if_begin
-%type <list> exp_list stmt_list stmts assignExp_list elemName_list
+%type <exp> call exp prevar var assign assignExpVal stmt cast integer func ufunc elemName if_begin set_stmt
+%type <list> exp_list stmt_list stmts assignExp_list elemName_list set_list
 %type <varList> var_list
 %type <strVec> element_index
 %type <element> element
@@ -154,6 +158,20 @@ stmt:
 	| FOR '(' assign TO exp ';' exp ')'{ beginScope(stLOOP); } stmts { $$ = new ForExpression($3, $10, $5, $7);  }
 	| FOR '(' assign TO exp ')' { beginScope(stLOOP); } stmts { $$ = new ForExpression($3, $8, $5);  }
 	| func { $$ = $1; }
+	| SET '(' var_list ')' { beginScope(stLOOP); } '{' set_list '}' ';' { $$ = new SetBlockExpression($3, $7); }
+	;
+
+set_stmt:
+	'(' exp ')' ':' '(' exp_list ')' { $$ = SetExpression($2, $6); }
+	;
+
+set_list:
+	  set_stmt { vector<SetExpression*> *v = new vector<SetExpression*>;
+				 v->push_back($1);
+				 $$ = v; }
+	| set_list set_stmt { vector<SetExpression*> *v = $1;
+						  v->push_back($2);
+						  $$ = v; }
 	;
 
 if_begin:
@@ -182,8 +200,8 @@ stmt_list:
 			 v->push_back($1);
 			 $$ = v; }
 	| stmt_list stmt { vector<Expression*> *v = $1;
-						   v->push_back($2);
-						   $$ = v; }
+					   v->push_back($2);
+					   $$ = v; }
 	;
 
 var_list:

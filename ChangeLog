@@ -4,3 +4,5 @@
 0.2a:
 	* Exec time available ( see header.h to turn it on )
 	* `delete` issues fixed
+	* Some functions added to EPblib
+	* Inline interpreter ~~

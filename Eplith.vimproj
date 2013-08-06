@@ -88,6 +88,7 @@ Eplith=/home/quentin/Bureau/Projets/FlexBison/Eplith CD=. filter=".gitignore *.c
   include_test.ep
   io_test.ep
   math_test.ep
+  set_test.ep
   string_test.ep
   system_test.ep
   temp_test.ep

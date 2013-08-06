@@ -62,7 +62,7 @@ string IO_getline(EPb_args *args) {
 	return oss.str();
 }
 
-void *IO_flush() {
+void *IO_flush(EPb_args *args) {
 	std::cout.flush();
 	return NULL;
 }

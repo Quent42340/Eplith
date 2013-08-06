@@ -70,6 +70,7 @@ static std::vector<int> stoi(const char *c) {
 extern int yylineno;
 extern char* yytext;
 extern std::string EP_filename;
+extern bool EP_inlineInterpreter;
 
 static inline std::string getPtrAddr(void* ptr) {
 	std::stringstream oss;

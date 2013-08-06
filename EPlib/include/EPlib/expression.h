@@ -399,4 +399,15 @@ class ForExpression : public Expression {
 		std::vector<Expression*> *m_statements;
 };
 
+class SetExpression : public Expression {
+	public:
+		SetExpression();
+		~SetExpression();
+		
+		Value *evaluate() { return new Value(); };
+		void doExp();
+		
+	private:
+}
+
 #endif // EPLIB_EXPRESSION_H
