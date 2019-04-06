@@ -77,7 +77,7 @@ int popFile();
 "const"						return CONST;
 "set"						return SET;
 "default"					return DEFAULT;
-"same"						return SAME
+"same"						return SAME;
 ("->"|"to")					return TO;
 "hex"						return HEX;
 	/* TODO: "oct"						return OCT;*/
@@ -135,7 +135,7 @@ int popFile();
 
 	/* Whitespace */
 [ \t\n]+					;	/* Ignore whitespace */
-	
+
 	/* Include */
 ^"-"[ \t]*include[ \t]*\" { BEGIN IFILE; }
 <IFILE>[^ \t\n\"]+		  {
@@ -156,13 +156,13 @@ int popFile();
 int newFile(char *filename) {
 	FILE *f = fopen(filename, "r");
 	struct EFile *file = new struct EFile;
-	
+
 	if(!f) { yylineno--; yyerror(string("File '") + string(filename) + "' not found"); }
 	if(!file) { yylineno--; yyerror("Memory allocation error"); }
-	
+
 	if(currentFile) currentFile->lineno = yylineno;
 	file->prev = currentFile;
-	
+
 	file->bs = yy_create_buffer(f, YY_BUF_SIZE);
 	file->f = f;
 	file->filename = filename;
@@ -175,20 +175,20 @@ int newFile(char *filename) {
 int popFile() {
 	struct EFile *file = currentFile;
 	struct EFile *prevFile;
-	
+
 	if(!file) return 0;
-	
+
 	fclose(file->f);
 	yy_delete_buffer(file->bs);
-	
+
 	prevFile = file->prev;
 	delete file;
-	
+
 	if(!prevFile) return 0;
-	
+
 	yy_switch_to_buffer(prevFile->bs);
 	currentFile = prevFile;
 	yylineno = currentFile->lineno;
-	return 1; 
+	return 1;
 }
 

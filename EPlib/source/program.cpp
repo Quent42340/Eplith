@@ -23,7 +23,7 @@ using namespace std;
 
 Program::Program(string filename) {
 	m_filename = filename;
-	
+
 	Variable::initNullVar();
 }
 

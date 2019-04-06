@@ -59,38 +59,38 @@ struct ScopeTypeList {
 					 delete stList; }
 
 class Expression {
-	public:	
+	public:
 		Expression();
 		~Expression();
-		
+
 		static bool inLoop();
 		static bool inFunc();
-		
+
 		virtual Value* evaluate() = 0;
 		virtual void doExp() = 0;
-		
+
 		void doThings() { if(scopes == 0) doExp(); }
 		void doThings(bool inScope) { if(scopes - 1 == 0) doExp(); }
-		
+
 		static int scopes;
 		static ScopeTypeList *scopeType;
 		static Signal signal;
-		
+
 		bool hexMode() const { return m_mode == modeHex; }
 		static void setHexMode(Expression *exp, bool h) { exp->m_mode = (h) ? modeHex : noMode; }
-		
+
 		bool sciMode() const { return m_mode == modeSci; }
 		static void setSciMode(Expression *exp, bool s) { exp->m_mode = (s) ? modeSci : noMode; }
-		
+
 		Mode mode() const { return m_mode; }
 		void mode(Mode m) { m_mode = m; }
-		
+
 		std::string type() const { return m_type; }
 		void type(std::string t) { m_type = t; }
-		
+
 		int line() const { return m_line; }
 		void line(int l) { m_line = l; }
-		
+
 	protected:
 		Mode m_mode;
 		int m_line;
@@ -101,7 +101,7 @@ class NullExpression : public Expression {
 	public:
 		NullExpression() {}
 		~NullExpression() {}
-		
+
 		Value *evaluate() { return Variable::vars[0][0]->value(); }
 		void doExp() {}
 };
@@ -110,10 +110,10 @@ class IntExpression : public Expression {
 	public:
 		IntExpression(int value);
 		~IntExpression();
-		
+
 		Value* evaluate() { return new Value(m_value); }
 		void doExp() {}
-	
+
 	private:
 		int m_value;
 };
@@ -122,10 +122,10 @@ class FloatExpression : public Expression {
 	public:
 		FloatExpression(double value);
 		~FloatExpression();
-		
+
 		Value* evaluate() { return new Value(m_value); }
 		void doExp() {}
-	
+
 	private:
 		double m_value;
 };
@@ -134,10 +134,10 @@ class StrExpression : public Expression {
 	public:
 		StrExpression(std::string str);
 		~StrExpression();
-		
+
 		Value* evaluate() { return new Value(m_str); }
 		void doExp() {}
-		
+
 	private:
 		std::string m_str;
 };
@@ -146,10 +146,10 @@ class BoolExpression : public Expression {
 	public:
 		BoolExpression(bool value);
 		~BoolExpression();
-		
+
 		Value* evaluate() { return new Value(m_value); }
 		void doExp() {}
-		
+
 	private:
 		bool m_value;
 };
@@ -161,7 +161,7 @@ class ArrayExpression : public Expression {
 
 		Value *evaluate();
 		void doExp() {}
-		
+
 	private:
 		std::multimap<std::string, Expression*> *m_elements;
 };
@@ -173,10 +173,10 @@ class ElementExpression : public Expression {
 
 		Value *evaluate();
 		void doExp() {}
-		
+
 		std::string arrayName() const { return m_arrayName; }
 		std::vector<std::string>* index() { return m_index; }
-		
+
 	private:
 		std::string m_arrayName;
 		std::vector<std::string> *m_index;
@@ -186,10 +186,10 @@ class OpExpression : public Expression {
 	public:
 		OpExpression(Expression *exp1, int oper, Expression *exp2 = 0);
 		~OpExpression();
-		
+
 		Value* evaluate();
 		void doExp() {}
-		
+
 	private:
 		int m_oper;
 		Expression *m_exp1;
@@ -200,19 +200,19 @@ class VarExpression : public Expression {
 	public:
 		VarExpression(std::string varName);
 		~VarExpression();
-		
+
 		Value* evaluate();
 		void doExp();
-		
+
 		virtual void value(Value *value) { m_value = value; }
 		virtual Value *value() const { return m_value; }
-		
+
 		virtual Variable *var() const { return m_var; }
-		
+
 		std::string varName() { return m_varName; }
-		
+
 		virtual Variable* getVar() { doExp(); return m_var; }
-		
+
 	private:
 		std::string m_varName;
 		Variable *m_var;
@@ -224,18 +224,18 @@ class AssignExpression : public Expression {
 		AssignExpression(std::string varName, Expression *valExp, int op = -1);
 		AssignExpression(ElementExpression *element, Expression *valExp, int op = -1);
 		~AssignExpression();
-		
+
 		Value *evaluate();
 		void doExp();
-		
+
 		Variable *getVar() { doExp(); return m_var; }
-		
+
 		void global(bool global) { m_global = global; }
-		
+
 		void isConstant(bool isConstant) { m_isConstant = isConstant; }
-		
+
 		void value(Value *v) { m_val = v; }
-		
+
 	private:
 		std::string m_varName;
 		Variable *m_var;
@@ -251,10 +251,10 @@ class AssignExpressionList : public Expression {
 	public:
 		AssignExpressionList(std::vector<Expression*> *elemNames, std::vector<Expression*> *exps);
 		~AssignExpressionList();
-		
+
 		Value *evaluate();
 		void doExp();
-		
+
 	private:
 		std::vector<Expression*> *m_elemNames;
 		std::vector<Expression*> *m_exps;
@@ -264,10 +264,10 @@ class CrExpression : public Expression {
 	public:
 		CrExpression(Expression *exp, int op, bool after = false);
 		~CrExpression();
-		
+
 		Value* evaluate();
 		void doExp();
-		
+
 	private:
 		VarExpression *m_varExp;
 		ElementExpression *m_elemExp;
@@ -280,10 +280,10 @@ class IfExpression : public Expression {
 	public:
 		IfExpression(Expression *ifExp, std::vector<Expression*> *statements, std::vector<Expression*> *elseStatements = 0);
 		~IfExpression();
-		
+
 		Value* evaluate();
 		void doExp();
-		
+
 	private:
 		Expression *m_ifExp;
 		std::vector<Expression*> *m_statements;
@@ -294,10 +294,10 @@ class BlockExpression : public Expression {
 	public:
 		BlockExpression(std::vector<Expression*> *statements);
 		~BlockExpression();
-		
+
 		Value* evaluate() { return new Value(); }
 		void doExp();
-		
+
 	private:
 		std::vector<Expression*> *m_statements;
 };
@@ -306,10 +306,10 @@ class FuncExpression : public Expression {
 	public:
 		FuncExpression(std::string funcName, std::vector<VarExpression*> *args, std::vector<Expression*> *stmts);
 		~FuncExpression();
-		
+
 		Value* evaluate() { if(!m_func) doExp(); return new Value(m_func); }
 		void doExp();
-		
+
 	private:
 		std::string m_funcName;
 		Function *m_func;
@@ -322,11 +322,11 @@ class CallExpression : public Expression {
 		CallExpression(std::string funcName, std::vector<Expression*> *args);
 		CallExpression(ElementExpression *element, std::vector<Expression*> *args);
 		~CallExpression();
-		
+
 		void initFunc();
 		Value* evaluate();
 		void doExp();
-		
+
 	private:
 		std::string m_funcName;
 		std::vector<Function*> m_funcs;
@@ -339,10 +339,10 @@ class ReturnExpression : public Expression {
 	public:
 		ReturnExpression(Expression *exp);
 		~ReturnExpression();
-		
+
 		Value* evaluate() { return m_exp->evaluate(); }
 		void doExp() { signal = sRETURN; };
-		
+
 	private:
 		Expression *m_exp;
 };
@@ -351,10 +351,10 @@ class DeleteExpression : public Expression {
 	public:
 		DeleteExpression(VarExpression *varExp);
 		~DeleteExpression();
-		
+
 		Value *evaluate() { return new Value(); }
 		void doExp();
-		
+
 	private:
 		Variable *m_var;
 };
@@ -363,10 +363,10 @@ class SignalExpression : public Expression {
 	public:
 		SignalExpression(Signal s);
 		~SignalExpression() {}
-		
+
 		Value* evaluate() { return new Value(); }
 		void doExp();
-	
+
 	private:
 		Signal m_signal;
 };
@@ -375,10 +375,10 @@ class WhileExpression : public Expression {
 	public:
 		WhileExpression(Expression *whileExp, std::vector<Expression*> *statements);
 		~WhileExpression();
-		
+
 		Value* evaluate() { return new Value(); };
 		void doExp();
-		
+
 	private:
 		Expression *m_whileExp;
 		std::vector<Expression*> *m_statements;
@@ -388,10 +388,10 @@ class ForExpression : public Expression {
 	public:
 		ForExpression(Expression *varExp, std::vector<Expression*> *statements, Expression *toExp, Expression *stepExp = 0);
 		~ForExpression();
-		
+
 		Value* evaluate() { return new Value(); };
 		void doExp();
-		
+
 	private:
 		AssignExpression *m_varExp;
 		Expression *m_toExp;
@@ -399,15 +399,15 @@ class ForExpression : public Expression {
 		std::vector<Expression*> *m_statements;
 };
 
-class SetExpression : public Expression {
-	public:
-		SetExpression();
-		~SetExpression();
-		
-		Value *evaluate() { return new Value(); };
-		void doExp();
-		
-	private:
-}
+// class SetExpression : public Expression {
+// 	public:
+// 		SetExpression();
+// 		~SetExpression();
+//
+// 		Value *evaluate() { return new Value(); };
+// 		void doExp();
+//
+// 	private:
+// }
 
 #endif // EPLIB_EXPRESSION_H

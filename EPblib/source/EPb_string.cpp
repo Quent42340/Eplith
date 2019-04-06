@@ -58,13 +58,13 @@ string String_sub(EPb_args *args) {
 	string s = EPb_getStr((*args)[0]);
 	int i = EPb_getInt((*args)[1]);
 	int j;
-	
+
 	if(EPb_argsNbr(args) == 3) {
 		j = EPb_getInt((*args)[2]);
 	} else {
 		j = -1;
 	}
-	
+
 	if(i >= 0) {
 		return s.substr(i, j);
 	} else {
@@ -81,14 +81,14 @@ EPb_initStruct(Sub, String_sub,, 3, "s", "i", "j=-1");
 
 void EPblib_initString() {
 	map<string, Value*> String_elements;
-	
+
 	EPb_initElemFunc(String_elements, Len, len);
 	EPb_initElemFunc(String_elements, Upper, upper);
 	EPb_initElemFunc(String_elements, Lower, lower);
 	EPb_initElemFunc(String_elements, Reverse, reverse);
 	EPb_initElemFunc(String_elements, Rep, rep);
 	EPb_initElemFunc(String_elements, Sub, sub);
-	
+
 	Variable *String = new Variable("String", new Value(String_elements));
 }
 

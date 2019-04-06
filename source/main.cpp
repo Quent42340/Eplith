@@ -26,18 +26,18 @@ using namespace std;
 int main(int argc, char* argv[]) {
 	// Set default filename to "Eplith" to make the error messages before launching a script much more pretty
 	EP_filename = "Eplith";
-	
+
 	// Set default value for the inline interpreter
 	EP_inlineInterpreter = false;
-	
+
 	#ifdef TYPES_DEBUG // Debug information of types enum
 		edbg("Types: Int: " << typeInt << " | Float: " << typeFloat << " | String: " << typeStr << " | Array: " << typeArray << " | Function: " << typeFunc << " | File: " << typeFile << " | Void: " << typeVoid);
 	#endif
-	
+
 	// Initalize Eplith libs and default variables
 	Variable::initNullVar();
 	EPblib_init();
-	
+
 	// Verify the arguments
 	if(argc > 2) {
 		yyerror("Too much arguments");
@@ -49,18 +49,18 @@ int main(int argc, char* argv[]) {
 	} else {
 		EP_inlineInterpreter = true;
 	}
-	
+
 	clock_t beginTime = clock();
-	
+
 	// Run the script
 	yyparse();
-	
+
 	clock_t endTime = clock();
-	
+
 #ifdef EXEC_TIME // Display execution time of the script
 	edbg("Exec time: " << (float(endTime - beginTime)) / CLOCKS_PER_SEC << "s.");
 #endif
-	
+
 	return 0;
-} 
+}
 

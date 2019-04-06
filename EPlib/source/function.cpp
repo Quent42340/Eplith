@@ -36,11 +36,11 @@ Function::Function(vector<VarExpression*> *args, vector<Expression*> *stmts, boo
 	m_args = new vector<VarExpression*>(*args);
 	m_stmts = new vector<Expression*>;
 	m_vars = new vector<Variable*>;
-	
+
 	for(unsigned int i = 0 ; i < stmts->size() ; i++) {
 		m_stmts->push_back((*stmts)[i]);
 	}
-	
+
 	m_ret = new Value();
 	m_colon = false;
 	m_mainElement = 0;
@@ -77,7 +77,7 @@ void Function::doFunc(vector<Expression*> *args) {
 			}
 		}
 	}
-	
+
 	vector<VarExpression*> *m_argsCopy = new vector<VarExpression*>(*m_args);
 	for(unsigned int i = 0 ; i < m_args->size() ; i++) {
 		if(m_colon && (*m_args)[i]->varName() == "self") {
@@ -96,7 +96,7 @@ void Function::doFunc(vector<Expression*> *args) {
 			}
 		}
 	}
-	
+
 	int oldlineno = yylineno;
 	for(unsigned int i = 0 ; i < m_stmts->size() ; i++) {
 		yylineno = (*m_stmts)[i]->line();
@@ -107,12 +107,12 @@ void Function::doFunc(vector<Expression*> *args) {
 			break;
 		}
 	}
-	
+
 	yylineno = oldlineno;
 	for(unsigned int i = m_vars->size() - 1 ; m_vars->size() != 0 ; i--) {
 		m_vars->pop_back();
 	}
-	
+
 	for(unsigned int i = 0 ; i < m_args->size() ; i++) {
 		(*m_args)[i]->value((*m_argsCopy)[i]->value());
 	}

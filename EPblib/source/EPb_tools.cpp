@@ -24,7 +24,7 @@ using namespace std;
 vector<VarExpression*> *EPb_arguments(int nbArgs, ...) {
 	vector<VarExpression*> *args = new vector<VarExpression*>;
 	if(!nbArgs) return args;
-	
+
 	va_list vargs;
 	va_start(vargs, nbArgs);
 	char *s;
@@ -42,14 +42,14 @@ vector<VarExpression*> *EPb_arguments(int nbArgs, ...) {
 		}
 	}
 	va_end(vargs);
-	
+
 	return args;
 }
 
 vector<Expression*> *EPb_statements(int nbStmts, ...) {
 	vector<Expression*> *stmts = new vector<Expression*>;
 	if(!nbStmts) return stmts;
-	
+
 	va_list vargs;
 	va_start(vargs, nbStmts);
 	Expression *exp;
@@ -58,7 +58,7 @@ vector<Expression*> *EPb_statements(int nbStmts, ...) {
 		stmts->push_back(exp);
 	}
 	va_end(vargs);
-	
+
 	return stmts;
 }
 

@@ -26,7 +26,7 @@ using namespace std;
 string Array_concat(EPb_args *args) {
 	map<string, Value*> t = EPb_getArray((*args)[0]);
 	string sep = EPb_getStr((*args)[1]);
-	
+
 	string r;
 	for(map<string, Value*>::iterator it = t.begin() ; it != t.end() ; it++) {
 		r += EPb_valToStr(it->second);
@@ -39,7 +39,7 @@ map<string, Value*> Array_insert(EPb_args *args) {
 	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
 	if(!t) yyerror("Bad argument");
 	int pos; Value *v;
-	
+
 	if(EPb_argsNbr(args) == 2) {
 		v = EPb_getVal((*args)[1]);
 		pos = -1;
@@ -48,7 +48,7 @@ map<string, Value*> Array_insert(EPb_args *args) {
 		if(pos < 0 || pos > t->size()) yyerror("Bad position");
 		v = EPb_getVal((*args)[2]);
 	}
-	
+
 	int count = 0;
 	for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
 		if(count == pos && pos != -1) {
@@ -73,14 +73,14 @@ map<string, Value*> Array_remove(EPb_args *args) {
 	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
 	if(!t) yyerror("Bad argument");
 	int pos; Value *v;
-	
+
 	if(EPb_argsNbr(args) == 1) {
 		pos = -1;
 	} else {
 		pos = EPb_getInt((*args)[1]);
 		if(pos < 0 || pos > t->size()) yyerror("Bad position");
 	}
-	
+
 	int count = 0;
 	for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
 		if((count - 1) == pos && pos != -1) {
@@ -104,7 +104,7 @@ map<string, Value*> Array_remove(EPb_args *args) {
 int Array_maxn(EPb_args *args) {
 	map<string, Value*> *t = EPb_getArrayPtr((*args)[0]);
 	if(!t) yyerror("Bad argument");
-	
+
 	int count = 0;
 	for(map<string, Value*>::iterator it = t->begin() ; it != t->end() ; it++) {
 		vector<int> r = stoi(it->first.c_str());
@@ -120,12 +120,12 @@ EPb_initStruct(Maxn, Array_maxn,, 1, "t");
 
 void EPblib_initArray() {
 	map<string, Value*> Array_elements;
-	
+
 	EPb_initElemFunc(Array_elements, Concat, concat);
 	EPb_initElemFunc(Array_elements, Insert, insert);
 	EPb_initElemFunc(Array_elements, Remove, remove);
 	EPb_initElemFunc(Array_elements, Maxn, maxn);
-	
+
 	Variable *Array = new Variable("Array", new Value(Array_elements));
 }
 

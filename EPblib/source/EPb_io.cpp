@@ -75,14 +75,14 @@ EPb_initStruct(Flush,, IO_flush, 0, "");
 
 void EPblib_initIO() {
 	map<string, Value*> IO_elements;
-	
+
 	EPb_initElemFunc(IO_elements, Close, close);
 	EPb_initElemFunc(IO_elements, Open, open);
 	EPb_initElemFunc(IO_elements, Getc, getc);
 	EPb_initElemFunc(IO_elements, Getline, getline);
-	
+
 	IO_elements.insert(IO_elements.end(), pair<string, Value*>("EOF", new Value(IO_EOF())));
-	
+
 	Variable *IO = new Variable("IO", new Value(IO_elements));
 }
 
