@@ -54,11 +54,11 @@ EPb_initStruct(Exit,, System_exit, 1, "status=-1");
 
 void EPblib_initSystem() {
 	map<string, Value*> System_elements;
-	
+
 	EPb_initElemFunc(System_elements, Time, time);
 	EPb_initElemFunc(System_elements, Execute, execute);
 	EPb_initElemFunc(System_elements, Exit, exit);
-	
+
 	Variable *System = new Variable("System", new Value(System_elements));
 }
 

@@ -89,41 +89,41 @@ class Value {
 		Value(boost::any *value, Mode mode = noMode);
 		Value(Variable *var, Mode mode = noMode);
 		~Value() {}
-		
+
 		void print(std::ostream &out = std::cout, Mode mode = noMode);
-		
+
 		template <typename T>
 			T* valuePtr() { T *c = boost::any_cast<T>(&m_value); return (c) ? c : 0; }
 		template <typename T>
 			T value() { T *c = valuePtr<T>(); if(c) return *c; else yyerror(std::string("Value is of type '") + typeToStr() + "' but a '" + GetTypeName<T>() + "' is required"); }
 		template <typename T>
 			T value(T value) { m_value = value; }
-		
+
 		Value *element(std::vector<std::string> indexTable);
 		void element(ElementExpression *element, Value *newValue);
-		
+
 		void copy(Value *value);
-		
+
 		boost::any *any() { return &m_value; }
-		
+
 		Type type() const { return m_type; }
-		
+
 		Mode mode() const { return m_mode; }
 		void mode(Mode m) { m_mode = m; }
-		
+
 		bool hexMode() const { return m_mode == modeHex; }
 		void hexMode(bool h) { m_mode = (h) ? modeHex : noMode; }
-		
+
 		bool sciMode() const { return m_mode == modeSci; }
 		void sciMode(bool s) { m_mode = (s) ? modeSci : noMode; }
-		
+
 		Value *valIncr() { m_value = value<int>() + 1; return this; }
 		Value *valDecr() { m_value = value<int>() - 1; return this; }
-		
+
 		bool toBool();
 
 		std::string typeToStr();
-		
+
 		Value *toNum() {
 			if(m_type != typeStr && !isNum(this)) yyerror(std::string("tonumber() function not available with type '") + typeToStr() + "'");
 			if(m_type == typeStr) {
@@ -134,14 +134,14 @@ class Value {
 				return new Value(getNumVal(this));
 			}
 		}
-		
+
 		Value *toStr() {
 			std::stringstream out;
 			print(out, m_mode);
 			out << std::ends;
 			return new Value(out.str());
 		}
-		
+
 	protected:
 		Type m_type;
 		boost::any m_value;

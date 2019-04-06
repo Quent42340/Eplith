@@ -28,10 +28,10 @@ class EPbExpression : public Expression {
 	public:
 		EPbExpression(EPb_args *args) { m_args = args; }
 		~EPbExpression() { delete T::args; delete T::stmts; delete T::value; delete m_args; }
-		
+
 		Value *evaluate() { return T::eval(m_args); }
 		void doExp() { T::exec(m_args); }
-		
+
 	private:
 		EPb_args *m_args;
 };

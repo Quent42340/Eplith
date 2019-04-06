@@ -33,7 +33,7 @@ void error(string str, const char* file, unsigned int line) {
 #ifdef EPLITH_DEBUG
 	edbg(file << ":" << line);
 #endif
-	
+
 	exit(1);
 }
 
@@ -47,7 +47,7 @@ void warn(string str, const char* file, unsigned int line) {
 extern "C" {
 int yywrap() {
 	return 1;
-} 
+}
 }
 
 %}
@@ -106,7 +106,7 @@ int yywrap() {
 %nonassoc ELSE
 
 	/* See Cp19 for others */
-%left ','	
+%left ','
 %left '=' BAND_EQ BOR_EQ XOR_EQ
 %left OR
 %left AND
@@ -123,8 +123,10 @@ int yywrap() {
 
 %start program
 
-%type <exp> call exp prevar var assign assignExpVal stmt cast integer func ufunc elemName if_begin set_stmt
-%type <list> exp_list stmt_list stmts assignExp_list elemName_list set_list
+/* %type <exp> call exp prevar var assign assignExpVal stmt cast integer func ufunc elemName if_begin set_stmt */
+%type <exp> call exp prevar var assign assignExpVal stmt cast integer func ufunc elemName if_begin
+%type <list> exp_list stmt_list stmts assignExp_list elemName_list
+/* %type <list> exp_list stmt_list stmts assignExp_list elemName_list set_list */
 %type <varList> var_list
 %type <strVec> element_index
 %type <element> element
@@ -158,21 +160,21 @@ stmt:
 	| FOR '(' assign TO exp ';' exp ')'{ beginScope(stLOOP); } stmts { $$ = new ForExpression($3, $10, $5, $7);  }
 	| FOR '(' assign TO exp ')' { beginScope(stLOOP); } stmts { $$ = new ForExpression($3, $8, $5);  }
 	| func { $$ = $1; }
-	| SET '(' var_list ')' { beginScope(stLOOP); } '{' set_list '}' ';' { $$ = new SetBlockExpression($3, $7); }
+	/* | SET '(' var_list ')' { beginScope(stLOOP); } '{' set_list '}' ';' { $$ = new SetBlockExpression($3, $7); } */
 	;
 
-set_stmt:
-	'(' exp ')' ':' '(' exp_list ')' { $$ = SetExpression($2, $6); }
-	;
-
-set_list:
-	  set_stmt { vector<SetExpression*> *v = new vector<SetExpression*>;
-				 v->push_back($1);
-				 $$ = v; }
-	| set_list set_stmt { vector<SetExpression*> *v = $1;
-						  v->push_back($2);
-						  $$ = v; }
-	;
+/* set_stmt: */
+/* 	'(' exp ')' ':' '(' exp_list ')' { $$ = SetExpression($2, $6); } */
+/* 	; */
+/*  */
+/* set_list: */
+/* 	  set_stmt { vector<SetExpression*> *v = new vector<SetExpression*>; */
+/* 				 v->push_back($1); */
+/* 				 $$ = v; } */
+/* 	| set_list set_stmt { vector<SetExpression*> *v = $1; */
+/* 						  v->push_back($2); */
+/* 						  $$ = v; } */
+/* 	; */
 
 if_begin:
 	IF '(' exp ')' { beginScope(stOTHER); $$ = $3; }

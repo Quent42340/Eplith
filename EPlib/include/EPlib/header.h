@@ -76,7 +76,7 @@ static inline std::string getPtrAddr(void* ptr) {
 	std::stringstream oss;
 	std::string str;
 	oss << ptr;
-	str = oss.str(); 
+	str = oss.str();
 	return str;
 }
 

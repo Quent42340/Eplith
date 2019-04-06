@@ -18,6 +18,7 @@
 
 ---------------------------------------------------------------------------------*/
 #include <EPlib.h>
+
 #include "EPb_tools.h"
 #include "EPb_base.h"
 
@@ -38,7 +39,7 @@ void *Base_puts(EPb_args *args) {
 
 string Base_gets(EPb_args *args) {
 	char *str = new char;
-	gets(str);
+	scanf("%s", &str);
 	return string(str);
 }
 
@@ -71,7 +72,7 @@ void EPblib_initBase() {
 	EPb_initFunc(BType, type);
 	EPb_initFunc(ToNumber, tonumber);
 	EPb_initFunc(ToString, tostring);
-	
+
 	Variable *version = new Variable("_VERSION", new Value("0.1a"));
 }
 

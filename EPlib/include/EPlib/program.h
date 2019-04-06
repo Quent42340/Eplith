@@ -24,12 +24,12 @@ class Program {
 	public:
 		Program(std::string filename);
 		~Program();
-		
+
 		void readFile();
 		void parseFile();
-		
+
 		void printVariable(std::string name);
-		
+
 	private:
 		std::string m_filename;
 };

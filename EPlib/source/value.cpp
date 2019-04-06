@@ -94,7 +94,7 @@ Value::Value(Type type, boost::any value, Mode mode) {
 
 Value::Value(boost::any *value, Mode mode) {
 	m_value = *value;
-	
+
 	if(int *pi = valuePtr<int>()) {
 		m_type = typeInt;
 	}
@@ -118,13 +118,13 @@ Value::Value(boost::any *value, Mode mode) {
 	} else {
 		m_type = typeVoid;
 	}
-	
+
 	m_mode = mode;
 }
 
 Value::Value(Variable *var, Mode mode) {
 	m_value = var->value()->m_value;
-	
+
 	if(int *pi = valuePtr<int>()) {
 		m_type = typeInt;
 	}
@@ -148,7 +148,7 @@ Value::Value(Variable *var, Mode mode) {
 	} else {
 		m_type = typeVoid;
 	}
-	
+
 	m_mode = mode;
 }
 

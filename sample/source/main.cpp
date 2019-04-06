@@ -24,10 +24,10 @@ using namespace std;
 int main(int argc, char* argv[]) {
 	// Initialize the script
 	Program *script = new Program("scripts/sample.ep");
-	
+
 	// New variable: 'y = 3'
 	Variable *y = new Variable("y", new Value(3));
-	
+
 	// New function: 'puts = function(str) { print(str + "\n"); }'
 	Expression::scopes++;
 	vector<VarExpression*> putsArgs;
@@ -36,16 +36,16 @@ int main(int argc, char* argv[]) {
 	putsStmts.push_back(new PrintExpression(new OpExpression(putsArgs[0], '+', new StrExpression("\n"))));
 	Expression::scopes--;
 	Variable *puts = new Variable("puts", new Value(new Function(&putsArgs, &putsStmts)));
-	
+
 	// Read file
 	script->readFile();
-	
+
 	// Parse file
 	script->parseFile();
-	
+
 	// Print variable: 'print("x = " + x + "\n")'
 	cout << "x = "; script->printVariable("x"); cout << endl;
-	
+
 	// Calls mputs function: 'mputs("All", "is", "OK.");'
 	vector<Expression*> args;
 	args.push_back(new StrExpression("All"));
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
 	args.push_back(new StrExpression("OK."));
 	CallExpression *call = new CallExpression("mputs", &args);
 	call->doExp();
-	
+
 	// Make an array: 'a = {5, "6", "str", 1.2}'
 	multimap<string, Expression*> elements;
 	elements.insert(elements.end(), pair<string, Expression*>("<<nothing>>", new IntExpression(5)));
@@ -62,19 +62,19 @@ int main(int argc, char* argv[]) {
 	elements.insert(elements.end(), pair<string, Expression*>("<<nothing>>", new FloatExpression(1.2)));
 	ArrayExpression *arrayExp = new ArrayExpression(&elements);
 	Variable *a = new Variable("a", arrayExp->evaluate());
-	
+
 	// Print a[2]: 'print(a[2] + "\n")'
 	vector<string> index;
 	index.push_back("2");
 	cout << "a[2] = \""; a->value()->element(index)->print(); cout << "\"" << endl;
-	
+
 	delete a;
 	delete arrayExp;
 	delete call;
 	delete puts;
 	delete y;
 	delete script;
-	
+
 	return 0;
 }
 

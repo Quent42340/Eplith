@@ -182,7 +182,7 @@ EPb_initStruct(Srand,, Math_srand, 1, "x");
 
 void EPblib_initMath() {
 	map<string, Value*> Math_elements;
-	
+
 	EPb_initElemFunc(Math_elements, Cos, cos);
 	EPb_initElemFunc(Math_elements, Sin, sin);
 	EPb_initElemFunc(Math_elements, Tan, tan);
@@ -206,9 +206,9 @@ void EPblib_initMath() {
 	EPb_initElemFunc(Math_elements, Rad, rad);
 	EPb_initElemFunc(Math_elements, Rand, rand);
 	EPb_initElemFunc(Math_elements, Srand, srand);
-	
+
 	Math_elements.insert(Math_elements.end(), pair<string, Value*>("pi", new Value(PI)));
-	
+
 	Variable *Math = new Variable("Math", new Value(Math_elements));
 }
 

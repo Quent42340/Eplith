@@ -32,16 +32,16 @@ class Function {
 		Function(const Function &f);
 		Function(std::vector<VarExpression*> *args, std::vector<Expression*> *stmts, boost::any returnValue = -1);
 		~Function();
-		
+
 		std::vector<VarExpression*> *args() const { return m_args; }
-		
+
 		Value *ret() { return m_ret; }
-		
+
 		void colon(bool colon) { m_colon = colon; }
 		void mainElement(Value *mainElement) { m_mainElement = mainElement; }
-		
+
 		void doFunc(std::vector<Expression*> *args);
-		
+
 	private:
 		std::vector<VarExpression*> *m_args;
 		std::vector<Variable*> *m_vars;

@@ -27,27 +27,27 @@ class Variable {
 	public:
 		Variable(std::string name, Value *value, bool isConstant = false);
 		~Variable();
-		
+
 		void print() { m_value->print(); }
-		
+
 		Value* value() { return m_value; }
 		void value(Value *value);
-		
+
 		std::string name() const { return m_name; }
 		std::string address() const { return m_address; }
-		
+
 		bool isConstant() const { return m_isConstant; }
-		
+
 		void setElement();
-		
+
 		static Variable* findByName(std::string name);
 		static bool exists(std::string name);
 		static bool erase(std::string name);
-		
+
 		static void initNullVar();
-		
+
 		static std::vector< std::vector<Variable*> > vars;
-		
+
 	private:
 		std::string m_name;
 		std::string m_address;

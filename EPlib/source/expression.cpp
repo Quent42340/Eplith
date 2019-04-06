@@ -336,7 +336,7 @@ void AssignExpression::doExp() {
 				} else {
 					setNumVal(m_var->value(), getNumVal(val) + getNumVal(val2));
 				}
-			} else { 
+			} else {
 				switch(m_op) {
 					case SUB:	  setNumVal(m_var->value(), getNumVal(val) - getNumVal(val2)); break;
 					case MUL:	  setNumVal(m_var->value(), getNumVal(val) * getNumVal(val2)); break;
@@ -372,7 +372,7 @@ AssignExpressionList::~AssignExpressionList() {
 }
 
 Value *AssignExpressionList::evaluate() {
-	
+
 }
 
 void AssignExpressionList::doExp() {
@@ -593,11 +593,11 @@ Value* CallExpression::evaluate() {
 void CallExpression::doExp() {
 	initFunc();
 	beginScope(stFUNC);
-	
+
 #ifdef CALL_DEBUG
 	edbg("Function called: '" << m_funcName << "' | Scope: " << Expression::scopes);
 #endif
-	
+
 	m_funcs.back()->doFunc(m_args);
 	m_ret = new Value(*m_funcs.back()->ret());
 	endScope();
@@ -718,12 +718,12 @@ void ForExpression::doExp() {
 	delete vi;
 }
 
-SetExpression::SetExpression() {
-}
-
-SetExpression::~SetExpression() {
-}
-
-void SetExpression::doExp() {
-}
+// SetExpression::SetExpression() {
+// }
+//
+// SetExpression::~SetExpression() {
+// }
+//
+// void SetExpression::doExp() {
+// }
 
